@@ -1,0 +1,18 @@
+import React from "react";
+import { TextInput, View } from "react-native";
+
+type InputProps = React.ComponentProps<typeof TextInput> & {
+    imagem?: JSX.Element;
+    text?: string;
+    styles?: string;
+};
+
+export const Input = (Props: InputProps) => {
+    const { imagem, text, styles, ...rest } = Props;
+    return (
+        <View className="flex-row w-[95%] items-center border border-blue-500 rounded-2xl h-12 px-3 bg-white shadow-md mb-4">
+            {imagem && <View className="w-5 h-5 mr-2">{imagem}</View>}
+            <TextInput className={`flex-1 ${styles}`} placeholder={text} {...rest} />
+        </View>
+    );
+}
