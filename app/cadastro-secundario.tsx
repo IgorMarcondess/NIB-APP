@@ -43,7 +43,7 @@ export default function CadastroSecundario() {
         source={require('../assets/sorriso.png')}
         className="w-[300px] h-[200px] rounded-xl my-5"
       />
-      <Link href="/">
+      <Link href="/" asChild>
       <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center mt-10 w-[170px]">
         <Text className="text-white text-lg font-bold">Enviar</Text>
       </TouchableOpacity>

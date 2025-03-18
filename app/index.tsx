@@ -22,13 +22,13 @@ export default function Index() {
                 <Text className="text-blue-800">Senhaa</Text>
                 <Input text="Senha" imagem={<Eye size={20} color="blue" />} keyboardType="email-address" />
 
-                <Link href='./cadastro-principal' asChild>
-                    <TouchableOpacity className="bg-blue-800 py-2 px-5 rounded-md w-1/2 items-center mt-6">
+                <Link href='./historico-medico' asChild>
+                    <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6">
 
                         <Text className="text-white text-base font-bold">ENTRAR</Text>
                     </TouchableOpacity>
                 </Link>
-                <TouchableOpacity className="bg-blue-800 py-3 px-5 rounded-md w-4/5 items-center mt-4">
+                <TouchableOpacity className="bg-primary py-3 px-5 rounded-md w-4/5 items-center mt-4">
                     <Text className="text-white text-base font-bold">REGISTRE-SE AQUI</Text>
                 </TouchableOpacity>
                 <StatusBar style="auto" />

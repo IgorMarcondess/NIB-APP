@@ -9,13 +9,13 @@ export default function CadastroPrincipal() {
         <View className="flex-1 items-center bg-[#003EA6] w-full h-full pt-12">
             <View className="flex-1 items-center">
                 <Image
-                    source={require('../../assets/logoteeth.png')}
+                    source={require('../assets/logoteeth.png')}
                     className="w-40 mb-5"
                 />
                 <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>
 
                 <Image
-                    source={require('../../assets/image1.png')}
+                    source={require('../assets/image1.png')}
                     className="w-[300px] h-[200px] rounded-xl"
                 />
 
