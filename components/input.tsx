@@ -1,7 +1,7 @@
 import React from "react";
-import { TextInput, View } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
 
-type InputProps = React.ComponentProps<typeof TextInput> & {
+type InputProps = TextInputProps & {
     imagem?: JSX.Element;
     text?: string;
     styles?: string;

@@ -1,10 +1,10 @@
 import React from 'react'
 import "../global.css"
-import Avaliacao from './avaliacao'
+import Ofensiva from './ofensiva'
 
 const RootLayout = () => {
   return (
-    <Avaliacao />
+    <Ofensiva />
     // <Slot />
   )
 }
