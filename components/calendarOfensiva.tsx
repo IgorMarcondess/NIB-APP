@@ -1,26 +1,29 @@
 import { Check, ChevronDown, ChevronUp } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DatePicker } from '../components/nativewindui/DatePicker';
 
 
 type AvaliacaoMensalProps = {
-    medalha?: string;
+    ofensiva?: number;
     titulo?: string;
     children?: JSX.Element;
 };
 
 export const CalendarOfensiva = (Props: AvaliacaoMensalProps) => {
 
-    const { medalha = "", titulo, children, ...rest } = Props;
+    const { ofensiva = 5, titulo = "Nome", children, ...rest } = Props;
     const [mostrarAvaliacoes, setMostrarAvaliacoes] = useState(false);
+    const [corMedalha, setCorMedalha] = useState("")
+    const [date, setDate] = React.useState(new Date());
 
-    const getMedalColor = (tipo: string) => {
-        switch (tipo) {
+    const getMedalColor = (medalha: string) => {
+        switch (medalha) {
             case "ouro":
-                return "gold";
+                setCorMedalha("");
             case "prata":
-                return "silver";
+                setCorMedalha("prata");
             case "bronze":
                 return "#cd7f32";
             default:
@@ -34,23 +37,23 @@ export const CalendarOfensiva = (Props: AvaliacaoMensalProps) => {
                 className="flex-row justify-between items-center bg-gray-300 rounded-2xl p-3">
                 <Text className="text-blue-700 font-bold text-lg">{titulo}</Text>
                 <View className="flex-row items-center">
-                    {medalha == "" ? (<Check size={20} color="#cd7f32" className="mr-2" />) : (<Check size={20} color="#003EA6" className="mr-2" />)}
-                    {mostrarAvaliacoes ? (
-                        <ChevronUp size={20} color="black" />
-                    ) : (
-                        <ChevronDown size={20} color="black" />
-                    )}
+                    {ofensiva > 20 ? (<Image source={require('../assets/Ouro.png')} />) : ofensiva > 10 ? (
+                        <Image source={require('../assets/Prata.png')} />) : (<Image source={require('../assets/Bronze.png')} />)}
+                    {mostrarAvaliacoes ? (<ChevronUp size={20} color="black" />) : (<ChevronDown size={20} color="black" />)}
                 </View>
             </TouchableOpacity>
 
             {mostrarAvaliacoes && (
-                <View className="bg-white p-3 mt-2 rounded-2xl">
+                <View className="bg-white p-3  rounded-2xl">
                     <Text className="text-blue-700 font-bold text-md mb-2">
                         AVALIAÇÕES DIÁRIAS
                     </Text>
-
-                    {/* Componente de calendário */}
-                    {children}
+                    <DatePicker value={date}
+                        mode="datetime"
+                        onChange={(ev) => {
+                            setDate(new Date(ev.nativeEvent.timestamp));
+                        }}
+                    />
 
                     {/* Data Selecionada */}
                     <Text className="text-center text-blue-700 font-bold text-lg mt-3">

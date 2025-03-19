@@ -5,10 +5,7 @@ export default function CadastroSecundario() {
 
   return (
     <View className="flex-1 items-center bg-[#003EA6] w-full h-full pt-12 px-5">
-      <Image
-        source={require('../assets/logoteeth.png')}
-        className="w-40 mb-5"
-      />
+      <Image source={require('../assets/logoteeth.png')} className="w-40 mb-5"/>
       <Text className="text-white text-2xl font-bold mb-5">INSERIR DADOS</Text>
 
       <Text className="text-white text-lg self-start mb-1">Endereço</Text>
