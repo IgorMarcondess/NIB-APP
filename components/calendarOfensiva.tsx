@@ -2,7 +2,6 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DatePicker } from '../components/nativewindui/DatePicker';
 
 
 type AvaliacaoMensalProps = {
@@ -34,12 +33,12 @@ export const CalendarOfensiva = (Props: AvaliacaoMensalProps) => {
         <SafeAreaView>
             <TouchableOpacity
                 onPress={() => setMostrarAvaliacoes(!mostrarAvaliacoes)}
-                className="flex-row justify-between items-center bg-gray-300 rounded-2xl p-3">
-                <Text className="text-blue-700 font-bold text-lg">{titulo}</Text>
-                <View className="flex-row items-center">
+                className="flex-row justify-start items-center bg-gray-300 rounded-2xl p-3 h-20">
+                <Text className="text-blue-700 font-extrabold text-2xl">{titulo}</Text>
+                <View className="flex-row items-start">
                     {ofensiva > 20 ? (<Image source={require('../assets/Ouro.png')} />) : ofensiva > 10 ? (
                         <Image source={require('../assets/Prata.png')} />) : (<Image source={require('../assets/Bronze.png')} />)}
-                    {mostrarAvaliacoes ? (<ChevronUp size={20} color="black" />) : (<ChevronDown size={20} color="black" />)}
+                    {mostrarAvaliacoes ? (<ChevronUp size={20} color="black" className='mr-80' />) : (<ChevronDown size={20} color="black" className='mr-80' />)}
                 </View>
             </TouchableOpacity>
 
@@ -48,12 +47,7 @@ export const CalendarOfensiva = (Props: AvaliacaoMensalProps) => {
                     <Text className="text-blue-700 font-bold text-md mb-2">
                         AVALIAÇÕES DIÁRIAS
                     </Text>
-                    <DatePicker value={date}
-                        mode="datetime"
-                        onChange={(ev) => {
-                            setDate(new Date(ev.nativeEvent.timestamp));
-                        }}
-                    />
+
 
                     {/* Data Selecionada */}
                     <Text className="text-center text-blue-700 font-bold text-lg mt-3">
