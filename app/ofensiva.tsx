@@ -7,6 +7,7 @@ const Ofensiva = () => {
     return (
         <SafeAreaView>
             <CalendarOfensiva />
+            <CalendarOfensiva />
             <StatusBar style='auto' />
         </SafeAreaView>
     )

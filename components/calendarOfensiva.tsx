@@ -1,4 +1,4 @@
-import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { format, startOfMonth, endOfMonth } from "date-fns";
 import { Check, ChevronDown, ChevronUp } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
@@ -15,15 +15,15 @@ type AvaliacaoProps = {
 
 export const CalendarOfensiva = (Props: AvaliacaoProps) => {
 
-    const { ofensiva = 5, titulo = "Nome", children, 
+    const { ofensiva = 5, titulo = "MARÇO", children, 
         habitos = [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: false },{ nome: "Bochecho", feito: true },] , ...rest } = Props;
 
     const [mostrarAvaliacoes, setMostrarAvaliacoes] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
 
     const hoje = new Date();
-    const primeiroDia = format((hoje), "yyyy-MM-dd");
-    const ultimoDia = format((hoje), "yyyy-MM-dd");
+    const primeiroDia = format(startOfMonth(hoje), "yyyy-MM-dd");
+    const ultimoDia = format(endOfMonth(hoje), "yyyy-MM-dd");
 
     return (
         <SafeAreaView className='p-5'>
@@ -41,32 +41,21 @@ export const CalendarOfensiva = (Props: AvaliacaoProps) => {
             {mostrarAvaliacoes && (
                 <View className="flex bg-white p-3  rounded-2xl items-center">
                     <Text className="text-blue-700 font-bold text-md mb-2"> AVALIAÇÕES DIÁRIAS</Text>
-
-                        {/**COLOQUE AQ O CALENDÁRIO */}
                         <Calendar onDayPress={(day:any) => setSelectedDate(day.dateString)}
-                        markedDates={{
-                            [selectedDate]: { selected: true, selectedColor: "blue" },
-                        }}
-                        minDate={primeiroDia}
-                        maxDate={ultimoDia}
-                        disableArrowLeft={true}
-                        disableArrowRight={true}
+                        markedDates={{[selectedDate]: { selected: true, selectedColor: "blue" },}}
+                        minDate={primeiroDia} maxDate={ultimoDia} disableArrowLeft={true} disableArrowRight={true}
                         theme={{
                             todayTextColor: "blue",
                             arrowColor: "black",
                             textMonthFontWeight: "bold",
                             textDayFontWeight: "500",
                             selectedDayBackgroundColor: "blue",
-                            selectedDayTextColor: "#fff",
-                        }}
+                            selectedDayTextColor: "#fff",}}
                     />
 
                     {/* Data Selecionada */}
-                    {selectedDate ? (
-                        <Text className="text-center text-blue-700 font-bold text-lg mt-3">{selectedDate}</Text>
-                    ) : (<Text className="text-center text-blue-700 font-bold text-lg mt-3">Selecione uma data</Text>)}
+                    {selectedDate ? (<Text className="text-center text-blue-700 font-bold text-lg mt-3">{selectedDate}</Text>) : (<Text className="text-center text-blue-700 font-bold text-lg mt-3">Selecione uma data</Text>)}
 
-                    {/* Ícones de avaliação do dia */}
                     <View className="flex-row items-center gap-6">
                     {habitos.map((habito) => (
                             <View key={habito.nome} className="flex-row items-center ">
@@ -85,11 +74,5 @@ export const CalendarOfensiva = (Props: AvaliacaoProps) => {
 
 }
 
-function endOfMonth(hoje: Date): any {
-    throw new Error('Function not implemented.');
-}
 
-function startOfMonth(hoje: Date): any {
-    throw new Error('Function not implemented.');
-}
 

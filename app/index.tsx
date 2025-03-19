@@ -22,7 +22,7 @@ export default function Index() {
                 <Text className="text-blue-800">Senhaa</Text>
                 <Input text="Senha" imagem={<Eye size={20} color="blue" />} keyboardType="email-address" />
 
-                <Link href='./historico-medico' asChild>
+                <Link href='./initial' asChild>
                     <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6">
 
                         <Text className="text-white text-base font-bold">ENTRAR</Text>
