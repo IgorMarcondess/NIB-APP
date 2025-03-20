@@ -9,26 +9,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const Dashboard = () => {
     const [diasConsecutivos, setDiasConsecutivos] = useState(12);
     const [selectedDate, setSelectedDate] = useState("");
+    const [ofensiva, setOfensiva] = useState(15); 
 
-    // Obtendo primeiro e último dia do mês
     const hoje = new Date();
     const primeiroDia = format(startOfMonth(hoje), "yyyy-MM-dd");
     const ultimoDia = format(endOfMonth(hoje), "yyyy-MM-dd");
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
-            {/* Scroll da Tela */}
-            <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-                {/* Header */}
-                <View className="bg-blue-600 p-6 rounded-b-2xl">
-                    <View className="flex-row items-center space-x-3">
-                        <Image source={require("../assets/manImage.png")} className="w-12 h-12 rounded-full" />
-                        <Text className="text-white text-lg font-bold">Olá, Usuário</Text>
+        <SafeAreaView className="flex-1 bg-white p-5">
+            <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="flex-1">
+                <View className="bg-blue-600 p-4 rounded-lg">
+                    <View className="flex-row items-center gap-3">
+                        <Image source={require("../assets/manImage.png")} className="w-14 h-14"/>
+                        <View>
+                            <Text className="text-white text-base font-bold leading-tight">Olá, Professor,</Text>
+                            <Text className="text-white text-sm">seja bem-vindo ao Teeth Diary</Text>
+                        </View>
                     </View>
-                    <Text className="text-white text-sm">Welcome to Teeth Diary</Text>
                 </View>
-
-                {/* Card de Avaliação */}
                 <View className="bg-gray-300 p-4 m-4 rounded-xl items-center">
                     <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
                     <TouchableOpacity>
@@ -36,15 +34,26 @@ const Dashboard = () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Contador de Dias */}
-                <View className="items-center mb-4">
-                    <Text className="text-blue-700 font-bold text-3xl">{diasConsecutivos} dias</Text>
-                    <Text className="text-gray-600">CONSECUTIVOS</Text>
+                <View className="flex-row items-center justify-center space-x-4 px-6 mb-6">
+                    {/* Medalha */}
+                    <View className="mr-5">
+                        {ofensiva > 20 ? (
+                            <Image source={require("../assets/Ouro_initial.jpg")} className="w-20 h-24" />
+                        ) : ofensiva > 10 ? (
+                            <Image source={require("../assets/Prata_initial.jpg")} className="w-20 h-24 " />
+                        ) : (
+                            <Image source={require("../assets/Bronze_initial.jpg")} className="w-20 h-24" />
+                        )}
+                    </View>
+                    <View className="border-l-2 border-gray-300 pl-4">
+                        <Text className="text-blue-700 font-bold text-3xl">{ofensiva} dias</Text>
+                        <Text className="text-gray-600 text-lg">CONSECUTIVOS</Text>
+                    </View>
                 </View>
 
                 {/* Calendário */}
                 <Calendar
-                    onDayPress={(day:any) => setSelectedDate(day.dateString)}
+                    onDayPress={(day: any) => setSelectedDate(day.dateString)}
                     markedDates={{
                         [selectedDate]: { selected: true, selectedColor: "blue" },
                     }}
@@ -61,8 +70,6 @@ const Dashboard = () => {
                         selectedDayTextColor: "#fff",
                     }}
                 />
-
-                {/* Data Selecionada */}
                 {selectedDate ? (
                     <Text className="text-center text-blue-700 font-bold text-lg mt-3">
                         {selectedDate}
@@ -73,16 +80,13 @@ const Dashboard = () => {
                     </Text>
                 )}
             </ScrollView>
-            {/* Barra de Navegação Fixa */}
-            <SafeAreaView className="flex-1 justify-center p-2">
             <BottomTabNavigator
                 icons={[
                     { name: "Home", component: <Home size={24} color="white" />, route: "/" },
-                    { name: "Camera", component: <Camera size={24} color="white" />, route: "/camera" },
-                    { name: "Perfil", component: <User size={24} color="white" />, route: "/perfil" },
+                    { name: "Camera", component: <Camera size={24} color="white" />, route: "/historico-medico" },
+                    { name: "Perfil", component: <User size={24} color="white" />, route: "/conta" },
                 ]}
             />
-            </SafeAreaView>
         </SafeAreaView>
     );
 };

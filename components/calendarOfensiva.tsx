@@ -52,8 +52,6 @@ export const CalendarOfensiva = (Props: AvaliacaoProps) => {
                             selectedDayBackgroundColor: "blue",
                             selectedDayTextColor: "#fff",}}
                     />
-
-                    {/* Data Selecionada */}
                     {selectedDate ? (<Text className="text-center text-blue-700 font-bold text-lg mt-3">{selectedDate}</Text>) : (<Text className="text-center text-blue-700 font-bold text-lg mt-3">Selecione uma data</Text>)}
 
                     <View className="flex-row items-center gap-6">

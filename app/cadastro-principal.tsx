@@ -1,6 +1,6 @@
 import { Mail } from 'lucide-react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Input } from '../components/input'; // Assuming the Input component is the same
+import { Input } from '../components/input';
 import { Link } from 'expo-router';
 
 export default function CadastroPrincipal() {

@@ -10,7 +10,7 @@ const NavBottom = (Props: NavProps) => {
     const router = useRouter();
 
     return (
-        <View className="h-screen items-center w-full bg-blue-600 p-4 flex-row justify-around rounded-2xl">
+        <View className="h-16 items-center w-full bg-primary p-4 flex-row justify-around rounded-2xl">
             {Props.icons.map((icon) => (
                 <TouchableOpacity key={icon.name} onPress={() => router.push(icon.route)}>
                     {icon.component}

@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { CalendarPlus2 } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Input } from '../components/input'; // Assuming Input is the same as before
+import { Input } from '../components/input';
 
 export default function HistoricoMedico() {
 
