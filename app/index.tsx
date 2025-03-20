@@ -29,7 +29,7 @@ export default function Index() {
                 <View className="items-center justify-center mt-4">
                 <Image source={require('../assets/logoteeth.png')} className="w-52 h-10 items-center justify-center" />
                 </View>
-                <Text className="text-white text-4xl ml-5 mt-6">Bem - vindo</Text>
+                <Text className="text-white text-4xl ml-5 mt-6">Bem - vindo!</Text>
                 <Text className="text-white text-2xl ml-5">Log In</Text>
                 <View className="flex-1 items-center justify-center">
                     <Image source={require('../assets/manImage.png')} className="w-64 h-64" />
