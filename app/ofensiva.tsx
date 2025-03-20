@@ -11,8 +11,8 @@ const Ofensiva = () => {
 <SafeAreaView className="flex-1 bg-white p-4 justify-between">
 
             <View className="space-y-4">
-                <CalendarOfensiva />
-                <CalendarOfensiva />
+                <CalendarOfensiva titulo='Fevereiro'/>
+                <CalendarOfensiva titulo='Março'/>
             </View>
 
             <View className='justify-center items-center'>

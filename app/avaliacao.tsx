@@ -71,8 +71,7 @@ export default function Avaliacao() {
                             <Text className="text-blue-700 font-extrabold text-2xl text-center">
                             ENVIO REALIZADO COM SUCESSO
                             </Text>
-            
-                            {/* Ícone de Sucesso */}
+        
                             <CheckCircle size={60} color="limegreen" className="mt-4" />
             
                             </View>

@@ -13,7 +13,7 @@ type AvaliacaoProps = {
 
 export const CalendarOfensiva = ({
     ofensiva = 5,
-    titulo = "MARÇO",
+    titulo,
     habitos = [
         { nome: "Escovação", feito: true },
         { nome: "Fio dental", feito: false },
@@ -29,12 +29,10 @@ export const CalendarOfensiva = ({
 
     return (
         <View className="p-4">
-            {/* Botão de Expansão */}
+
             <TouchableOpacity
                 onPress={() => setMostrarAvaliacoes(!mostrarAvaliacoes)}
                 className="flex-row justify-between items-center bg-gray-300 rounded-2xl p-4 h-20">
-                
-                {/* Título + Medalha */}
                 <View className="flex-row items-center">
                     <Text className="text-blue-700 font-extrabold text-2xl">{titulo}</Text>
                     <View className="ml-2">
@@ -47,21 +45,12 @@ export const CalendarOfensiva = ({
                         )}
                     </View>
                 </View>
-
-                {/* Ícone de Expandir */}
-                {mostrarAvaliacoes ? (
-                    <ChevronUp size={20} color="black" />
-                ) : (
-                    <ChevronDown size={20} color="black" />
-                )}
+                {mostrarAvaliacoes ? (<ChevronUp size={20} color="black" />) : (<ChevronDown size={20} color="black" />)}
             </TouchableOpacity>
 
-            {/* Conteúdo Expandido */}
             {mostrarAvaliacoes && (
                 <View className="bg-white p-3 rounded-2xl mt-2 items-center">
                     <Text className="text-blue-700 font-bold text-md mb-2">AVALIAÇÕES DIÁRIAS</Text>
-
-                    {/* Calendário */}
                     <Calendar
                         onDayPress={(day: any) => setSelectedDate(day.dateString)}
                         markedDates={{ [selectedDate]: { selected: true, selectedColor: "blue" } }}
@@ -79,18 +68,9 @@ export const CalendarOfensiva = ({
                         }}
                     />
 
-                    {/* Data Selecionada */}
-                    {selectedDate ? (
-                        <Text className="text-center text-blue-700 font-bold text-lg mt-3">
-                            {selectedDate}
-                        </Text>
-                    ) : (
-                        <Text className="text-center text-blue-700 font-bold text-lg mt-3">
-                            Selecione uma data
-                        </Text>
-                    )}
+                    {selectedDate ? (<Text className="text-center text-blue-700 font-bold text-lg mt-3">{selectedDate}</Text>) 
+                    : (<Text className="text-center text-blue-700 font-bold text-lg mt-3">Selecione uma data</Text>)}
 
-                    {/* Ícones de avaliação do dia */}
                     <View className="flex-row items-center gap-6 mt-3">
                         {habitos.map((habito) => (
                             <View key={habito.nome} className="flex-row items-center">

@@ -37,7 +37,7 @@ const Dashboard = () => {
 
 
                 <View className="flex-row items-center justify-center space-x-4 px-6 mb-6">
-                    {/* Medalha */}
+
                     <View className="mr-5">
                         {ofensiva > 20 ? (
                             <Image source={require("../assets/Ouro_initial.jpg")} className="w-20 h-24" />
@@ -53,7 +53,6 @@ const Dashboard = () => {
                     </View>
                 </View>
 
-                {/* Calendário */}
                 <Calendar
                     onDayPress={(day: any) => setSelectedDate(day.dateString)}
                     markedDates={{
@@ -84,7 +83,7 @@ const Dashboard = () => {
             </ScrollView>
             <BottomTabNavigator
                 icons={[
-                    { name: "Home", component: <FolderClock size={24} color="white" />, route: "/ofensiva" },
+                    { name: "Home", component: <FolderClock size={24} color="white" />, route: "/avaliacao" },
                     { name: "Camera", component: <ScanHeart size={24} color="white" />, route: "/historico-medico" },
                     { name: "Perfil", component: <User size={24} color="white" />, route: "/conta" },
                 ]}
