@@ -23,7 +23,7 @@ export default function CadastroSecundario() {
             setConfirmData(true)
             setTimeout(() => {
               setConfirmData(!confirmData);
-              router.navigate("./inital")
+              router.navigate('./initial')
           }, 3000);
         }
     };

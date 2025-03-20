@@ -2,7 +2,7 @@ import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Check, CheckCircle } from "lucide-react-native";
 import { useState } from "react";
-import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
+import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Avaliacao() {
@@ -20,6 +20,7 @@ export default function Avaliacao() {
 
     return (
         <SafeAreaView className="flex-1 bg-white">
+            <ScrollView>
             <View className="flex-1 justify-center items-center border-2 border-primary rounded-lg m-2 p-2">
                 <Text className="text-center text-blue-700 font-bold text-2xl mb-4">O QUE FOI REALIZADO?</Text>
 
@@ -54,16 +55,17 @@ export default function Avaliacao() {
                     <Text className="text-white font-bold text-center">ENVIAR</Text>
                 </TouchableOpacity>
 
-                <Image
-                    source={require("../assets/health.png")}
-                    className="w-full h-60 mt-9 mb-20"
-                    resizeMode="contain"
-                />
-                <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-4">
+                <Image source={require("../assets/health.png")} className="w-full h-60 mt-9 mb-20" resizeMode="contain"/>
+
+                
+                <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-4" onPress={() => router.back()}>
                     <Text className="text-white font-bold text-center">Voltar</Text>
                 </TouchableOpacity>
+                
                 <StatusBar style="auto" />
+                
             </View>
+            </ScrollView>
                         <Modal transparent animationType="fade" visible={popupVisible}>
                             <View className="flex-1 justify-center items-center bg-black/50">
                             <View className="bg-white p-6 rounded-2xl w-4/5 items-center">

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Alert, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Mail } from 'lucide-react-native';
 import { Input } from '../components/input';
 import { Link, router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CadastroPrincipal() {
     const [cpf, setCpf] = useState('');
@@ -14,19 +15,22 @@ export default function CadastroPrincipal() {
     const validarCampos = () => {
         if (!cpf || !email || !confirmEmail || !senha || !telefone) {
             Alert.alert("Erro", "Preencha todos os campos.");
-        }if (!/^\d{11}$/.test(cpf)) {
+        }else if (!/^\d{11}$/.test(cpf)) {
             Alert.alert("Erro", "CPF inválido! Deve conter 11 números.");
-        }if (!/^\d{11}$/.test(telefone)) {
+        }else if (!/^\d{11}$/.test(telefone)) {
             Alert.alert("Erro", "Número de telefone inválido! Deve conter 11 números.");
-        }if (email !== confirmEmail) {
+        }else if (email !== confirmEmail) {
             Alert.alert("Erro", "Os e-mails não coincidem.");
+        } else{
+            router.navigate("/cadastro-secundario");
         }
 
-        router.push("/cadastro-secundario");
+ 
     };
 
     return (
-        <View className="flex-1 items-center bg-[#003EA6] w-full h-full pt-12">
+        <SafeAreaView className="flex-1 bg-[#003EA6] w-full h-full">
+        <ScrollView>
             <View className="flex-1 items-center">
                 <Image source={require('../assets/logoteeth.png')} className="w-40 mb-5" />
                 <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>
@@ -72,6 +76,7 @@ export default function CadastroPrincipal() {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 }

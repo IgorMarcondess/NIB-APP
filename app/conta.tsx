@@ -1,10 +1,11 @@
-import { Image, Text, View, TouchableOpacity } from "react-native";
+import { Image, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 export default function Conta() {
   return (
     <View className="flex-1 bg-white items-center">
+      <ScrollView>
       <View className="flex-1 flex-col items-center pt-16">
         <Image
           source={require("../assets/ManImage2.png")}
@@ -26,6 +27,7 @@ export default function Conta() {
         </Link>
       </View>
       <StatusBar style="light"/>
+      </ScrollView>
     </View>
   );
 }
