@@ -6,7 +6,9 @@ O projeto do grupo N.I.B. consiste na criação de um aplicativo para acompanham
 LINK FIGMA: https://www.figma.com/design/TojKAIT1nLnZqISwtn78YX/OdontoPrev-x-N.I.B?m=auto&t=ipxkY6svySA37MGu-6
 
 Credenciais de Login:
+
 Email: professor@nota10.com
+
 Senha: 10
 
 Em caso de erro, por favor seguir o passo a passo abaixo:
