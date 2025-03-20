@@ -19,12 +19,12 @@ export default function CadastroSecundario() {
         } else if (!/^\d+$/.test(numero)) {
             Alert.alert("Erro", "O número deve conter apenas dígitos.");
             return;
-        }else {
-            setConfirmData(true)
+        } else {
+            setConfirmData(true);
             setTimeout(() => {
-              setConfirmData(!confirmData);
-              router.navigate('./initial')
-          }, 3000);
+                setConfirmData(false);
+                router.navigate('./initial');
+            }, 3000);
         }
     };
 
@@ -45,6 +45,7 @@ export default function CadastroSecundario() {
                     <TextInput className="bg-white w-full rounded-xl p-3 text-lg mb-4"
                         placeholder="Digite o CEP" placeholderTextColor="#888"
                         keyboardType="numeric" value={cep} onChangeText={setCep}
+                        returnKeyType="done"
                     />
                 </View>
                 <View className="w-1/2 pl-2">
@@ -52,6 +53,7 @@ export default function CadastroSecundario() {
                     <TextInput className="bg-white w-full rounded-xl p-3 text-lg mb-4"
                         placeholder="Número" placeholderTextColor="#888"
                         keyboardType="numeric" value={numero} onChangeText={setNumero}
+                        returnKeyType="done"
                     />
                 </View>
             </View>
@@ -63,17 +65,18 @@ export default function CadastroSecundario() {
                 <Text className="text-white text-lg font-bold">Enviar</Text>
             </TouchableOpacity>
 
-          {confirmData && (<Modal transparent animationType="fade">
-              <View className="flex-1 justify-center items-center bg-black/50">
-              <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
-              <Text className="text-blue-700 font-extrabold text-2xl text-center">
-              ENVIO REALIZADO COM SUCESSO
-              </Text>
-              <CheckCircle size={60} color="limegreen" className="mt-4" />
-
-              </View>
-              </View>
-          </Modal>)}
+            {confirmData && (
+                <Modal transparent animationType="fade">
+                    <View className="flex-1 justify-center items-center bg-black/50">
+                        <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
+                            <Text className="text-blue-700 font-extrabold text-2xl text-center">
+                                ENVIO REALIZADO COM SUCESSO
+                            </Text>
+                            <CheckCircle size={60} color="limegreen" className="mt-4" />
+                        </View>
+                    </View>
+                </Modal>
+            )}
         </View>
     );
 }

@@ -12,7 +12,7 @@ export default function Index() {
     
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const emailFixo= "professor@nota10.com";
+    const emailFixo= "p";
     const senhaFixo= "10";
 
     const Login = () => {

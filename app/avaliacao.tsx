@@ -20,14 +20,14 @@ export default function Avaliacao() {
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}> 
             <View className="flex-1 justify-center items-center border-2 border-primary rounded-lg m-2 p-2">
-                <Text className="text-center text-blue-700 font-bold text-2xl mb-4">O QUE FOI REALIZADO?</Text>
+                <Text className="text-center text-blue-700 font-bold text-2xl mb-4">O QUE FOI REALIZADo?</Text>
 
                 <TouchableOpacity
                     onPress={() => setEscovacao(!escovacao)}
                     className="flex-row items-center justify-between border-2 border-blue-500 rounded-lg p-4 w-full mb-2">
-                    <Text className={`text-blue-700 text-xl font-semibold ${escovacao ? "opacity-100" : "opacity-50"}`}>
+                    <Text className={`text-blue-700 text-xl font-extrabold ${escovacao ? "opacity-100" : "opacity-50"}`}>
                         ESCOVAÇÃO
                     </Text>
                     <Check size={30} strokeWidth={2.5} color={escovacao ? "green" : "gray"} />
@@ -36,7 +36,7 @@ export default function Avaliacao() {
                 <TouchableOpacity
                     onPress={() => setFioDental(!fioDental)}
                     className="flex-row items-center justify-between border-2 border-blue-500 rounded-lg p-4 w-full mb-2">
-                    <Text className={`text-blue-700 text-xl font-semibold ${fioDental ? "opacity-100" : "opacity-50"}`}>
+                    <Text className={`text-blue-700 text-xl font-extrabold ${fioDental ? "opacity-100" : "opacity-50"}`}>
                         FIO DENTAL
                     </Text>
                     <Check size={30} strokeWidth={2.5} color={fioDental ? "green" : "gray"} />
@@ -65,7 +65,7 @@ export default function Avaliacao() {
                 <StatusBar style="auto" />
                 
             </View>
-            </ScrollView>
+           
                         <Modal transparent animationType="fade" visible={popupVisible}>
                             <View className="flex-1 justify-center items-center bg-black/50">
                             <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
@@ -77,7 +77,7 @@ export default function Avaliacao() {
                             </View>
                             </View>
                             </Modal>
-
+            </ScrollView>
         </SafeAreaView>
     );
 }

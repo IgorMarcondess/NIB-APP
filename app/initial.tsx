@@ -83,8 +83,8 @@ const Dashboard = () => {
             </ScrollView>
             <BottomTabNavigator
                 icons={[
-                    { name: "Home", component: <FolderClock size={24} color="white" />, route: "/avaliacao" },
-                    { name: "Camera", component: <ScanHeart size={24} color="white" />, route: "/historico-medico" },
+                    { name: "Ofensiva", component: <FolderClock size={24} color="white" />, route: "/ofensiva" },
+                    { name: "Historico", component: <ScanHeart size={24} color="white" />, route: "/historico-medico" },
                     { name: "Perfil", component: <User size={24} color="white" />, route: "/conta" },
                 ]}
             />
