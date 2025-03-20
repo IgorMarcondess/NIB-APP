@@ -19,7 +19,7 @@ export default function Conta() {
         <Text className="text-[#003EA6] text-lg mb-1">Telefone</Text>
         <View className="flex-row w-[350px] items-center justify-center border border-blue-500 rounded-2xl h-[60px] px-4 bg-white shadow mb-4" />
 
-        <Link href="/" asChild>
+        <Link push href="/initial" asChild>
           <TouchableOpacity className="bg-[#003EA6] py-2 px-6 rounded-full mt-5">
             <Text className="text-white text-base font-bold">Voltar</Text>
           </TouchableOpacity>

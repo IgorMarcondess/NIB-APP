@@ -1,13 +1,22 @@
+import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Check } from "lucide-react-native";
+import { Check, CheckCircle } from "lucide-react-native";
 import { useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Avaliacao() {
     const [escovacao, setEscovacao] = useState(false);
     const [fioDental, setFioDental] = useState(false);
     const [bochecho, setBochecho] = useState(false);
+    const [popupVisible, setPopupVisible] = useState(false)
+
+        if(popupVisible){
+            setTimeout(() => {
+                setPopupVisible(!popupVisible);
+                router.navigate("./initial")
+            }, 3000);
+        }
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -41,7 +50,7 @@ export default function Avaliacao() {
                     <Check size={30} strokeWidth={2.5} color={bochecho ? "green" : "gray"} />
                 </TouchableOpacity>
 
-                <TouchableOpacity className="bg-blue-500 rounded-full py-3 w-80 mt-4">
+                <TouchableOpacity className="bg-blue-500 rounded-full py-3 w-80 mt-4" onPress={() => setPopupVisible(!popupVisible)}>
                     <Text className="text-white font-bold text-center">ENVIAR</Text>
                 </TouchableOpacity>
 
@@ -50,12 +59,25 @@ export default function Avaliacao() {
                     className="w-full h-60 mt-9 mb-20"
                     resizeMode="contain"
                 />
-
                 <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-4">
                     <Text className="text-white font-bold text-center">Voltar</Text>
                 </TouchableOpacity>
                 <StatusBar style="auto" />
             </View>
+                        <Modal transparent animationType="fade" visible={popupVisible}>
+                            <View className="flex-1 justify-center items-center bg-black/50">
+                            <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
+                            {/* Texto de Sucesso */}
+                            <Text className="text-blue-700 font-extrabold text-2xl text-center">
+                            ENVIO REALIZADO COM SUCESSO
+                            </Text>
+            
+                            {/* Ícone de Sucesso */}
+                            <CheckCircle size={60} color="limegreen" className="mt-4" />
+            
+                            </View>
+                            </View>
+                            </Modal>
 
         </SafeAreaView>
     );

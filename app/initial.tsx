@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { format, startOfMonth, endOfMonth } from "date-fns";
-import { Home, Camera, User } from "lucide-react-native";
+import { Home, Camera, User, ScanHeart, FolderClock } from "lucide-react-native";
 import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link, router } from "expo-router";
 
 const Dashboard = () => {
     const [diasConsecutivos, setDiasConsecutivos] = useState(12);
@@ -27,12 +28,13 @@ const Dashboard = () => {
                         </View>
                     </View>
                 </View>
-                <View className="bg-gray-300 p-4 m-4 rounded-xl items-center">
-                    <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
-                    <TouchableOpacity>
-                        <Text className="text-blue-500 underline">Clique Aqui !</Text>
+                
+                    <TouchableOpacity className="bg-gray-300 p-4 m-4 rounded-xl items-center" onPress={() => router.push("./avaliacao")}>
+                            <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
+                            <Text className="text-blue-500">Clique Aqui!</Text>
                     </TouchableOpacity>
-                </View>
+
+
 
                 <View className="flex-row items-center justify-center space-x-4 px-6 mb-6">
                     {/* Medalha */}
@@ -82,8 +84,8 @@ const Dashboard = () => {
             </ScrollView>
             <BottomTabNavigator
                 icons={[
-                    { name: "Home", component: <Home size={24} color="white" />, route: "/" },
-                    { name: "Camera", component: <Camera size={24} color="white" />, route: "/historico-medico" },
+                    { name: "Home", component: <FolderClock size={24} color="white" />, route: "/ofensiva" },
+                    { name: "Camera", component: <ScanHeart size={24} color="white" />, route: "/historico-medico" },
                     { name: "Perfil", component: <User size={24} color="white" />, route: "/conta" },
                 ]}
             />
