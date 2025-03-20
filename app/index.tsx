@@ -44,9 +44,11 @@ export default function Index() {
                 <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6"onPress={Login}>
                     <Text className="text-white text-base font-bold">ENTRAR</Text>
                 </TouchableOpacity>
+                <Link href={"/cadastro-principal"} asChild>
                 <TouchableOpacity className="bg-primary py-3 px-5 rounded-md w-4/5 items-center mt-4">
                     <Text className="text-white text-base font-bold">REGISTRE-SE AQUI</Text>
                 </TouchableOpacity>
+                </Link>
 
                 <StatusBar style="auto" />
             </View>

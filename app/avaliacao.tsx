@@ -67,11 +67,9 @@ export default function Avaliacao() {
                         <Modal transparent animationType="fade" visible={popupVisible}>
                             <View className="flex-1 justify-center items-center bg-black/50">
                             <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
-                            {/* Texto de Sucesso */}
                             <Text className="text-blue-700 font-extrabold text-2xl text-center">
                             ENVIO REALIZADO COM SUCESSO
                             </Text>
-        
                             <CheckCircle size={60} color="limegreen" className="mt-4" />
             
                             </View>
