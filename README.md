@@ -13,7 +13,7 @@ O projeto do grupo N.I.B. consiste na criação de um aplicativo para acompanham
 
 **Em caso de erro, por favor seguir o passo a passo abaixo:**
 
-1° rodar este código no terminal: npm i 
+1° rodar este código no terminal: **npm i**
 
 2° pressionar Ctrl + Shift + p  logo depois pesquisar Typescript Restart TS
 
