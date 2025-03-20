@@ -8,10 +8,13 @@ O projeto do grupo N.I.B. consiste na criação de um aplicativo para acompanham
 **Credenciais de Login:**
 
 **Email:** professor@nota10.com
+
 **Senha:** 10
 
 **Em caso de erro, por favor seguir o passo a passo abaixo:**
 
 1° rodar este código no terminal: npm i 
+
 2° pressionar Ctrl + Shift + p  logo depois pesquisar Typescript Restart TS
+
 Caso o erro não tenha saído, somente reiniciar o VSCODE
