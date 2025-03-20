@@ -25,14 +25,14 @@ export default function Index() {
 
     return (
         <SafeAreaView className="flex-1 items-center justify-center bg-white">
-            <View className="flex-1 bg-blue-800 rounded-b-[270px] w-full h-[500px]">
-                <View className="items-center justify-center mt-4">
+            <View className="flex-1 bg-blue-800 rounded-b-[270px] w-full h-[600px] mb-2">
+                <View className="items-center justify-center">
                 <Image source={require('../assets/logoteeth.png')} className="w-52 h-10 items-center justify-center" />
                 </View>
                 <Text className="text-white text-4xl ml-5 mt-6">Bem - vindo!</Text>
                 <Text className="text-white text-2xl ml-5">Log In</Text>
                 <View className="flex-1 items-center justify-center">
-                    <Image source={require('../assets/manImage.png')} className="w-64 h-64" />
+                    <Image source={require('../assets/manImage.png')} className="w-52 h-52" />
                 </View>
             </View>
 
