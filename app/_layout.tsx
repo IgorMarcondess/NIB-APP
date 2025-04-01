@@ -1,11 +1,8 @@
-import React from 'react'
 import "../global.css"
-import Ofensiva from './ofensiva'
-import { Slot } from 'expo-router'
-
+import Tela from './(medico)/tela_principal'
 const RootLayout = () => {
   return (
-    <Slot />
+    <Tela/>
   )
 }
 
