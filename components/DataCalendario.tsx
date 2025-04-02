@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 
 type ConfigDatas = {
     data: number;
@@ -7,9 +7,9 @@ type ConfigDatas = {
 export const DataCalendario = (Props: ConfigDatas) => {
     const {data = 10, mes = 'SET'} = Props
     return(
-        <View className="h-28 w-28 bg-white flex justify-center items-center rounded-2xl">
+        <TouchableOpacity className="h-28 w-28 bg-white flex justify-center items-center rounded-2xl">
             <Text className="color-primary text-3xl font-bold">{data}</Text>
             <Text className="color-primary text-3xl font-bold">{mes}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
