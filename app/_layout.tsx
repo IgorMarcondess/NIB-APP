@@ -1,5 +1,5 @@
 import "../global.css"
-import Tela from './(medico)/tela_principal'
+import Tela from './(medico)/medico_formulario'
 const RootLayout = () => {
   return (
     <Tela/>

@@ -9,19 +9,19 @@ type PacientesProps ={
 }
 
 export const Pacientes = (Props: PacientesProps) => {
-    const {imagem = require('../assets/person-medic.png'), nome = 'igor gabriel ', exame , hours} = Props
+    const {imagem, nome, exame , hours} = Props
     return (
-        <TouchableOpacity className="h-36 w-auto bg-white rounded-3xl m-5 flex-row p-3 gap-1" onPress={() => router.push('../app/initial.tsx')}>
+        <View className="h-36 w-full bg-white rounded-3xl flex-row justify-around p-3 gap-1" onPress={() => router.push('../app/initial.tsx')}>
             <Image source={imagem} /> 
             <View className="items-center">
                 <Text className="font-semibold color-primary text-lg">{nome}</Text>
-                <Text className="text-lg">{exame}</Text>
+                <Text className="text-lg">"{exame}"</Text>
 
                 <View className="w-48 h-11 bg-primary justify-center items-center rounded-xl mt-4">
-                <Text className="color-white text-2xl font-semibold">18:00 PM</Text>
+                <Text className="color-white text-2xl font-semibold">{hours}</Text>
                 </View>
 
             </View>
-        </TouchableOpacity>
+        </View>
     )
 }
