@@ -1,8 +1,10 @@
+import { Slot } from "expo-router"
 import "../global.css"
-import Tela from './(medico)/medico_formulario'
+import Tela from './(medico)/tela_principal'
+ 
 const RootLayout = () => {
   return (
-    <Tela/>
+    <Slot/>
   )
 }
 

@@ -4,25 +4,67 @@ import { Mail } from 'lucide-react-native';
 import { Input } from '../components/input';
 import { Link, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../services/firebase';
 
 export default function CadastroPrincipal() {
     const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
-    const [confirmEmail, setConfirmEmail] = useState('');
+    const [nome, setNome] = useState('');
+    const [sobrenome, setSobrenome] = useState('');
     const [senha, setSenha] = useState('');
     const [telefone, setTelefone] = useState('');
 
-    const validarCampos = () => {
-        if (!cpf || !email || !confirmEmail || !senha || !telefone) {
+    const validarCampos_EnviarInformacao = async () => {
+        if (!cpf || !email || !nome || !senha || !telefone) {
             Alert.alert("Erro", "Preencha todos os campos.");
         } else if (!/^\d{11}$/.test(cpf)) {
             Alert.alert("Erro", "CPF inválido! Deve conter 11 números.");
         } else if (!/^\d{11}$/.test(telefone)) {
             Alert.alert("Erro", "Número de telefone inválido! Deve conter 11 números.");
-        } else if (email !== confirmEmail) {
-            Alert.alert("Erro", "Os e-mails não coincidem.");
         } else {
-            router.navigate("/cadastro-secundario");
+            const nomeAndSobrenome = nome.split(" ")
+            setNome(nomeAndSobrenome[0])
+            setSobrenome(nomeAndSobrenome[1])
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, senha)
+
+                const infos = await fetch('https://jsonplaceholder.typicode.com/posts',{
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        cpfUser: cpf,
+                        nomeUser: nome,
+                        sobrenomeUser: nome,
+                        telefoneUser: telefone,
+                        dataNascimentoUser: "22/06/2005",
+                        planoUser: "Premium",
+                        emailUser: email,
+                    }),
+                })
+                const dados = await infos.json();
+
+                console.log('Status da resposta:', infos.status);
+                console.log('Resposta JSON:', dados);
+
+                if (infos.ok) {
+                    Alert.alert('Sucesso!', 'Dados enviados com sucesso!');
+                    console.log('Resposta:', dados);
+                    router.navigate("./cadastro-secundario"); 
+                } else {
+                    Alert.alert('Erro!', dados.message || 'Erro ao enviar os dados.');
+                }
+
+
+            } catch (error: any) {
+                console.error('Erro no fetch:', error);
+                Alert.alert('Erro!', 'Não foi possível conectar à API.');
+            }
+
+            // router.navigate("/cadastro-secundario");
         }
     };
 
@@ -41,14 +83,14 @@ export default function CadastroPrincipal() {
                         returnKeyType="done"
                     />
 
-                    <Text className="text-white text-lg mt-4">E-mail</Text>
-                    <Input text="Digite seu E-mail!" imagem={<Mail size={20} color="blue" />} 
-                        keyboardType="email-address" value={email} onChangeText={setEmail} 
+                    <Text className="text-white text-lg mt-4">Nome e Sobrenome</Text>
+                    <Input text="Digite seu nome e sobrenome!" imagem={<Mail size={20} color="blue" />} 
+                        keyboardType="email-address" value={nome} onChangeText={setNome} 
                     />
 
-                    <Text className="text-white text-lg mt-4">Confirmar E-mail</Text>
+                    <Text className="text-white text-lg mt-4">E-mail</Text>
                     <Input text="Digite seu E-mail novamente!" imagem={<Mail size={20} color="blue" />} 
-                        keyboardType="email-address" value={confirmEmail} onChangeText={setConfirmEmail} 
+                        keyboardType="email-address" value={email} onChangeText={setEmail} 
                     />
 
                     <Text className="text-white text-lg mt-4">Senha</Text>
@@ -67,7 +109,7 @@ export default function CadastroPrincipal() {
                                 <Text className="text-white text-lg font-bold">Voltar</Text>
                             </TouchableOpacity>
 
-                        <TouchableOpacity onPress={validarCampos} 
+                        <TouchableOpacity onPress={validarCampos_EnviarInformacao} 
                             className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center"
                         >
                             <Text className="text-white text-lg font-bold">Próximo</Text>

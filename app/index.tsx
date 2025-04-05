@@ -5,6 +5,11 @@ import { StatusBar } from "expo-status-bar";
 import { Eye, Mail } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
+import { app, auth, firebase } from "../services/firebase";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+
+
 
 export default function Index() {
     const router = useRouter();
@@ -15,12 +20,26 @@ export default function Index() {
     const emailFixo= "professor@nota10.com";
     const senhaFixo= "10";
 
-    const Login = () => {
-        if (email === emailFixo && senha === senhaFixo) {
+
+    const Login = async () => {
+        try {
+            await signInWithEmailAndPassword(auth, email, senha)
+            Alert.alert("Login realizado com sucesso!")  
             router.navigate("./initial"); 
-        } else {
-            Alert.alert("Erro", "E-mail ou senha inválidos!");
+            
+        } catch (error: any) {
+            Alert.alert('Erro', error.message);
         }
+        
+
+        // if (email === emailFixo && senha === senhaFixo) {
+        //     router.navigate("./initial"); 
+        // } else {
+        //     Alert.alert("Erro", "E-mail ou senha inválidos!");
+        // }
+
+        
+
     };
 
     return (

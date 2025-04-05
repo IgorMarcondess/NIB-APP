@@ -9,12 +9,12 @@ export default function medico_formulario() {
   const [confirmData, setConfirmData] = useState(false);
   const [modal, setModal] = useState(false)
 
-    if (confirmData == true){
-      setTimeout(() => {
-        setConfirmData(false);
-        setModal(false)
-      }, 3000);
-    }
+    // if (confirmData == true){
+    //   setTimeout(() => {
+    //     setConfirmData(false);
+    //     setModal(false)
+    //   }, 3000);
+    // }
   
   return (
     <SafeAreaView className='bg-primary h-full w-full flex-1'>
@@ -52,27 +52,26 @@ export default function medico_formulario() {
           </View>
 
           <Text className='text-white text-xl font-bold mb-4'>FORMULÁRIO</Text>
-          <Input text="SIM/NÃO" imagem={<IdCard size={20} color="blue" />} keyboardType="default" secureTextEntry returnKeyType="done"/>
+          <Input text="SIM/NÃO" imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done"/>
           <Text className='text-white text-xl font-bold mb-4'>ESCOVAÇÃO</Text>
-          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" secureTextEntry returnKeyType="done"/>
+          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done"/>
           <Text className='text-white text-xl font-bold mb-4'>FIO DENTAL</Text>
-          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" secureTextEntry returnKeyType="done"/>
+          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done"/>
           <Text className='text-white text-xl font-bold mb-4'>BOCHECHO</Text>
-          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" secureTextEntry returnKeyType="done"/>
+          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done"/>
 
-          <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center mt-10 w-[170px]"
-          onPress={setConfirmData(!confirmData)}> 
+          <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center mt-10 w-[170px]"> 
           <Text className="text-white text-lg font-bold">Enviar</Text>
           </TouchableOpacity>
 
-          {modal && (<Modal transparent animationType="fade">
+          {/* {modal && (<Modal transparent animationType="fade">
                     <View className="flex-1 justify-center items-center bg-black/50">
                         <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
                             <Text className="text-blue-700 font-extrabold text-2xl text-center">ENVIO REALIZADO COM SUCESSO</Text>
                             <CheckCircle size={60} color="limegreen" className="mt-4" />
                         </View>
                     </View>
-                </Modal>)}
+                </Modal>)} */}
         </View>
       </ScrollView>
     </SafeAreaView>
