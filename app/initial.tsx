@@ -6,8 +6,11 @@ import { Home, Camera, User, ScanHeart, FolderClock } from "lucide-react-native"
 import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
+import { useUser } from "../components/userContext";
+
 
 const Dashboard = () => {
+    const { user } = useUser();
     const [diasConsecutivos, setDiasConsecutivos] = useState(12);
     const [selectedDate, setSelectedDate] = useState("");
     const [ofensiva, setOfensiva] = useState(15); 
@@ -23,7 +26,7 @@ const Dashboard = () => {
                     <View className="flex-row items-center gap-3">
                         <Image source={require("../assets/manImage.png")} className="w-14 h-14"/>
                         <View>
-                            <Text className="text-white text-base font-bold leading-tight">Olá, Professor,</Text>
+                            <Text className="text-white text-base font-bold leading-tight">Olá, {user?.nomeUser}</Text>
                             <Text className="text-white text-sm">seja bem-vindo ao Teeth Diary</Text>
                         </View>
                     </View>

@@ -7,39 +7,49 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
 import { app, auth, firebase } from "../services/firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useUser } from "../components/userContext";
 
 
 
 
 export default function Index() {
     const router = useRouter();
-
-    
+    const { setUser } = useUser();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [logado, setLogado] = useState(false);
-    const emailFixo= "professor@nota10.com";
-    const senhaFixo= "10";
     
     const Login = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, senha)
             setLogado(!logado)
-            Alert.alert("Login realizado com sucesso!")  
-            router.navigate("./initial"); 
-            
+
         } catch (error: any) {
             Alert.alert('Erro', error.message);
-        }
-
+        }};
         useEffect(() => {
-            const infos = await fetch('', {
-                method: 'GET'
-            })
+            try {
+                const baixarInfos = async () =>{ 
+                    const infos = await fetch('')
+                    const dados = await infos.json()
+                    
+                    console.log(`Informações: ${dados}`)
+                    console.log(infos.status)
+                    
+                if (infos.ok) {
+                    setUser(dados)
+                    Alert.alert("Login realizado com sucesso!")  
+                    router.navigate("./initial"); 
+                } else {
+                    Alert.alert("Erro", dados.message || "Usuário não encontrado.");
+                }     
+                }
+                baixarInfos()
+            } catch (error) {
+                Alert.alert("Erro", "Problema ao fazer login.");
+            }    
         }, [logado]);
-        
-
-    };
+    
 
     return (
         <SafeAreaView className="flex-1 items-center justify-center bg-white">
