@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -17,27 +17,26 @@ export default function Index() {
     
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [logado, setLogado] = useState(false);
     const emailFixo= "professor@nota10.com";
     const senhaFixo= "10";
-
-
+    
     const Login = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, senha)
+            setLogado(!logado)
             Alert.alert("Login realizado com sucesso!")  
             router.navigate("./initial"); 
             
         } catch (error: any) {
             Alert.alert('Erro', error.message);
         }
-        
 
-        // if (email === emailFixo && senha === senhaFixo) {
-        //     router.navigate("./initial"); 
-        // } else {
-        //     Alert.alert("Erro", "E-mail ou senha inválidos!");
-        // }
-
+        useEffect(() => {
+            const infos = await fetch('', {
+                method: 'GET'
+            })
+        }, [logado]);
         
 
     };
