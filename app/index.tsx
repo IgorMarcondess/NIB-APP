@@ -22,33 +22,45 @@ export default function Index() {
     const Login = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, senha)
+            Alert.alert("Login realizado com sucesso!")  
+            router.navigate("./initial"); 
             setLogado(!logado)
-
+            setUser({
+                cpfUser: "12345678900",
+                nomeUser: "Igor Gabriel",
+                sobrenomeUser: "",
+                telefoneUser: "11 970636566",
+                dataNascimentoUser: "22/06/2005",
+                planoUser: "Premium",
+                emailUser: "igorgabriel@gmail.com",
+            })
+            console.log("clicado entrar")
         } catch (error: any) {
             Alert.alert('Erro', error.message);
         }};
-        useEffect(() => {
-            try {
-                const baixarInfos = async () =>{ 
-                    const infos = await fetch('')
-                    const dados = await infos.json()
+
+        // useEffect(() => {
+        //     // try {
+        //     //     const baixarInfos = async () =>{ 
+        //     //         const infos = await fetch('')
+        //     //         const dados = await infos.json()
                     
-                    console.log(`Informações: ${dados}`)
-                    console.log(infos.status)
+        //     //         console.log(`Informações: ${dados}`)
+        //     //         console.log(infos.status)
                     
-                if (infos.ok) {
-                    setUser(dados)
-                    Alert.alert("Login realizado com sucesso!")  
-                    router.navigate("./initial"); 
-                } else {
-                    Alert.alert("Erro", dados.message || "Usuário não encontrado.");
-                }     
-                }
-                baixarInfos()
-            } catch (error) {
-                Alert.alert("Erro", "Problema ao fazer login.");
-            }    
-        }, [logado]);
+        //     //     if (infos.ok) {
+        //     //         setUser(dados)
+        //     //         Alert.alert("Login realizado com sucesso!")  
+        //     //         router.navigate("./initial"); 
+        //     //     } else {
+        //     //         Alert.alert("Erro", dados.message || "Usuário não encontrado.");
+        //     //     }     
+        //     //     }
+        //     //     baixarInfos()
+        //     } catch (error) {
+        //         Alert.alert("Erro", "Problema ao fazer login.");
+        //     }    
+        // }, [logado]);
     
 
     return (
@@ -71,7 +83,7 @@ export default function Index() {
                 <Text className="text-blue-800">Senha</Text>
                 <Input text="Senha" imagem={<Eye size={20} color="blue" />} secureTextEntry value={senha} onChangeText={setSenha} />
 
-                <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6"onPress={Login}>
+                <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6" onPress={Login}>
                     <Text className="text-white text-base font-bold">ENTRAR</Text>
                 </TouchableOpacity>
                 <Link href={"/cadastro-principal"} asChild>

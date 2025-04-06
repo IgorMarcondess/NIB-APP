@@ -7,17 +7,19 @@ import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
 import { useUser } from "../components/userContext";
+import { CalendarOfensiva } from "../components/calendarOfensiva";
 
 
 const Dashboard = () => {
     const { user } = useUser();
     const [diasConsecutivos, setDiasConsecutivos] = useState(12);
-    const [selectedDate, setSelectedDate] = useState("");
     const [ofensiva, setOfensiva] = useState(15); 
 
-    const hoje = new Date();
-    const primeiroDia = format(startOfMonth(hoje), "yyyy-MM-dd");
-    const ultimoDia = format(endOfMonth(hoje), "yyyy-MM-dd");
+    const dadosHabitos = {
+        "2025-04-02": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: false },],
+        "2025-04-05": [{ nome: "Bochecho", feito: true },],
+        "2025-04-07": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: true },{ nome: "Bochecho", feito: false },],
+    };
 
     return (
         <SafeAreaView className="flex-1 bg-white p-5">
@@ -40,7 +42,6 @@ const Dashboard = () => {
 
 
                 <View className="flex-row items-center justify-center space-x-4 px-6 mb-6">
-
                     <View className="mr-5">
                         {ofensiva > 20 ? (
                             <Image source={require("../assets/Ouro_initial.jpg")} className="w-20 h-24" />
@@ -55,34 +56,12 @@ const Dashboard = () => {
                         <Text className="text-gray-600 text-lg">CONSECUTIVOS</Text>
                     </View>
                 </View>
-
-                <Calendar
-                    onDayPress={(day: any) => setSelectedDate(day.dateString)}
-                    markedDates={{
-                        [selectedDate]: { selected: true, selectedColor: "blue" },
-                    }}
-                    minDate={primeiroDia}
-                    maxDate={ultimoDia}
-                    disableArrowLeft={true}
-                    disableArrowRight={true}
-                    theme={{
-                        todayTextColor: "blue",
-                        arrowColor: "black",
-                        textMonthFontWeight: "bold",
-                        textDayFontWeight: "500",
-                        selectedDayBackgroundColor: "blue",
-                        selectedDayTextColor: "#fff",
-                    }}
+                <CalendarOfensiva
+                    titulo="Progresso atual"
+                    ofensiva={ofensiva}
+                    habitos={dadosHabitos}
                 />
-                {selectedDate ? (
-                    <Text className="text-center text-blue-700 font-bold text-lg mt-3">
-                        {selectedDate}
-                    </Text>
-                ) : (
-                    <Text className="text-center text-blue-700 font-bold text-lg mt-3">
-                        Selecione uma data
-                    </Text>
-                )}
+                
             </ScrollView>
             <BottomTabNavigator
                 icons={[

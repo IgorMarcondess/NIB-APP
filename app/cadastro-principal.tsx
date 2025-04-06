@@ -38,7 +38,7 @@ export default function CadastroPrincipal() {
                     body: JSON.stringify({
                         cpfUser: cpf,
                         nomeUser: nome,
-                        sobrenomeUser: nome,
+                        sobrenomeUser: sobrenome,
                         telefoneUser: telefone,
                         dataNascimentoUser: "22/06/2005",
                         planoUser: "Premium",
