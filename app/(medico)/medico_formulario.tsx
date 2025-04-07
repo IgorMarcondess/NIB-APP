@@ -1,5 +1,5 @@
 import { View, Text, Image, ScrollView, SafeAreaView, TouchableOpacity, Modal, Alert } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input } from '../../components/input';
 import { CheckCircle, IdCard } from 'lucide-react-native';
 import { usePaciente } from '../../components/pacientesContext';
@@ -10,11 +10,25 @@ export default function medico_formulario() {
   const [modal, setModal] = useState(false);
   const { pacienteSelecionado, marcarComoAtendido, pacientesAtendidos } = usePaciente();
 
-  const jaAtendido = !!pacienteSelecionado && pacientesAtendidos.includes(pacienteSelecionado.nome);
+  const [escovacao, setEscovacao] = useState('');
+  const [fioDental, setFioDental] = useState('');
+  const [bochecho, setBochecho] = useState('');
+  const [respostaSimples, setRespostaSimples] = useState('');
 
+  const respostasValidas = ["SIM", "sim", "NAO", "nao", "NÃO", "não"];
+  const jaAtendido = !!pacienteSelecionado && pacientesAtendidos.includes(pacienteSelecionado.nome);
 
   const handleEnviar = () => {
     if (!pacienteSelecionado) return;
+
+    const todasValidas = [respostaSimples, escovacao, fioDental, bochecho].every(res =>
+      respostasValidas.includes(res.trim())
+    );
+
+    if (!todasValidas) {
+      Alert.alert('Erro', 'Por favor, responda apenas com "SIM" ou "NÃO".');
+      return;
+    }
 
     if (jaAtendido) {
       Alert.alert('Atenção', 'Este paciente já foi atendido.');
@@ -26,8 +40,7 @@ export default function medico_formulario() {
 
     setTimeout(() => {
       setModal(false);
-      router.push('./tela_principal')
-
+      router.push('./tela_principal');
     }, 3000);
   };
 
@@ -65,13 +78,13 @@ export default function medico_formulario() {
           </View>
 
           <Text className='text-white text-xl font-bold mb-4'>FORMULÁRIO</Text>
-          <Input text="SIM/NÃO" imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done" />
+          <Input text="SIM/NÃO" imagem={<IdCard size={20} color="blue" />} value={respostaSimples} onChangeText={setRespostaSimples} />
           <Text className='text-white text-xl font-bold mb-4'>ESCOVAÇÃO</Text>
-          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done" />
+          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} value={escovacao} onChangeText={setEscovacao} />
           <Text className='text-white text-xl font-bold mb-4'>FIO DENTAL</Text>
-          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done" />
+          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} value={fioDental} onChangeText={setFioDental} />
           <Text className='text-white text-xl font-bold mb-4'>BOCHECHO</Text>
-          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} keyboardType="default" returnKeyType="done" />
+          <Input text='SIM/NÃO' imagem={<IdCard size={20} color="blue" />} value={bochecho} onChangeText={setBochecho} />
 
           <TouchableOpacity
             className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center mt-10 w-[170px]"

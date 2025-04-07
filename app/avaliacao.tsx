@@ -22,7 +22,7 @@ export default function Avaliacao() {
         <SafeAreaView className="flex-1 bg-white">
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}> 
             <View className="flex-1 justify-center items-center border-2 border-primary rounded-lg m-2 p-2">
-                <Text className="text-center text-blue-700 font-bold text-2xl mb-4">O QUE FOI REALIZADo?</Text>
+                <Text className="text-center text-blue-700 font-bold text-2xl mb-4">O QUE FOI REALIZADO?</Text>
 
                 <TouchableOpacity
                     onPress={() => setEscovacao(!escovacao)}
