@@ -7,67 +7,67 @@ import { ArrowLeft } from 'lucide-react-native'
 import { Link, router } from 'expo-router'
 
 const Ofensiva = () => {
-
-    const dadosHabitos = {
-        "2025-02-01": [
-          { nome: "Escovação", feito: true },
-          { nome: "Fio dental", feito: false },
-        ],
-        // "2025-04-02": [
-        //   { nome: "Escovação", feito: true },
-        //   { nome: "Bochecho", feito: true },
-        // ],
-        // "2025-04-30": [
-        //   { nome: "Escovação", feito: true },
-        //   { nome: "Fio dental", feito: true },
-        //   { nome: "Enxaguante", feito: false },
-        // ],
-        // "2025-04-24": [
-        //   { nome: "Escovação", feito: false },
-        //   { nome: "Fio dental", feito: false },
-        // ],
-        // "2025-04-05": [
-        //   { nome: "Escovação", feito: true },
-        //   { nome: "Enxaguante", feito: true },
-        // ],
-        // "2025-04-15": [
-        //   { nome: "Língua", feito: true },
-        //   { nome: "Bochecho", feito: false },
-        // ],
-        // "2025-04-21": [
-        //   { nome: "Escovação", feito: true },
-        //   { nome: "Fio dental", feito: true },
-        //   { nome: "Bochecho", feito: true },
-        // ],
-      };
+    const habitos2 = {
+      "2025-05-01": [
+        { nome: "Escovação", feito: true },
+        { nome: "Fio dental", feito: true },
+      ],
+      "2025-05-03": [
+        { nome: "Escovação", feito: false },
+        { nome: "Bochecho", feito: true },
+      ],
+      "2025-05-05": [
+        { nome: "Língua", feito: true },
+        { nome: "Fio dental", feito: false },
+      ],
+      "2025-05-08": [
+        { nome: "Escovação", feito: true },
+        { nome: "Bochecho", feito: false },
+        { nome: "Língua", feito: true },
+      ],
+      "2025-05-10": [
+        { nome: "Enxaguante", feito: true },
+      ],
+      "2025-05-14": [
+        { nome: "Escovação", feito: false },
+        { nome: "Fio dental", feito: false },
+        { nome: "Bochecho", feito: false },
+      ],
+      "2025-05-21": [
+        { nome: "Escovação", feito: true },
+        { nome: "Fio dental", feito: true },
+        { nome: "Língua", feito: true },
+      ],
+    };
+  
       
-      const dadosHabitos1 = {
-        "2025-04-02": [
+      const habitos1 = {
+        "2025-02-02": [
           { nome: "Escovação", feito: false },
           { nome: "Fio dental", feito: false },
           { nome: "Língua", feito: false },
         ],
-        "2025-04-17": [
+        "2025-02-17": [
           { nome: "Escovação", feito: true },
           { nome: "Enxaguante", feito: true },
         ],
-        "2025-04-26": [
+        "2025-02-26": [
           { nome: "Bochecho", feito: true },
           { nome: "Língua", feito: true },
         ],
-        "2025-04-24": [
+        "2025-02-24": [
           { nome: "Escovação", feito: true },
           { nome: "Fio dental", feito: false },
           { nome: "Enxaguante", feito: true },
         ],
-        "2025-04-12": [
+        "2025-02-12": [
           { nome: "Bochecho", feito: false },
         ],
-        "2025-04-13": [
+        "2025-02-13": [
           { nome: "Escovação", feito: true },
           { nome: "Língua", feito: true },
         ],
-        "2025-04-14": [
+        "2025-02-14": [
           { nome: "Fio dental", feito: true },
           { nome: "Bochecho", feito: false },
         ],
@@ -79,14 +79,19 @@ const Ofensiva = () => {
         <ScrollView>
             <View className="space-y-4">
                 <CalendarOfensiva
-                    titulo="Fevereiro"
-                    ofensiva={15}
-                    habitos={dadosHabitos}
-                />
-                <CalendarOfensiva
                     titulo="Janeiro"
                     ofensiva={25}
-                    habitos={dadosHabitos1}
+                    habitos={habitos2}
+                />
+                <CalendarOfensiva
+                    titulo="Fevereiro"
+                    ofensiva={5}
+                    habitos={habitos1}
+                />
+                <CalendarOfensiva
+                    titulo="Março"
+                    ofensiva={15}
+                    habitos={habitos1}
                 />
 
             </View>

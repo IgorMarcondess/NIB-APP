@@ -19,6 +19,8 @@ const Dashboard = () => {
         "2025-04-02": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: false },],
         "2025-04-05": [{ nome: "Bochecho", feito: true },],
         "2025-04-07": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: true },{ nome: "Bochecho", feito: false },],
+        "2025-04-08": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: true },{ nome: "Bochecho", feito: false },],
+        
     };
 
     return (

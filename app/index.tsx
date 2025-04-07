@@ -20,6 +20,11 @@ export default function Index() {
     const [logado, setLogado] = useState(false);
     
     const Login = async () => {
+        if (email.toUpperCase().includes("CRM")) {
+            Alert.alert("Acesso Médico", "Login como médico detectado.");
+            router.push("./(medico)/tela_principal");
+            return; 
+          }
         try {
             await signInWithEmailAndPassword(auth, email, senha)
             Alert.alert("Login realizado com sucesso!")  
@@ -83,7 +88,7 @@ export default function Index() {
                 <Text className="text-blue-800">Senha</Text>
                 <Input text="Senha" imagem={<Eye size={20} color="blue" />} secureTextEntry value={senha} onChangeText={setSenha} />
 
-                <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6" onPress={Login}>
+                <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6" onPress={() => Login()}>
                     <Text className="text-white text-base font-bold">ENTRAR</Text>
                 </TouchableOpacity>
                 <Link href={"/cadastro-principal"} asChild>
