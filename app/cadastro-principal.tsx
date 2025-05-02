@@ -89,7 +89,7 @@ export default function CadastroPrincipal() {
                     />
 
                     <Text className="text-white text-lg mt-4">E-mail</Text>
-                    <Input text="Digite seu E-mail novamente!" imagem={<Mail size={20} color="blue" />} 
+                    <Input text="Digite seu E-mail!" imagem={<Mail size={20} color="blue" />} 
                         keyboardType="email-address" value={email} onChangeText={setEmail} 
                     />
 

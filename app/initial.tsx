@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
 import { useUser } from "../components/userContext";
 import { CalendarOfensiva } from "../components/calendarOfensiva";
-
+import CardNoticias from "../components/cardNoticias"; // 👈 Importação aqui
 
 const Dashboard = () => {
     const { user } = useUser();
@@ -20,7 +20,6 @@ const Dashboard = () => {
         "2025-04-05": [{ nome: "Bochecho", feito: true },],
         "2025-04-07": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: true },{ nome: "Bochecho", feito: false },],
         "2025-04-08": [{ nome: "Escovação", feito: true },{ nome: "Fio dental", feito: true },{ nome: "Bochecho", feito: false },],
-        
     };
 
     return (
@@ -35,13 +34,16 @@ const Dashboard = () => {
                         </View>
                     </View>
                 </View>
-                
-                    <TouchableOpacity className="bg-gray-300 p-4 m-4 rounded-xl items-center" onPress={() => router.push("./avaliacao")}>
-                            <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
-                            <Text className="text-blue-500">Clique Aqui!</Text>
-                    </TouchableOpacity>
+ 
+                <TouchableOpacity className="bg-gray-300 p-4 m-4 rounded-xl items-center" onPress={() => router.push("./avaliacao")}>
+                    <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
+                    <Text className="text-blue-500">Clique Aqui!</Text>
+                </TouchableOpacity>
 
-
+                <View className="my-4 justify-center items-center">
+                    <Text className="text-primary font-bold text-lg">Notícias Recentes</Text>
+                    <CardNoticias />
+                </View>
 
                 <View className="flex-row items-center justify-center space-x-4 px-6 mb-6">
                     <View className="mr-5">
@@ -58,13 +60,14 @@ const Dashboard = () => {
                         <Text className="text-gray-600 text-lg">CONSECUTIVOS</Text>
                     </View>
                 </View>
+
                 <CalendarOfensiva
                     titulo="Progresso atual"
                     ofensiva={ofensiva}
                     habitos={dadosHabitos}
                 />
-                
             </ScrollView>
+
             <BottomTabNavigator
                 icons={[
                     { name: "Ofensiva", component: <FolderClock size={24} color="white" />, route: "/ofensiva" },

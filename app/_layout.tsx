@@ -1,15 +1,13 @@
 import { Slot } from "expo-router"
 import "../global.css"
-import Tela from './(medico)/tela_principal'
 import { UserProvider } from "../components/userContext";
-import { PacienteProvider } from "../components/pacientesContext";
+import  Initial  from "./initial"
+
  
 const RootLayout = () => {
   return (
     <UserProvider>
-      <PacienteProvider>
-        <Slot/>
-      </PacienteProvider>
+        <Initial />
     </UserProvider>
   )
 }
