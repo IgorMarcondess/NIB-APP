@@ -1,7 +1,7 @@
-import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Calendar } from "react-native-calendars";
+import { Feather } from "@expo/vector-icons";
 
 type DatasMarcadasOfensiv = Record<string, { nome: string; feito: boolean }[]>;
 type AvaliacaoProps = {
@@ -50,9 +50,9 @@ export const CalendarOfensiva = ({
           </View>
         </View>
         {mostrarAvaliacoes ? (
-          <ChevronUp size={20} color="black" />
+          <Feather name="chevron-up" size={20} color="black" />
         ) : (
-          <ChevronDown size={20} color="black" />
+          <Feather name="chevron-down" size={20} color="black" />
         )}
       </TouchableOpacity>
 
@@ -78,14 +78,12 @@ export const CalendarOfensiva = ({
               textDayFontWeight: "500",
               selectedDayBackgroundColor: "blue",
               selectedDayTextColor: "#fff",
-              textMonthFontSize: 0, // para esconder visualmente o mês
+              textMonthFontSize: 0,
             }}
           />
 
           <Text className="text-center text-blue-700 font-bold text-lg mt-3">
-            {selectedDate
-              ? "Hábitos realizados"
-              : "Selecione uma data"}
+            {selectedDate ? "Hábitos realizados" : "Selecione uma data"}
           </Text>
 
           <View className="flex-row items-center gap-6 mt-3">
@@ -95,7 +93,11 @@ export const CalendarOfensiva = ({
                   <Text className="text-blue-700 font-semibold mr-0.5">
                     {habito.nome}
                   </Text>
-                  <Check size={18} color={habito.feito ? "green" : "gray"} />
+                  <Feather
+                    name="check"
+                    size={18}
+                    color={habito.feito ? "green" : "gray"}
+                  />
                 </View>
               ))
             ) : (

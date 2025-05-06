@@ -1,7 +1,7 @@
+import { Feather } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Image, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { Link, router } from 'expo-router';
-import { CheckCircle } from 'lucide-react-native';
 
 export default function CadastroSecundario() {
     const [endereco, setEndereco] = useState('');
@@ -72,7 +72,7 @@ export default function CadastroSecundario() {
                             <Text className="text-blue-700 font-extrabold text-2xl text-center">
                                 ENVIO REALIZADO COM SUCESSO
                             </Text>
-                            <CheckCircle size={60} color="limegreen" className="mt-4" />
+                            <Feather name="check-circle" size={60} color="limegreen" className="mt-4" />
                         </View>
                     </View>
                 </Modal>

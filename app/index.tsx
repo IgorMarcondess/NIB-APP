@@ -1,74 +1,33 @@
-import { useState } from "react";
-import { Alert, Image, Text, TouchableOpacity, View, Dimensions } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Eye, Mail } from "lucide-react-native";
+import { useState } from "react";
+import { Alert, Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebase";
-import { useUser } from "../components/userContext";
+//import { useUser } from "../components/userContext";
 
 export default function Index() {
   const router = useRouter();
-  const { setUser } = useUser();
+  // const { setUser } = useUser();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [logado, setLogado] = useState(false);
 
   const Login = async () => {
-    if (email.toUpperCase().includes("CRM")) {
-      Alert.alert("Acesso Médico", "Login como médico detectado.");
-      router.push("./(medico)/tela_principal");
-      return;
-    }
 
     try {
       await signInWithEmailAndPassword(auth, email, senha);
       Alert.alert("Login realizado com sucesso!");
-      setUser({
-        cpfUser: "12345678900",
-        nomeUser: "Igor Gabriel",
-        sobrenomeUser: "",
-        telefoneUser: "11 970636566",
-        dataNascimentoUser: "22/06/2005",
-        planoUser: "Premium",
-        emailUser: "igorgabriel@gmail.com",
-      });
       setLogado(!logado);
       router.navigate("./initial");
     } catch (error: any) {
       Alert.alert("Erro", error.message);
     }
   };
-
-   // Caso você queira buscar dados da API após o login via Firebase:
-  /*
-  useEffect(() => {
-    const baixarInfos = async () => {
-      try {
-        const infos = await fetch('URL_DA_SUA_API');
-        const dados = await infos.json();
-
-        console.log(`Informações: ${JSON.stringify(dados)}`);
-        console.log(`Status: ${infos.status}`);
-
-        if (infos.ok) {
-          setUser(dados);
-          Alert.alert("Login realizado com sucesso!");
-          router.navigate("./initial");
-        } else {
-          Alert.alert("Erro", dados.message || "Usuário não encontrado.");
-        }
-      } catch (error) {
-        Alert.alert("Erro", "Problema ao fazer login.");
-      }
-    };
-
-    if (logado) baixarInfos();
-  }, [logado]);
-  */
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-white">
@@ -99,7 +58,7 @@ export default function Index() {
         <Text className="text-blue-800 mt-2">E-mail</Text>
         <Input
           text="Digite seu E-mail!"
-          imagem={<Mail size={20} color="blue" />}
+          imagem={<Feather name="mail" size={20} color="blue" />}
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
@@ -108,7 +67,7 @@ export default function Index() {
         <Text className="text-blue-800">Senha</Text>
         <Input
           text="Senha"
-          imagem={<Eye size={20} color="blue" />}
+          imagem={<Feather name="eye" size={20} color="blue" />}
           secureTextEntry
           value={senha}
           onChangeText={setSenha}

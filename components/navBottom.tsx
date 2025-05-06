@@ -1,6 +1,6 @@
-import React from "react";
-import { View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import React, { JSX } from "react";
+import { TouchableOpacity, View } from "react-native";
 
 type NavProps = {
     icons: Array<{ name: string; component: JSX.Element; route: string }>;

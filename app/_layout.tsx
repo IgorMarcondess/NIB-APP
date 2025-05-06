@@ -1,14 +1,13 @@
-import { Slot } from "expo-router"
-import "../global.css"
-import { UserProvider } from "../components/userContext";
-import  Initial  from "./initial"
+import { Slot } from "expo-router";
+//import { UserProvider } from "../components/userContext";
+import "../global.css";
 
- 
+
 const RootLayout = () => {
   return (
-    <UserProvider>
-        <Initial />
-    </UserProvider>
+  // <UserProvider >
+      <Slot />
+  //  </UserProvider>
   )
 }
 

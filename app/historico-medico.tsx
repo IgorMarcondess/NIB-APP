@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { CalendarPlus2, CheckCircle } from "lucide-react-native";
+import { Feather } from "@expo/vector-icons";
 import { Modal, Text, TouchableOpacity, View, Alert } from "react-native";
 import { Input } from "../components/input";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -52,7 +52,7 @@ export default function HistoricoMedico() {
             <Text className="text-blue-700 font-extrabold text-2xl text-center">
               ENVIO REALIZADO COM SUCESSO
             </Text>
-            <CheckCircle size={60} color="limegreen" className="mt-4" />
+            <Feather name="check-circle" size={60} color="limegreen" style={{ marginTop: 16 }} />
           </View>
         </View>
       </Modal>
@@ -63,19 +63,49 @@ export default function HistoricoMedico() {
         </Text>
 
         <Text className="text-[#003EA6] text-lg mt-2 mb-2">Já realizou tratamento?</Text>
-        <Input text="SIM OU NÃO" imagem={<CalendarPlus2 size={20} color="blue" />} keyboardType="default" value={tratamento} onChangeText={setTratamento} />
+        <Input
+          text="SIM OU NÃO"
+          imagem={<Feather name="calendar" size={20} color="blue" />}
+          keyboardType="default"
+          value={tratamento}
+          onChangeText={setTratamento}
+        />
 
         <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já realizou canal?</Text>
-        <Input text="SIM OU NÃO" imagem={<CalendarPlus2 size={20} color="blue" />} keyboardType="default" value={canal} onChangeText={setCanal} />
+        <Input
+          text="SIM OU NÃO"
+          imagem={<Feather name="calendar" size={20} color="blue" />}
+          keyboardType="default"
+          value={canal}
+          onChangeText={setCanal}
+        />
 
         <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já realizou limpeza?</Text>
-        <Input text="SIM OU NÃO" imagem={<CalendarPlus2 size={20} color="blue" />} keyboardType="default" value={limpeza} onChangeText={setLimpeza} />
+        <Input
+          text="SIM OU NÃO"
+          imagem={<Feather name="calendar" size={20} color="blue" />}
+          keyboardType="default"
+          value={limpeza}
+          onChangeText={setLimpeza}
+        />
 
         <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já colocou aparelho ortodôntico?</Text>
-        <Input text="SIM OU NÃO" imagem={<CalendarPlus2 size={20} color="blue" />} keyboardType="default" value={aparelho} onChangeText={setAparelho} />
+        <Input
+          text="SIM OU NÃO"
+          imagem={<Feather name="calendar" size={20} color="blue" />}
+          keyboardType="default"
+          value={aparelho}
+          onChangeText={setAparelho}
+        />
 
         <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já realizou alguma cirurgia?</Text>
-        <Input text="SIM OU NÃO" imagem={<CalendarPlus2 size={20} color="blue" />} keyboardType="default" value={cirurgia} onChangeText={setCirurgia} />
+        <Input
+          text="SIM OU NÃO"
+          imagem={<Feather name="calendar" size={20} color="blue" />}
+          keyboardType="default"
+          value={cirurgia}
+          onChangeText={setCirurgia}
+        />
 
         <View className="flex-row items-center gap-16">
           <Link push href="/initial" asChild>
