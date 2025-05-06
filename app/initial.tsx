@@ -40,7 +40,7 @@ const Dashboard = () => {
             <Image source={require("../assets/manImage.png")} className="w-14 h-14" />
             <View>
               <Text className="text-white text-base font-bold leading-tight">
-                Olá, {user?.nomeUser}
+                /*Olá, {user?.nomeUser}*/
               </Text>
               <Text className="text-white text-sm">seja bem-vindo ao Teeth Diary</Text>
             </View>

@@ -7,11 +7,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebase";
-//import { useUser } from "../components/userContext";
+import { useUser } from "../components/userContext";
 
 export default function Index() {
   const router = useRouter();
-  // const { setUser } = useUser();
+  const { setUser } = useUser();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
