@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Alert, Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
+import { useUser } from "../components/userContext";
 import { loginUser } from "../services/firebase";
 
 
@@ -13,6 +14,8 @@ export default function Index() {
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const { setUser } = useUser(); 
+
 
   const handleLogin = async (): Promise<void> => {
     try {
@@ -20,16 +23,15 @@ export default function Index() {
         Alert.alert("Erro", "Preencha todos os campos.");
         return;
       }
-  
-      const userData = await loginUser(email, senha);
+
+      const userData = await loginUser(email, senha); // Este userData precisa conter os campos do tipo UserType
+
+      setUser(userData); // ✅ Salva no contexto
       Alert.alert("Login realizado com sucesso!");
-  
+
       console.log("Usuário autenticado:", userData);
-  
-      // Exemplo: salvar dados no contexto se desejar
-      // setUser(userData);
-  
       router.navigate("./initial");
+
     } catch (error: unknown) {
       if (error instanceof Error) {
         Alert.alert("Erro ao fazer login", error.message);

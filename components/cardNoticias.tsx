@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ActivityIndicator, FlatList, ScrollView } from 'react-native';
-import { fetchDentalNews } from '../noticiasService';
+import { fetchDentalNews } from '../services/noticiasService';
 
 type Noticia = {
   link: string;

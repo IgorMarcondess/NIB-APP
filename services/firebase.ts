@@ -1,12 +1,11 @@
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore,
-  collection,
   addDoc,
+  collection,
   getDocs,
+  getFirestore,
   query,
-  where,
-  DocumentData
+  where
 } from "firebase/firestore";
 
 // Configuração do Firebase
@@ -32,6 +31,17 @@ type UserData = {
   plano?: string;
 };
 
+export type UserType = {
+  cpfUser: string;
+  nomeUser: string;
+  sobrenomeUser: string;
+  telefoneUser: string;
+  dataNascimentoUser: string;
+  planoUser: string;
+  emailUser: string;
+};
+
+
 // REGISTRO
 export const registerUser = async (userData: UserData) => {
   const usuariosRef = collection(db, "usuarios");
@@ -47,7 +57,7 @@ export const registerUser = async (userData: UserData) => {
 };
 
 // LOGIN
-export const loginUser = async (email: string, senha: string): Promise<DocumentData> => {
+export const loginUser = async (email: string, senha: string): Promise<UserType> => {
   const usuariosRef = collection(db, "usuarios");
   const snapshot = await getDocs(query(usuariosRef, where("email", "==", email)));
 
@@ -62,5 +72,16 @@ export const loginUser = async (email: string, senha: string): Promise<DocumentD
     throw new Error("Senha incorreta.");
   }
 
-  return { uid: userDoc.id, ...userData };
+  // 🔐 Converta e retorne como UserType
+  const UserData: UserType = {
+    cpfUser: userData.cpfUser,
+    nomeUser: userData.nomeUser,
+    sobrenomeUser: userData.sobrenomeUser,
+    telefoneUser: userData.telefoneUser,
+    dataNascimentoUser: userData.dataNascimentoUser,
+    planoUser: userData.planoUser,
+    emailUser: userData.emailUser,
+  };
+
+  return UserData;
 };
