@@ -3,10 +3,12 @@ import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Alert, Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
 import { useUser } from "../components/userContext";
 import { loginUser } from "../services/firebase";
+
 
 
 export default function Index() {
@@ -16,23 +18,28 @@ export default function Index() {
   const [senha, setSenha] = useState("");
   const { setUser } = useUser(); 
 
-
   const handleLogin = async (): Promise<void> => {
     try {
       if (!email || !senha) {
         Alert.alert("Erro", "Preencha todos os campos.");
         return;
       }
-
-      const userData = await loginUser(email, senha); // Este userData precisa conter os campos do tipo UserType
-
-      setUser(userData); // ✅ Salva no contexto
+  
+      const userData = await loginUser(email, senha); // userData precisa conter pelo menos .nome e .email
+  
+      setUser(userData);
       Alert.alert("Login realizado com sucesso!");
-
       console.log("Usuário autenticado:", userData);
+  
+      // Envio para o AsyncStorage
+      await AsyncStorage.setItem(
+        email, // chave
+        JSON.stringify({ nome: userData.nomeUser }) // valor
+      );
+  
       router.navigate("./initial");
-
-    } catch (error: unknown) {
+  
+    } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Erro ao fazer login", error.message);
       } else {
@@ -40,6 +47,7 @@ export default function Index() {
       }
     }
   };
+
   
   
 
