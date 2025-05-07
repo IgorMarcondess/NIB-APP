@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '../components/input';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../services/firebase';
+import { registerUser } from '../services/firebase'; // ✅ Importa sua função
 
 export default function CadastroPrincipal() {
     const [cpf, setCpf] = useState('');
@@ -18,51 +17,37 @@ export default function CadastroPrincipal() {
     const validarCampos_EnviarInformacao = async () => {
         if (!cpf || !email || !nome || !senha || !telefone) {
             Alert.alert("Erro", "Preencha todos os campos.");
-        } else if (!/^\d{11}$/.test(cpf)) {
+            return;
+        }
+
+        if (!/^\d{11}$/.test(cpf)) {
             Alert.alert("Erro", "CPF inválido! Deve conter 11 números.");
-        } else if (!/^\d{11}$/.test(telefone)) {
+            return;
+        }
+
+        if (!/^\d{11}$/.test(telefone)) {
             Alert.alert("Erro", "Número de telefone inválido! Deve conter 11 números.");
-        } else {
-            const nomeAndSobrenome = nome.split(" ")
-            setNome(nomeAndSobrenome[0])
-            setSobrenome(nomeAndSobrenome[1])
+            return;
+        }
 
-                    try {
-                        //await createUserWithEmailAndPassword(auth, email, senha)
+        try {
+            const usuario = {
+                email,
+                senha, // texto puro, conforme solicitado
+                nome: `${nome} ${sobrenome}`,
+                telefone,
+                plano: "Premium"
+            };
 
-                        const infos = await fetch('https://jsonplaceholder.typicode.com/posts', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                cpfUser: cpf,
-                                nomeUser: nome,
-                                sobrenomeUser: sobrenome,
-                                telefoneUser: telefone,
-                                dataNascimentoUser: "22/06/2005",
-                                planoUser: "Premium",
-                                emailUser: email,
-                            }),
-                        })
-                        const dados = await infos.json();
+            const response = await registerUser(usuario);
+            console.log("Usuário registrado:", response);
 
-                        console.log('Status da resposta:', infos.status);
-                        console.log('Resposta JSON:', dados);
+            Alert.alert("Sucesso!", "Usuário cadastrado com sucesso.");
+            router.navigate("./cadastro-secundario");
 
-                        if (infos.ok) {
-                            Alert.alert('Sucesso!', 'Dados enviados com sucesso!');
-                            console.log('Resposta:', dados);
-                            router.navigate("./cadastro-secundario");
-                        } else {
-                            Alert.alert('Erro!', dados.message || 'Erro ao enviar os dados.');
-                        }
-
-
-                    } catch (error: any) {
-                        console.error('Erro no fetch:', error);
-                        Alert.alert('Erro!', 'Não foi possível conectar à API.');
-                    }
+        } catch (error: any) {
+            Alert.alert("Erro!", error.message || "Erro ao registrar o usuário.");
+            console.error("Erro ao registrar:", error);
         }
     };
 
@@ -76,40 +61,29 @@ export default function CadastroPrincipal() {
                     <Image source={require('../assets/image1.png')} className="w-[300px] h-[200px] rounded-xl" />
 
                     <Text className="text-white text-lg mt-4">CPF</Text>
-                    <Input text="Digite seu CPF!" imagem={<Feather name="mail" size={20} color="blue" />}
-                        keyboardType="numeric" value={cpf} onChangeText={setCpf}
-                        returnKeyType="done"
-                    />
+                    <Input text="Digite seu CPF!" imagem={<Feather name="mail" size={20} color="blue" />} keyboardType="numeric" value={cpf} onChangeText={setCpf} returnKeyType="done" />
 
-                    <Text className="text-white text-lg mt-4">Nome e Sobrenome</Text>
-                    <Input text="Digite seu nome e sobrenome!" imagem={<Feather name="mail" size={20} color="blue" />}
-                        keyboardType="email-address" value={nome} onChangeText={setNome}
-                    />
+                    <Text className="text-white text-lg mt-4">Nome</Text>
+                    <Input text="Digite seu nome" imagem={<Feather name="user" size={20} color="blue" />} value={nome} onChangeText={setNome} />
+
+                    <Text className="text-white text-lg mt-4">Sobrenome</Text>
+                    <Input text="Digite seu sobrenome" imagem={<Feather name="user" size={20} color="blue" />} value={sobrenome} onChangeText={setSobrenome} />
 
                     <Text className="text-white text-lg mt-4">E-mail</Text>
-                    <Input text="Digite seu E-mail!" imagem={<Feather name="mail" size={20} color="blue" />}
-                        keyboardType="email-address" value={email} onChangeText={setEmail}
-                    />
+                    <Input text="Digite seu E-mail!" imagem={<Feather name="mail" size={20} color="blue" />} keyboardType="email-address" value={email} onChangeText={setEmail} />
 
                     <Text className="text-white text-lg mt-4">Senha</Text>
-                    <Input text="Digite sua Senha!" imagem={<Feather name="mail" size={20} color="blue" />}
-                        keyboardType="default" secureTextEntry value={senha} onChangeText={setSenha}
-                    />
+                    <Input text="Digite sua Senha!" imagem={<Feather name="lock" size={20} color="blue" />} secureTextEntry value={senha} onChangeText={setSenha} />
 
                     <Text className="text-white text-lg mt-4">Telefone</Text>
-                    <Input text="Digite seu Telefone!" imagem={<Feather name="mail" size={20} color="blue" />}
-                        keyboardType="numeric" value={telefone} onChangeText={setTelefone}
-                        returnKeyType="done"
-                    />
+                    <Input text="Digite seu Telefone!" imagem={<Feather name="phone" size={20} color="blue" />} keyboardType="numeric" value={telefone} onChangeText={setTelefone} returnKeyType="done" />
 
                     <View className="flex-row justify-center items-center gap-5 mt-10">
-                        <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center" onPress={() => router.back()}>
+                        <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white" onPress={() => router.back()}>
                             <Text className="text-white text-lg font-bold">Voltar</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={validarCampos_EnviarInformacao}
-                            className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center"
-                        >
+                        <TouchableOpacity onPress={validarCampos_EnviarInformacao} className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white">
                             <Text className="text-white text-lg font-bold">Próximo</Text>
                         </TouchableOpacity>
                     </View>

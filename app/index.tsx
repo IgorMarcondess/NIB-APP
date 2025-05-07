@@ -5,29 +5,41 @@ import { useState } from "react";
 import { Alert, Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../services/firebase";
-import { useUser } from "../components/userContext";
+import { loginUser } from "../services/firebase";
+
 
 export default function Index() {
   const router = useRouter();
-  const { setUser } = useUser();
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [logado, setLogado] = useState(false);
 
-  const Login = async () => {
-
+  const handleLogin = async (): Promise<void> => {
     try {
-      await signInWithEmailAndPassword(auth, email, senha);
+      if (!email || !senha) {
+        Alert.alert("Erro", "Preencha todos os campos.");
+        return;
+      }
+  
+      const userData = await loginUser(email, senha);
       Alert.alert("Login realizado com sucesso!");
-      setLogado(!logado);
+  
+      console.log("Usuário autenticado:", userData);
+  
+      // Exemplo: salvar dados no contexto se desejar
+      // setUser(userData);
+  
       router.navigate("./initial");
-    } catch (error: any) {
-      Alert.alert("Erro", error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert("Erro ao fazer login", error.message);
+      } else {
+        Alert.alert("Erro desconhecido", "Não foi possível fazer login.");
+      }
     }
   };
+  
+  
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-white">
@@ -75,7 +87,7 @@ export default function Index() {
 
         <TouchableOpacity
           className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6"
-          onPress={Login}
+          onPress={handleLogin}
         >
           <Text className="text-white text-base font-bold">ENTRAR</Text>
         </TouchableOpacity>
