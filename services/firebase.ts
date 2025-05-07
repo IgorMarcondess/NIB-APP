@@ -29,6 +29,7 @@ type UserData = {
   nome: string;
   telefone: string;
   plano?: string;
+  idUser: string;
 };
 
 export type UserType = {
@@ -39,6 +40,7 @@ export type UserType = {
   dataNascimentoUser: string;
   planoUser: string;
   emailUser: string;
+  idUser: string;
 };
 
 
@@ -74,14 +76,17 @@ export const loginUser = async (email: string, senha: string): Promise<UserType>
 
   // 🔐 Converta e retorne como UserType
   const UserData: UserType = {
-    cpfUser: userData.cpfUser,
-    nomeUser: userData.nomeUser,
-    sobrenomeUser: userData.sobrenomeUser,
-    telefoneUser: userData.telefoneUser,
-    dataNascimentoUser: userData.dataNascimentoUser,
-    planoUser: userData.planoUser,
-    emailUser: userData.emailUser,
+    cpfUser: userData.cpf,
+    nomeUser: userData.nome,
+    sobrenomeUser: userData.sobrenome,
+    telefoneUser: userData.telefone,
+    dataNascimentoUser: userData.dataNascimento,
+    planoUser: userData.plano,
+    emailUser: userData.email,
+    idUser: userDoc.id
   };
 
   return UserData;
+
 };
+export { UserData, db };

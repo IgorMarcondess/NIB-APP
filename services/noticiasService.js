@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = 'pub_8425361e6016114a525abfaa1e1bb1d8f347c'; 
+const API_KEY = 'pub_842533c121cdec079bf947d29212c1ff64f18';
 
 export const fetchDentalNews = async () => {
   try {
@@ -10,11 +10,12 @@ export const fetchDentalNews = async () => {
         q: 'odontologia OR dentista OR "saúde bucal"',
         language: 'pt',
         country: 'br',
-        category: 'health',
+       // category: 'health',
       },
     });
 
-    console.log(response)
+    console.log('Data:', response.data);
+    console.log('Results:', response.data.results);
     const noticias = response.data.results.slice(0, 3); //top 3 para slides
     return noticias
 

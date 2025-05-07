@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { format, startOfMonth, endOfMonth } from "date-fns";
 import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useUser } from "../components/userContext";
 import { CalendarOfensiva } from "../components/calendarOfensiva";
 import CardNoticias from "../components/cardNoticias";

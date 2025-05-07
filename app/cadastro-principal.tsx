@@ -35,8 +35,10 @@ export default function CadastroPrincipal() {
                 email,
                 senha, // texto puro, conforme solicitado
                 nome: `${nome} ${sobrenome}`,
+                sobrenome,
                 telefone,
-                plano: "Premium"
+                plano: "Premium",
+                cpf,
             };
 
             const response = await registerUser(usuario);

@@ -1,9 +1,9 @@
 import { Feather } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Alert, Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
 import { useUser } from "../components/userContext";
@@ -16,7 +16,7 @@ export default function Index() {
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const { setUser } = useUser(); 
+  const { setUser } = useUser();
 
   const handleLogin = async (): Promise<void> => {
     try {
@@ -24,21 +24,22 @@ export default function Index() {
         Alert.alert("Erro", "Preencha todos os campos.");
         return;
       }
-  
+
       const userData = await loginUser(email, senha); // userData precisa conter pelo menos .nome e .email
-  
+      console.log("Informações para o SetData", userData)
+
       setUser(userData);
       Alert.alert("Login realizado com sucesso!");
       console.log("Usuário autenticado:", userData);
-  
+
       // Envio para o AsyncStorage
       await AsyncStorage.setItem(
         email, // chave
         JSON.stringify({ nome: userData.nomeUser }) // valor
       );
-  
+
       router.navigate("./initial");
-  
+
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Erro ao fazer login", error.message);
@@ -48,8 +49,8 @@ export default function Index() {
     }
   };
 
-  
-  
+
+
 
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-white">

@@ -78,7 +78,7 @@ export const CalendarOfensiva = ({
               textDayFontWeight: "500",
               selectedDayBackgroundColor: "blue",
               selectedDayTextColor: "#fff",
-              textMonthFontSize: 0,
+              textMonthFontSize: 12,
             }}
           />
 

@@ -13,6 +13,7 @@ type UserType = {
   dataNascimentoUser: string;
   planoUser: string;
   emailUser: string;
+  idUser: string;
 };
 
 type UserContextType = {

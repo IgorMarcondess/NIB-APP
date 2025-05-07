@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator, FlatList, ScrollView } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, Text, View } from 'react-native';
 import { fetchDentalNews } from '../services/noticiasService';
 
 type Noticia = {
@@ -16,10 +16,11 @@ const CardNoticias = () => {
   useEffect(() => {
     const loadNews = async () => {
       const fetchedNews = await fetchDentalNews();
+      console.log('Fetched news:', fetchedNews);
       setNews(fetchedNews);
       setLoading(false);
     };
-    
+
     loadNews();
   }, []);
 
@@ -29,7 +30,7 @@ const CardNoticias = () => {
 
   const renderItem = ({ item }: { item: Noticia }) => (
     <View className="w-[18.75rem] h-[30rem] rounded-2xl overflow-hidden bg-white border border-gray-300 mr-4">
-      
+
       <View className="items-center justify-center h-[12.5rem] bg-gray-200">
         {item.image_url ? (
           <Image source={{ uri: item.image_url }} className="w-full h-full" />
