@@ -1,11 +1,11 @@
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Image, Modal, Text, TouchableOpacity, View, TextInput } from "react-native";
-import { useUser } from "../components/userContext";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../services/firebase";
 import { useState } from "react";
+import { Image, Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUser } from "../components/userContext";
+import { db } from "../services/firebase";
 
 export default function Conta() {
     const { user } = useUser();
@@ -45,7 +45,7 @@ export default function Conta() {
             await deleteDoc(doc(db, "usuarios", user.idUser));
             setShowDeleteModal(false);
             alert("Conta excluída com sucesso.");
-            router.replace("/login");
+            router.replace("/initial");
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
             alert("Erro ao excluir conta.");
@@ -178,7 +178,7 @@ export default function Conta() {
                 </View>
             </Modal>
 
-            
+
             <Modal visible={showDeleteModal} transparent={true} animationType="fade">
                 <View className="flex-1 items-center justify-center bg-black/50">
                     <View className="bg-white p-6 rounded-2xl w-[85%] items-center">
