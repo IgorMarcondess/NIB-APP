@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { CalendarOfensiva } from '../components/calendarOfensiva'
+import { CalendarioOfensiva } from '../components/calendarioOfensivas'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
@@ -76,21 +76,7 @@ const Ofensiva = () => {
     <SafeAreaView className="flex-1 bg-white p-4 justify-between">
       <ScrollView>
         <View className="space-y-4">
-          <CalendarOfensiva
-            titulo="Janeiro"
-            ofensiva={25}
-            habitos={habitos2}
-          />
-          <CalendarOfensiva
-            titulo="Fevereiro"
-            ofensiva={5}
-            habitos={habitos1}
-          />
-          <CalendarOfensiva
-            titulo="Março"
-            ofensiva={15}
-            habitos={habitos1}
-          />
+          <CalendarioOfensiva/>
         </View>
 
         <View className="justify-center items-center">

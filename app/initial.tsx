@@ -5,8 +5,9 @@ import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useUser } from "../components/userContext";
-import { CalendarOfensiva } from "../components/calendarOfensiva";
+import { CalendarioOfensiva } from "../components/calendarioOfensivas";
 import CardNoticias from "../components/cardNoticias";
+import { CalendarioCompleto } from "../components/calendarioCompleto";
 
 const Dashboard = () => {
   const { user } = useUser();
@@ -75,11 +76,8 @@ const Dashboard = () => {
           </View>
         </View>
 
-        <CalendarOfensiva
-          titulo="Progresso atual"
-          ofensiva={ofensiva}
-          habitos={dadosHabitos}
-        />
+        <CalendarioCompleto />
+
       </ScrollView>
 
       <BottomTabNavigator
