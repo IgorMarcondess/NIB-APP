@@ -6,36 +6,48 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../components/userContext";
 
 export default function HistoricoMedico() {
+  const { user } = useUser();
+
   const [tratamento, setTratamento] = useState("");
   const [canal, setCanal] = useState("");
   const [limpeza, setLimpeza] = useState("");
   const [aparelho, setAparelho] = useState("");
   const [cirurgia, setCirurgia] = useState("");
   const [informacoesEnviadas, setInformacoesEnviadas] = useState(false);
-  const [email, setEmail] = useState("");
 
-  const respostasValidas = ["SIM", "sim", "NAO", "NÃO", "nao", "não"];
+  const respostasValidas = ["SIM", "NAO", "NÃO"];
 
   useEffect(() => {
     const verificarInformacoesEnviadas = async () => {
-      const enviado = await AsyncStorage.getItem(email);
-      if (enviado === "true") {
+      if (!user?.emailUser) return;
+
+      const dadosExistente = await AsyncStorage.getItem(user.emailUser);
+      const objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
+
+      if (objetoDados.historicoMedico === true) {
         setInformacoesEnviadas(true);
+        setTimeout(() => {
+        router.push("./initial");
+    }, 3000);
       }
     };
 
-    if (email) {
-      verificarInformacoesEnviadas();
-    }
-  }, [email]);
+    verificarInformacoesEnviadas();
+  }, [user?.emailUser]);
 
   const validarResposta = (texto: string) => {
     return respostasValidas.includes(texto.trim().toUpperCase());
   };
 
   const enviarInformacoes = async () => {
+    if (!user?.emailUser) {
+      Alert.alert("Erro", "Email do usuário não disponível.");
+      return;
+    }
+
     if (!tratamento || !canal || !limpeza || !aparelho || !cirurgia) {
       Alert.alert("Erro", "Preencha todos os campos antes de enviar.");
       return;
@@ -52,7 +64,13 @@ export default function HistoricoMedico() {
       return;
     }
 
-    await AsyncStorage.setItem(email, "true");
+    const dadosExistente = await AsyncStorage.getItem(user.emailUser);
+    let objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
+
+    objetoDados.historicoMedico = true;
+
+    await AsyncStorage.setItem(user.emailUser, JSON.stringify(objetoDados));
+
     setInformacoesEnviadas(true);
 
     setTimeout(() => {
@@ -63,7 +81,7 @@ export default function HistoricoMedico() {
   return (
     <SafeAreaView className="flex-1 items-center bg-white w-full h-full pt-12">
       {informacoesEnviadas && (
-        <View className="flex-1 justify-center items-center bg-black/50">
+        <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-black/50 z-50">
           <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
             <Text className="text-blue-700 font-extrabold text-2xl text-center">
               Informações Médicas já enviadas
@@ -74,9 +92,7 @@ export default function HistoricoMedico() {
       )}
 
       <View className="flex-1 items-center">
-        <Text className="text-[#003EA6] text-3xl font-bold mb-4">
-          Histórico Médico
-        </Text>
+        <Text className="text-[#003EA6] text-3xl font-bold mb-4">Histórico Médico</Text>
 
         <Text className="text-[#003EA6] text-lg mt-2 mb-2">Já realizou tratamento?</Text>
         <Input
@@ -130,7 +146,10 @@ export default function HistoricoMedico() {
             </TouchableOpacity>
           </Link>
 
-          <TouchableOpacity onPress={enviarInformacoes} className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-6">
+          <TouchableOpacity
+            onPress={enviarInformacoes}
+            className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-6"
+          >
             <Text className="text-white text-lg font-bold">Enviar</Text>
           </TouchableOpacity>
         </View>
