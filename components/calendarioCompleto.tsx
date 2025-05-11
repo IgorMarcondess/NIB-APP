@@ -5,9 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useUser } from "./userContext";
 
-const MESES_PT_BR = [
-  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho","julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
 ];
 
 export const CalendarioCompleto = () => {
@@ -17,27 +15,30 @@ export const CalendarioCompleto = () => {
 
   useEffect(() => {
     const carregarDadosDoMesAtual = async () => {
-      if (!user?.idUser) return;
+      if (!user?.idUser) {
+        console.log("Id do user não existe!");
+        return;
+      }
 
       const hoje = new Date();
-      const mes = MESES_PT_BR[hoje.getMonth()]; // Ex: "maio"
+      const mesIndex = hoje.getMonth();
+      const mes = meses[mesIndex];
       const ano = hoje.getFullYear();
       const docRef = doc(db, "usuarios", user.idUser);
-      const docSnap = await getDoc(docRef);
+      const docsUsuario = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const dados = docSnap.data();
+      if (docsUsuario.exists()) {
+        const dados = docsUsuario.data();
         const marcacoes: Record<string, any> = {};
 
         if (dados[mes]) {
-          const dias = Object.keys(dados[mes]);
-          dias.forEach((dia) => {
-            const dataFormatada = formatarData(ano, mes, dia);
+          for (const dia in dados[mes]) {
+            const dataFormatada = formatarData(ano, dia);
             marcacoes[dataFormatada] = {
               selected: true,
               selectedColor: "blue"
             };
-          });
+          }
 
           setMarkedDates(marcacoes);
           setMesAtual(mes);
@@ -48,11 +49,12 @@ export const CalendarioCompleto = () => {
     carregarDadosDoMesAtual();
   }, [user?.idUser]);
 
-  const formatarData = (ano: number, mes: string, dia: string): string => {
-    const indexMes = MESES_PT_BR.indexOf(mes.toLowerCase());
-    const mesNum = String(indexMes + 1).padStart(2, "0");
+  const formatarData = (ano: number, dia: string): string => {
+    const hoje = new Date();
+    const mesIndex = hoje.getMonth();
+    const mesNum = String(mesIndex + 1).padStart(2, "0");
     const diaNum = String(dia).padStart(2, "0");
-    return `${ano}-${mesNum}-${diaNum}`;
+    return `${ano}-${mesNum}-${diaNum}`; //tem q enviar como string para o Calendar kk
   };
 
   return (

@@ -6,15 +6,13 @@ export const enviarHabitos = async (userId: string): Promise<void> => {
   
   const dataAtual = new Date();
   const mesAtual = dataAtual.toLocaleString("pt-BR", { month: "long" });
-  const diaAtual = String(dataAtual.getDate()).padStart(2, "0"); //Estudar depois
+  const diaAtual = String(dataAtual.getDate()).padStart(2, "0");
+  let infosAtualizada = {};
 
   const docRef = doc(db, "usuarios", userId);
   const dadosUsuario = await getDoc(docRef);
+  console.log("Infos do usuario", dadosUsuario)
 
-    console.log("Infos do usuario", dadosUsuario)
-
-
-  let infosAtualizada = {};
 
   if (dadosUsuario.exists()) {
     const infosUsuario = dadosUsuario.data();

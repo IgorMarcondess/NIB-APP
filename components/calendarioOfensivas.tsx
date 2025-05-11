@@ -6,9 +6,7 @@ import { Feather } from "@expo/vector-icons";
 import { db } from "../services/firebase";
 import { useUser } from "./userContext";
 
-const MESES_PT_BR = [
-  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
 ];
 
 type MarkedDates = Record<string, { selected: boolean; selectedColor: string }>;
@@ -20,24 +18,32 @@ export const CalendarioOfensiva = () => {
 
   useEffect(() => {
     const carregarDados = async () => {
-      if (!user?.idUser) return;
+      if (!user?.idUser) {
+        console.log("Id do usuário não encontrado!");
+        return;
+      }
 
       const docRef = doc(db, "usuarios", user.idUser);
-      const docSnap = await getDoc(docRef);
+      const docsUsuario = await getDoc(docRef);
 
-      if (!docSnap.exists()) return;
+      if (!docsUsuario.exists()) {
+        console.log("Docs do usuário não encontrado");
+        return;
+      }
 
-      const dados = docSnap.data();
+      const dados = docsUsuario.data();
       const resultado: Record<string, MarkedDates> = {};
       const vis: Record<string, boolean> = {};
+      const ano = new Date().getFullYear();
 
-      MESES_PT_BR.forEach((mes) => {
+      meses.forEach((mes) => {
         if (dados[mes]) {
           const dias = Object.keys(dados[mes]);
           const markedDates: MarkedDates = {};
+          const indiceMes = meses.indexOf(mes)
 
           dias.forEach((dia) => {
-            const dataFormatada = formatarData(mes, dia);
+            const dataFormatada = formatarData(ano, indiceMes, dia);
             markedDates[dataFormatada] = {
               selected: true,
               selectedColor: "blue"
@@ -56,10 +62,8 @@ export const CalendarioOfensiva = () => {
     carregarDados();
   }, [user?.idUser]);
 
-  const formatarData = (mes: string, dia: string): string => {
-    const indexMes = MESES_PT_BR.indexOf(mes.toLowerCase());
-    const ano = new Date().getFullYear();
-    const mesNum = String(indexMes + 1).padStart(2, "0");
+  const formatarData = (ano: number, indiceMes: number, dia: string): string => {
+    const mesNum = String(indiceMes + 1).padStart(2, "0");
     const diaNum = String(dia).padStart(2, "0");
     return `${ano}-${mesNum}-${diaNum}`;
   };
@@ -83,27 +87,20 @@ export const CalendarioOfensiva = () => {
       {Object.entries(dadosPorMes).map(([mes, diasMarcados]) => {
         const pontuacao = calcularPontuacao(mes);
         const mostrar = visibilidade[mes];
-
+ 
         return (
           <View key={mes} className="mb-6">
-            <TouchableOpacity
-              onPress={() => alternarVisibilidade(mes)}
-              className="flex-row justify-between items-center bg-gray-300 rounded-2xl p-4 h-20"
-            >
+            <TouchableOpacity  className="flex-row justify-between items-center bg-gray-300 rounded-2xl p-4 h-20" onPress={() => alternarVisibilidade(mes)}>
               <View className="flex-row items-center">
                 <Text className="text-blue-700 font-extrabold text-2xl capitalize">{mes}</Text>
                 <Image source={obterMedalha(pontuacao)} className="w-6 h-6 ml-2" />
               </View>
-              <Feather
-                name={mostrar ? "chevron-up" : "chevron-down"}
-                size={20}
-                color="black"
-              />
+              <Feather name={mostrar ? "chevron-up" : "chevron-down"} size={20}color="black"/>
             </TouchableOpacity>
 
             {mostrar && (
               <Calendar
-                current={`2025-${String(MESES_PT_BR.indexOf(mes) + 1).padStart(2, "0")}-01`}
+                current={`2025-${String(meses.indexOf(mes) + 1).padStart(2, "0")}-01`}
                 markedDates={diasMarcados}
                 hideExtraDays
                 theme={{

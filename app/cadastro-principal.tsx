@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '../components/input';
-import { registerUser } from '../services/firebase'; // ✅ Importa sua função
+import { registerUser } from '../services/firebase';
+
 
 export default function CadastroPrincipal() {
     const [cpf, setCpf] = useState('');
@@ -17,38 +18,32 @@ export default function CadastroPrincipal() {
     const validarCampos_EnviarInformacao = async () => {
         if (!cpf || !email || !nome || !senha || !telefone) {
             Alert.alert("Erro", "Preencha todos os campos.");
-            return;
-        }
-
+            return;}
         if (!/^\d{11}$/.test(cpf)) {
             Alert.alert("Erro", "CPF inválido! Deve conter 11 números.");
-            return;
-        }
-
-        if (!/^\d{11}$/.test(telefone)) {
+            return;} else if (!/^\d{11}$/.test(telefone)) {
             Alert.alert("Erro", "Número de telefone inválido! Deve conter 11 números.");
-            return;
-        }
+            return;}
 
         try {
             const usuario = {
-                email,
-                senha, // texto puro, conforme solicitado
+                email: `${email}`,
+                senha: `${senha}`,
                 nome: `${nome} ${sobrenome}`,
-                sobrenome,
-                telefone,
-                plano: "Premium",
-                cpf,
+                sobrenome: `${sobrenome}`,
+                telefone: `${telefone}`,
+                plano: "",
+                cpf:`${cpf}`,
+                userId: ""  
             };
 
             const response = await registerUser(usuario);
             console.log("Usuário registrado:", response);
-
-            Alert.alert("Sucesso!", "Usuário cadastrado com sucesso.");
+            console.log("Usuário cadastrado com sucesso");
             router.navigate("./cadastro-secundario");
 
         } catch (error: any) {
-            Alert.alert("Erro!", error.message || "Erro ao registrar o usuário.");
+            Alert.alert("Erro!", error.message || "Erro ao registrar o usuário");
             console.error("Erro ao registrar:", error);
         }
     };

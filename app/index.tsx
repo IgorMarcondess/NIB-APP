@@ -25,19 +25,15 @@ export default function Index() {
         return;
       }
 
-      const userData = await loginUser(email, senha); // userData precisa conter pelo menos .nome e .email
+      const userData = await loginUser(email, senha); 
       console.log("Informações para o SetData", userData)
 
       setUser(userData);
       Alert.alert("Login realizado com sucesso!");
       console.log("Usuário autenticado:", userData);
 
-      // Envio para o AsyncStorage
-      await AsyncStorage.setItem(
-        email, // chave
-        JSON.stringify({ nome: userData.nomeUser }) // valor
-      );
-
+      
+      await AsyncStorage.setItem( email, JSON.stringify({ nome: userData.nomeUser }));
       router.navigate("./initial");
 
     } catch (error) {
@@ -88,18 +84,9 @@ export default function Index() {
         />
 
         <Text className="text-blue-800">Senha</Text>
-        <Input
-          text="Senha"
-          imagem={<Feather name="eye" size={20} color="blue" />}
-          secureTextEntry
-          value={senha}
-          onChangeText={setSenha}
-        />
+        <Input text="Senha" imagem={<Feather name="eye" size={20} color="blue" />} secureTextEntry value={senha} onChangeText={setSenha} />
 
-        <TouchableOpacity
-          className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6"
-          onPress={handleLogin}
-        >
+        <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6" onPress={handleLogin} >
           <Text className="text-white text-base font-bold">ENTRAR</Text>
         </TouchableOpacity>
 

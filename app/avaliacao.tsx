@@ -6,29 +6,25 @@ import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-na
 import { enviarHabitos } from "../services/enviarHabitos";
 import { useUser } from "../components/userContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../services/firebase";
-import { setDoc } from "firebase/firestore/lite";
-
 
 
 export default function Avaliacao() {
     const [escovacao, setEscovacao] = useState(false);
     const [fioDental, setFioDental] = useState(false);
     const [bochecho, setBochecho] = useState(false);
-    const [popupVisible, setPopupVisible] = useState(false);
+    const [popupEnvio, setPopupEnvio] = useState(false);
     const { user } = useUser();
 
     useEffect(() => {
-        if (popupVisible) {
+        if (popupEnvio) {
             const timeout = setTimeout(() => {
-                setPopupVisible(false);
+                setPopupEnvio(false);
                 router.navigate("./initial");
             }, 3000);
 
             return () => clearTimeout(timeout);
         }
-    }, [popupVisible]);
+    }, [popupEnvio]);
 
     const envioHabitos = async () => {
         if (!user?.idUser) {
@@ -36,49 +32,14 @@ export default function Avaliacao() {
             return;
         }
 
-
         try {
-         console.log("Esntrou no TRY")
+         console.log("Entrou no TRY")
           await enviarHabitos(user.idUser);
-          setPopupVisible(true);
+          setPopupEnvio(true);
         } catch (error) {
           console.error("Erro ao salvar hábitos:", error);
         }
       };
-
-
-
-const preencherMesAnterior = async (userId: string) => {
-  const hoje = new Date();
-  const mesAnterior = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
-
-  console.log("Função chamada com ID:", userId);
-
-  // Nome do mês em português
-  const nomeMesAnterior = mesAnterior.toLocaleString("pt-BR", { month: "long" });
-
-  // Referência ao documento do usuário
-  const docRef = doc(db, "usuarios", userId);
-  const docSnap = await getDoc(docRef);
-
-  const infosUsuario = docSnap.exists() ? docSnap.data() : {};
-  if (!infosUsuario[nomeMesAnterior]) {
-    infosUsuario[nomeMesAnterior] = {};
-  }
-
-  // Gerar dias aleatórios (ex: 5, 9, 14, 20)
-  const diasAleatorios = [5, 9, 14, 20];
-  diasAleatorios.forEach((dia) => {
-    const diaFormatado = String(dia).padStart(2, "0");
-    const valorAleatorio = Math.floor(Math.random() * 3) + 1; // valores de 1 a 3
-    infosUsuario[nomeMesAnterior][diaFormatado] = valorAleatorio;
-  });
-
-  // Atualiza o Firestore
-  await setDoc(docRef, infosUsuario);
-
-  console.log(`Dados inseridos no mês anterior (${nomeMesAnterior}) para o usuário ${userId}.`);
-};
 
 
     return (
@@ -90,7 +51,7 @@ const preencherMesAnterior = async (userId: string) => {
                     <TouchableOpacity
                         onPress={() => setEscovacao(!escovacao)}
                         className="flex-row items-center justify-between border-2 border-blue-500 rounded-lg p-4 w-full mb-2">
-                        <Text className={`text-blue-700 text-xl font-extrabold ${escovacao} ? "opacity-100" : "opacity-50"}`}>
+                        <Text className={`text-blue-700 text-xl font-extrabold ${escovacao ? "opacity-100" : "opacity-50"}`}>
                             ESCOVAÇÃO
                         </Text>
                         <Feather name="check" size={30} color={escovacao ? "green" : "gray"} />
@@ -114,7 +75,7 @@ const preencherMesAnterior = async (userId: string) => {
                         <Feather name="check" size={30} color={bochecho ? "green" : "gray"} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="bg-blue-500 rounded-full py-3 w-80 mt-4" onPress={() =>  preencherMesAnterior(user!.idUser)}>
+                    <TouchableOpacity className="bg-blue-500 rounded-full py-3 w-80 mt-4" onPress={() =>  envioHabitos()}>
                         <Text className="text-white font-bold text-center">ENVIAR</Text>
                     </TouchableOpacity>
 
@@ -127,7 +88,7 @@ const preencherMesAnterior = async (userId: string) => {
                     <StatusBar style="auto" />
                 </View>
 
-                <Modal transparent animationType="fade" visible={popupVisible}>
+                <Modal transparent animationType="fade" visible={popupEnvio}>
                     <View className="flex-1 justify-center items-center bg-black/50">
                         <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
                             <Text className="text-blue-700 font-extrabold text-2xl text-center">

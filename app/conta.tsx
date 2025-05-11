@@ -1,6 +1,6 @@
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Image, Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,19 +8,19 @@ import { useUser } from "../components/userContext";
 import { db } from "../services/firebase";
 
 export default function Conta() {
-    const { user } = useUser();
+    const { user, setUser } = useUser();
     const router = useRouter();
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [fecharModal, setFecharModal] = useState(false);
 
     const [newEmail, setNewEmail] = useState<string>(user?.emailUser || "");
     const [newCpf, setNewCpf] = useState<string>(user?.cpfUser || "");
     const [newTelefone, setNewTelefone] = useState<string>(user?.telefoneUser || "");
 
-    const [modalEmailVisible, setModalEmailVisible] = useState(false);
-    const [modalCpfVisible, setModalCpfVisible] = useState(false);
-    const [modalTelefoneVisible, setModalTelefoneVisible] = useState(false);
+    const [modalEmailVisivel, setModalEmailVisivel] = useState(false);
+    const [modalCpfVisivel, setModalCpfVisivel] = useState(false);
+    const [modalTelefoneVisivel, setModalTelefoneVisivel] = useState(false);
 
-    const updateUserField = async (field: string, value: string) => {
+    const atualizarDados = async (field: string, value: string) => {
         if (!user || !user.idUser) {
             alert("Usuário não encontrado.");
             return;
@@ -30,20 +30,37 @@ export default function Conta() {
             const userRef = doc(db, "usuarios", user.idUser);
             await updateDoc(userRef, { [field]: value });
             alert(`${field} atualizado com sucesso!`);
+
+            const dados = await getDoc(userRef);
+            if (!dados?.exists()){
+                return;
+            }
+            const infosUsuario = dados.data()
+            const userData =  { cpfUser: infosUsuario.cpf,
+                                nomeUser: infosUsuario.nome,
+                                sobrenomeUser: infosUsuario.sobrenome,
+                                telefoneUser: infosUsuario.telefone,
+                                dataNascimentoUser: "",
+                                planoUser: infosUsuario.plano,
+                                emailUser: infosUsuario.email,
+                                idUser: `${dados.id}`
+                            }
+
+            setUser(userData)
         } catch (error) {
             console.error(`Erro ao atualizar ${field}:`, error);
             alert(`Erro ao atualizar ${field}.`);
         }
     };
 
-    const handleDeleteAccount = async () => {
+    const deletarConta = async () => {
         if (!user?.idUser) {
             alert("Usuário não encontrado.");
             return;
         }
         try {
             await deleteDoc(doc(db, "usuarios", user.idUser));
-            setShowDeleteModal(false);
+            setFecharModal(false);
             alert("Conta excluída com sucesso.");
             router.replace("/initial");
         } catch (error) {
@@ -57,34 +74,31 @@ export default function Conta() {
             <View className="flex-1 items-center pt-2">
                 <Image source={require("../assets/ManImage2.png")} className="w-[270px] h-[265px] mb-5" />
 
-                {/* Email */}
                 <Text className="text-[#003EA6] text-lg mb-1">E-mail</Text>
                 <View className="w-[350px] h-[60px] justify-center items-center border border-blue-500 rounded-2xl bg-white shadow mb-2">
                     <Text className="text-[#003EA6] text-lg">{user?.emailUser}</Text>
                 </View>
-                <TouchableOpacity onPress={() => setModalEmailVisible(true)} className="mb-4">
+                <TouchableOpacity onPress={() => setModalEmailVisivel(true)} className="mb-4">
                     <Text className="text-[#003EA6] text-sm">Mudar E-mail</Text>
                 </TouchableOpacity>
 
-                {/* CPF */}
                 <Text className="text-[#003EA6] text-lg mb-1">CPF</Text>
                 <View className="w-[350px] h-[60px] justify-center items-center border border-blue-500 rounded-2xl bg-white shadow mb-2">
                     <Text className="text-[#003EA6] text-lg">{user?.cpfUser}</Text>
                 </View>
-                <TouchableOpacity onPress={() => setModalCpfVisible(true)} className="mb-4">
+                <TouchableOpacity onPress={() => setModalCpfVisivel(true)} className="mb-4">
                     <Text className="text-[#003EA6] text-sm">Mudar CPF</Text>
                 </TouchableOpacity>
 
-                {/* Telefone */}
                 <Text className="text-[#003EA6] text-lg mb-1">Telefone</Text>
                 <View className="w-[350px] h-[60px] justify-center items-center border border-blue-500 rounded-2xl bg-white shadow mb-2">
                     <Text className="text-[#003EA6] text-lg">{user?.telefoneUser}</Text>
                 </View>
-                <TouchableOpacity onPress={() => setModalTelefoneVisible(true)} className="mb-4">
+                <TouchableOpacity onPress={() => setModalTelefoneVisivel(true)} className="mb-4">
                     <Text className="text-[#003EA6] text-sm">Mudar Telefone</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => setShowDeleteModal(true)} className="bg-red-600 py-2 px-6 rounded-full mb-4">
+                <TouchableOpacity onPress={() => setFecharModal(true)} className="bg-red-600 py-2 px-6 rounded-full mb-4">
                     <Text className="text-white text-base font-bold">Deletar Conta</Text>
                 </TouchableOpacity>
 
@@ -97,8 +111,7 @@ export default function Conta() {
                 <StatusBar style="light" />
             </View>
 
-            {/* Modal de Edição - Email */}
-            <Modal visible={modalEmailVisible} transparent animationType="slide">
+            <Modal visible={modalEmailVisivel} transparent animationType="slide">
                 <View className="flex-1 items-center justify-center bg-black/50">
                     <View className="bg-white p-6 rounded-2xl w-[85%] items-center">
                         <Text className="text-lg font-bold text-[#003EA6] mb-4">Novo E-mail</Text>
@@ -108,24 +121,19 @@ export default function Conta() {
                             placeholder="Digite o novo e-mail"
                             className="w-full border border-blue-500 rounded-xl px-4 py-2 mb-4 text-[#003EA6]"
                         />
-                        <TouchableOpacity
-                            onPress={async () => {
-                                await updateUserField("email", newEmail);
-                                setModalEmailVisible(false);
-                            }}
+                        <TouchableOpacity onPress={async () => { await atualizarDados("email", newEmail); setModalEmailVisivel(false);}}
                             className="bg-[#003EA6] px-6 py-2 rounded-full mb-2"
                         >
                             <Text className="text-white font-bold">Confirmar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setModalEmailVisible(false)}>
+                        <TouchableOpacity onPress={() => setModalEmailVisivel(false)}>
                             <Text className="text-sm text-gray-600">Cancelar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
 
-            {/* Modal de Edição - CPF */}
-            <Modal visible={modalCpfVisible} transparent animationType="slide">
+            <Modal visible={modalCpfVisivel} transparent animationType="slide">
                 <View className="flex-1 items-center justify-center bg-black/50">
                     <View className="bg-white p-6 rounded-2xl w-[85%] items-center">
                         <Text className="text-lg font-bold text-[#003EA6] mb-4">Novo CPF</Text>
@@ -135,24 +143,19 @@ export default function Conta() {
                             placeholder="Digite o novo CPF"
                             className="w-full border border-blue-500 rounded-xl px-4 py-2 mb-4 text-[#003EA6]"
                         />
-                        <TouchableOpacity
-                            onPress={async () => {
-                                await updateUserField("cpf", newCpf);
-                                setModalCpfVisible(false);
-                            }}
+                        <TouchableOpacity onPress={async () => { await atualizarDados("cpf", newCpf); setModalCpfVisivel(false)}}
                             className="bg-[#003EA6] px-6 py-2 rounded-full mb-2"
                         >
                             <Text className="text-white font-bold">Confirmar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setModalCpfVisible(false)}>
+                        <TouchableOpacity onPress={() => setModalCpfVisivel(false)}>
                             <Text className="text-sm text-gray-600">Cancelar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
 
-            {/* Modal de Edição - Telefone */}
-            <Modal visible={modalTelefoneVisible} transparent animationType="slide">
+            <Modal visible={modalTelefoneVisivel} transparent animationType="slide">
                 <View className="flex-1 items-center justify-center bg-black/50">
                     <View className="bg-white p-6 rounded-2xl w-[85%] items-center">
                         <Text className="text-lg font-bold text-[#003EA6] mb-4">Novo Telefone</Text>
@@ -162,16 +165,12 @@ export default function Conta() {
                             placeholder="Digite o novo telefone"
                             className="w-full border border-blue-500 rounded-xl px-4 py-2 mb-4 text-[#003EA6]"
                         />
-                        <TouchableOpacity
-                            onPress={async () => {
-                                await updateUserField("telefone", newTelefone);
-                                setModalTelefoneVisible(false);
-                            }}
+                        <TouchableOpacity onPress={async () => { await atualizarDados("telefone", newTelefone); setModalTelefoneVisivel(false);}}
                             className="bg-[#003EA6] px-6 py-2 rounded-full mb-2"
                         >
                             <Text className="text-white font-bold">Confirmar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setModalTelefoneVisible(false)}>
+                        <TouchableOpacity onPress={() => setModalTelefoneVisivel(false)}>
                             <Text className="text-sm text-gray-600">Cancelar</Text>
                         </TouchableOpacity>
                     </View>
@@ -179,22 +178,18 @@ export default function Conta() {
             </Modal>
 
 
-            <Modal visible={showDeleteModal} transparent={true} animationType="fade">
+            <Modal visible={fecharModal} transparent={true} animationType="fade">
                 <View className="flex-1 items-center justify-center bg-black/50">
                     <View className="bg-white p-6 rounded-2xl w-[85%] items-center">
                         <Text className="text-lg font-bold text-[#003EA6] mb-4">
                             Tem certeza que deseja excluir sua conta?
                         </Text>
                         <View className="flex-row space-x-4">
-                            <TouchableOpacity
-                                onPress={() => setShowDeleteModal(false)}
-                                className="bg-gray-300 px-6 py-2 rounded-full"
+                            <TouchableOpacity onPress={() => setFecharModal(false)} className="bg-gray-300 px-6 py-2 rounded-full"
                             >
                                 <Text className="text-black font-bold">Cancelar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={handleDeleteAccount}
-                                className="bg-red-600 px-6 py-2 rounded-full"
+                            <TouchableOpacity onPress={deletarConta} className="bg-red-600 px-6 py-2 rounded-full"
                             >
                                 <Text className="text-white font-bold">Sim</Text>
                             </TouchableOpacity>

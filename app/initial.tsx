@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import BottomTabNavigator from "../components/navBottom";
@@ -8,29 +8,50 @@ import { useUser } from "../components/userContext";
 import { CalendarioOfensiva } from "../components/calendarioOfensivas";
 import CardNoticias from "../components/cardNoticias";
 import { CalendarioCompleto } from "../components/calendarioCompleto";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../services/firebase";
 
 const Dashboard = () => {
   const { user } = useUser();
   const [diasConsecutivos, setDiasConsecutivos] = useState(12);
-  const [ofensiva, setOfensiva] = useState(15);
+  const [ofensiva, setOfensiva] = useState(0);
 
-  const dadosHabitos = {
-    "2025-04-02": [
-      { nome: "Escovação", feito: true },
-      { nome: "Fio dental", feito: false },
-    ],
-    "2025-04-05": [{ nome: "Bochecho", feito: true }],
-    "2025-04-07": [
-      { nome: "Escovação", feito: true },
-      { nome: "Fio dental", feito: true },
-      { nome: "Bochecho", feito: false },
-    ],
-    "2025-04-08": [
-      { nome: "Escovação", feito: true },
-      { nome: "Fio dental", feito: true },
-      { nome: "Bochecho", feito: false },
-    ],
-  };
+  useEffect(() => {
+    const buscarDiasPreenchidos = async () => {
+      if (!user?.idUser) return;
+
+      const meses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+      ];
+      const hoje = new Date();
+      const mesAtual = meses[hoje.getMonth()];
+
+      const docRef = doc(db, "usuarios", user.idUser);
+
+      try {
+        const docsUsuario = await getDoc(docRef);
+        if (docsUsuario.exists()) {
+          const dadosUsuario = docsUsuario.data();
+          
+          if (dadosUsuario[mesAtual]) {
+            const diasDoMes = dadosUsuario[mesAtual];
+            const totalDias = Object.entries(diasDoMes).length;
+            setOfensiva(totalDias);
+          } else {
+            setOfensiva(0);
+          }
+        } else {
+          setOfensiva(0);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar hábitos:", error);
+        setOfensiva(0);
+      }
+    };
+
+    buscarDiasPreenchidos();
+  }, [user?.idUser]);
 
   return (
     <SafeAreaView className="flex-1 bg-white p-5">
@@ -40,7 +61,7 @@ const Dashboard = () => {
             <Image source={require("../assets/manImage.png")} className="w-14 h-14" />
             <View>
               <Text className="text-white text-base font-bold leading-tight">
-                /*Olá, {user?.nomeUser}*/
+                Olá, {user?.nomeUser} 
               </Text>
               <Text className="text-white text-sm">seja bem-vindo ao Teeth Diary</Text>
             </View>
@@ -77,7 +98,6 @@ const Dashboard = () => {
         </View>
 
         <CalendarioCompleto />
-
       </ScrollView>
 
       <BottomTabNavigator

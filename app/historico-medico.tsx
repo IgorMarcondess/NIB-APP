@@ -1,26 +1,41 @@
 import { Link, router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
-import { Modal, Text, TouchableOpacity, View, Alert } from "react-native";
+import { Text, TouchableOpacity, View, Alert } from "react-native";
 import { Input } from "../components/input";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HistoricoMedico() {
-  const [popupVisible, setPopupVisible] = useState(false);
   const [tratamento, setTratamento] = useState("");
   const [canal, setCanal] = useState("");
   const [limpeza, setLimpeza] = useState("");
   const [aparelho, setAparelho] = useState("");
   const [cirurgia, setCirurgia] = useState("");
+  const [informacoesEnviadas, setInformacoesEnviadas] = useState(false);
+  const [email, setEmail] = useState("");
 
   const respostasValidas = ["SIM", "sim", "NAO", "NÃO", "nao", "não"];
+
+  useEffect(() => {
+    const verificarInformacoesEnviadas = async () => {
+      const enviado = await AsyncStorage.getItem(email);
+      if (enviado === "true") {
+        setInformacoesEnviadas(true);
+      }
+    };
+
+    if (email) {
+      verificarInformacoesEnviadas();
+    }
+  }, [email]);
 
   const validarResposta = (texto: string) => {
     return respostasValidas.includes(texto.trim().toUpperCase());
   };
 
-  const handleEnviar = () => {
+  const enviarInformacoes = async () => {
     if (!tratamento || !canal || !limpeza || !aparelho || !cirurgia) {
       Alert.alert("Erro", "Preencha todos os campos antes de enviar.");
       return;
@@ -37,25 +52,26 @@ export default function HistoricoMedico() {
       return;
     }
 
-    setPopupVisible(true);
+    await AsyncStorage.setItem(email, "true");
+    setInformacoesEnviadas(true);
+
     setTimeout(() => {
-      setPopupVisible(false);
       router.push("./initial");
     }, 3000);
   };
 
   return (
     <SafeAreaView className="flex-1 items-center bg-white w-full h-full pt-12">
-      <Modal transparent animationType="fade" visible={popupVisible}>
+      {informacoesEnviadas && (
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
             <Text className="text-blue-700 font-extrabold text-2xl text-center">
-              ENVIO REALIZADO COM SUCESSO
+              Informações Médicas já enviadas
             </Text>
-            <Feather name="check-circle" size={60} color="limegreen" style={{ marginTop: 16 }} />
+            <Feather name="check-circle" size={60} color="limegreen" className="mt-4" />
           </View>
         </View>
-      </Modal>
+      )}
 
       <View className="flex-1 items-center">
         <Text className="text-[#003EA6] text-3xl font-bold mb-4">
@@ -114,7 +130,7 @@ export default function HistoricoMedico() {
             </TouchableOpacity>
           </Link>
 
-          <TouchableOpacity onPress={handleEnviar} className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-6">
+          <TouchableOpacity onPress={enviarInformacoes} className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-6">
             <Text className="text-white text-lg font-bold">Enviar</Text>
           </TouchableOpacity>
         </View>

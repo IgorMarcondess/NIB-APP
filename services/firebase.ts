@@ -8,7 +8,6 @@ import {
   where
 } from "firebase/firestore";
 
-// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDMgTaq9QJMPT5d2nBl5FJaSyKvcMrem4M",
   authDomain: "nib-teethdiary.firebaseapp.com",
@@ -18,18 +17,16 @@ const firebaseConfig = {
   appId: "1:1097197017823:web:f80980a78b80ddc998e76a"
 };
 
-// Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Tipo de dados do usuário
 type UserData = {
   email: string;
-  senha: string; // texto puro, conforme solicitado
+  senha: string;
   nome: string;
   telefone: string;
   plano?: string;
-  idUser: string;
+  idUser?: string;
 };
 
 export type UserType = {
@@ -43,22 +40,16 @@ export type UserType = {
   idUser: string;
 };
 
-
-// REGISTRO
 export const registerUser = async (userData: UserData) => {
   const usuariosRef = collection(db, "usuarios");
-
-  // Verifica duplicidade de e-mail
   const existing = await getDocs(query(usuariosRef, where("email", "==", userData.email)));
   if (!existing.empty) {
     throw new Error("E-mail já cadastrado.");
   }
-
   const docRef = await addDoc(usuariosRef, userData);
   return { uid: docRef.id, ...userData };
 };
 
-// LOGIN
 export const loginUser = async (email: string, senha: string): Promise<UserType> => {
   const usuariosRef = collection(db, "usuarios");
   const snapshot = await getDocs(query(usuariosRef, where("email", "==", email)));
@@ -74,7 +65,6 @@ export const loginUser = async (email: string, senha: string): Promise<UserType>
     throw new Error("Senha incorreta.");
   }
 
-  // 🔐 Converta e retorne como UserType
   const UserData: UserType = {
     cpfUser: userData.cpf,
     nomeUser: userData.nome,
@@ -87,6 +77,6 @@ export const loginUser = async (email: string, senha: string): Promise<UserType>
   };
 
   return UserData;
-
 };
+
 export { UserData, db };

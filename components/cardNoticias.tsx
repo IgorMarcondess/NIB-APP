@@ -24,9 +24,7 @@ const CardNoticias = () => {
     loadNews();
   }, []);
 
-  if (loading) {
-    return <ActivityIndicator size="large" className="mt-10" />;
-  }
+  if (loading) {return <ActivityIndicator size="large" className="mt-10" />;}
 
   const renderItem = ({ item }: { item: Noticia }) => (
     <View className="w-[18.75rem] h-[30rem] rounded-2xl overflow-hidden bg-white border border-gray-300 mr-4">
@@ -49,7 +47,7 @@ const CardNoticias = () => {
   );
 
   return (
-    <FlatList
+    <FlatList //PAGER VIEW não funcionou 
       data={news}
       keyExtractor={(item) => item.link}
       renderItem={renderItem}
