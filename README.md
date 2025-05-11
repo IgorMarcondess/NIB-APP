@@ -5,16 +5,18 @@ O projeto do grupo N.I.B. consiste na criação de um aplicativo para acompanham
 
 **LINK FIGMA:** https://www.figma.com/design/TojKAIT1nLnZqISwtn78YX/OdontoPrev-x-N.I.B?m=auto&t=ipxkY6svySA37MGu-6
 
-**Credenciais de Login:**
+**Credenciais de Login:** *Caso não queira se cadastrar*
 
-**Email:** professor@nota10.com
+**Email:** igor@gmail.com
 
-**Senha:** 10
+**Senha:** 123456
 
 **Em caso de erro, por favor seguir o passo a passo abaixo:**
 
 1° rodar este código no terminal: **npm i**
 
-2° pressionar Ctrl + Shift + p  logo depois pesquisar Typescript Restart TS
+2° pressionar ( Ctrl + Shift + P ) - logo depois pesquisar Typescript Restart TS
 
 Caso o erro não tenha saído, somente reiniciar o VSCODE
+
+**Após ações erro persistir, peço entrar em contato conosco por favor**
