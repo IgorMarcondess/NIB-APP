@@ -19,4 +19,4 @@ O projeto do grupo N.I.B. consiste na criação de um aplicativo para acompanham
 
 Caso o erro não tenha saído, somente reiniciar o VSCODE
 
-**Após ações erro persistir, peço entre em contato conosco por favor**
+**Após ações erro persistir, peço entrar em contato conosco por favor**
