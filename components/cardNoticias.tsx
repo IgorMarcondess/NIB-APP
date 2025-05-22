@@ -16,7 +16,7 @@ const CardNoticias = () => {
   useEffect(() => {
     const loadNews = async () => {
       const fetchedNews = await fetchDentalNews();
-      console.log('Fetched news:', fetchedNews);
+      //console.log('Fetched news:', fetchedNews);
       setNews(fetchedNews);
       setLoading(false);
     };

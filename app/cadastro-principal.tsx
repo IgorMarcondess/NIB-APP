@@ -5,7 +5,7 @@ import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '../components/input';
 import { registerUser } from '../services/firebase';
-
+import { useUser } from "../components/userContext";
 
 export default function CadastroPrincipal() {
     const [cpf, setCpf] = useState('');
@@ -14,16 +14,21 @@ export default function CadastroPrincipal() {
     const [sobrenome, setSobrenome] = useState('');
     const [senha, setSenha] = useState('');
     const [telefone, setTelefone] = useState('');
+    const { setUser } = useUser();
 
     const validarCampos_EnviarInformacao = async () => {
         if (!cpf || !email || !nome || !senha || !telefone) {
             Alert.alert("Erro", "Preencha todos os campos.");
-            return;}
+            return;
+        }
         if (!/^\d{11}$/.test(cpf)) {
             Alert.alert("Erro", "CPF inválido! Deve conter 11 números.");
-            return;} else if (!/^\d{11}$/.test(telefone)) {
+            return;
+        } 
+        if (!/^\d{11}$/.test(telefone)) {
             Alert.alert("Erro", "Número de telefone inválido! Deve conter 11 números.");
-            return;}
+            return;
+        }
 
         try {
             const usuario = {
@@ -37,20 +42,27 @@ export default function CadastroPrincipal() {
                 userId: ""  
             };
 
-            const response = await registerUser(usuario);
-            console.log("Usuário registrado:", response);
+            console.log("Informações enviadas: ", usuario);
+
+            const userData = await registerUser(usuario);
+            setUser(userData);
+            console.log("Usuário registrado:", userData);
             console.log("Usuário cadastrado com sucesso");
             router.navigate("./cadastro-secundario");
 
         } catch (error: any) {
-            Alert.alert("Erro!", error.message || "Erro ao registrar o usuário");
+            if (error.message === "E-mail já cadastrado.") {
+                Alert.alert("Erro", "Este e-mail já está cadastrado.");
+            } else {
+                Alert.alert("Erro!", error.message || "Erro ao registrar o usuário");
+            }
             console.error("Erro ao registrar:", error);
         }
     };
 
     return (
         <SafeAreaView className="flex-1 bg-[#003EA6] w-full h-full">
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View className="flex-1 items-center">
                     <Image source={require('../assets/logoteeth.png')} className="w-40 mb-5" />
                     <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>

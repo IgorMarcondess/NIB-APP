@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white p-5">
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="flex-1">
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 }} className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="bg-blue-600 p-4 rounded-lg">
           <View className="flex-row items-center gap-3">
             <Image source={require("../assets/manImage.png")} className="w-14 h-14" />

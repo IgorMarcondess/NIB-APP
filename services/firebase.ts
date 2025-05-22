@@ -1,12 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  getFirestore,
-  query,
-  where
-} from "firebase/firestore";
+import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query,where } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDMgTaq9QJMPT5d2nBl5FJaSyKvcMrem4M",
@@ -40,25 +33,46 @@ export type UserType = {
   idUser: string;
 };
 
-export const registerUser = async (userData: UserData) => {
+export const registerUser = async (userData: UserData): Promise<UserType> => {
   const usuariosRef = collection(db, "usuarios");
-  const existing = await getDocs(query(usuariosRef, where("email", "==", userData.email)));
-  if (!existing.empty) {
+  const userExiste = await getDocs(query(usuariosRef, where("email", "==", userData.email)));
+  if (!userExiste.empty) {
     throw new Error("E-mail já cadastrado.");
   }
   const docRef = await addDoc(usuariosRef, userData);
-  return { uid: docRef.id, ...userData };
+
+  const userDoc = await getDoc(doc(db, "usuarios", docRef.id));
+
+  if (!userDoc.exists()) {
+    throw new Error("Erro ao buscar usuário recém-criado.");
+  }
+
+  const dados = userDoc.data();
+
+  const UserData: UserType = {
+    cpfUser: dados.cpf,
+    nomeUser: dados.nome,
+    sobrenomeUser: dados.sobrenome,
+    telefoneUser: dados.telefone,
+    dataNascimentoUser: dados.dataNascimento,
+    planoUser: dados.plano,
+    emailUser: dados.email,
+    idUser: userDoc.id,
+  };
+  
+  return UserData;
+
 };
 
 export const loginUser = async (email: string, senha: string): Promise<UserType> => {
   const usuariosRef = collection(db, "usuarios");
-  const snapshot = await getDocs(query(usuariosRef, where("email", "==", email)));
+  const doscUsuario = await getDocs(query(usuariosRef, where("email", "==", email)));
 
-  if (snapshot.empty) {
+  if (doscUsuario.empty) {
     throw new Error("E-mail não encontrado.");
   }
 
-  const userDoc = snapshot.docs[0];
+  const userDoc = doscUsuario.docs[0];
   const userData = userDoc.data();
 
   if (userData.senha !== senha) {

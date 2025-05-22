@@ -2,7 +2,7 @@ import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
-import { Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "../components/userContext";
 import { db } from "../services/firebase";
@@ -29,7 +29,7 @@ export default function Conta() {
         try {
             const userRef = doc(db, "usuarios", user.idUser);
             await updateDoc(userRef, { [field]: value });
-            alert(`${field} atualizado com sucesso!`);
+            Alert.alert("Informação atualizada!", `${field} atualizado com sucesso!`);
 
             const dados = await getDoc(userRef);
             if (!dados?.exists()) return;
@@ -49,7 +49,7 @@ export default function Conta() {
             setUser(userData);
         } catch (error) {
             console.error(`Erro ao atualizar ${field}:`, error);
-            alert(`Erro ao atualizar ${field}.`);
+            Alert.alert(`Erro ao atualizar ${field}.`);
         }
     };
 
