@@ -33,36 +33,16 @@ export type UserType = {
   idUser: string;
 };
 
-export const registerUser = async (userData: UserData): Promise<UserType> => {
+export async function registrarUser(userData: any) {
   const usuariosRef = collection(db, "usuarios");
+
   const userExiste = await getDocs(query(usuariosRef, where("email", "==", userData.email)));
   if (!userExiste.empty) {
     throw new Error("E-mail já cadastrado.");
   }
-  const docRef = await addDoc(usuariosRef, userData);
 
-  const userDoc = await getDoc(doc(db, "usuarios", docRef.id));
-
-  if (!userDoc.exists()) {
-    throw new Error("Erro ao buscar usuário recém-criado.");
-  }
-
-  const dados = userDoc.data();
-
-  const UserData: UserType = {
-    cpfUser: dados.cpf,
-    nomeUser: dados.nome,
-    sobrenomeUser: dados.sobrenome,
-    telefoneUser: dados.telefone,
-    dataNascimentoUser: dados.dataNascimento,
-    planoUser: dados.plano,
-    emailUser: dados.email,
-    idUser: userDoc.id,
-  };
-  
-  return UserData;
-
-};
+  await addDoc(usuariosRef, userData);
+}
 
 export const loginUser = async (email: string, senha: string): Promise<UserType> => {
   const usuariosRef = collection(db, "usuarios");

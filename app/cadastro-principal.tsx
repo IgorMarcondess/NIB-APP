@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '../components/input';
-import { registerUser } from '../services/firebase';
+import { registrarUser } from '../services/firebase';
 import { useUser } from "../components/userContext";
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
@@ -34,8 +34,8 @@ export default function CadastroPrincipal() {
         userId: ""
       };
 
-      const userData = await registerUser(usuario);
-      setUser(userData);
+      const userData = await registrarUser(usuario);
+      //setUser(userData);
       router.navigate("./cadastro-secundario");
 
     } catch (error: any) {

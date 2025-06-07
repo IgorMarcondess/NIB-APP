@@ -66,7 +66,7 @@ const Dashboard = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => router.push("./preparacaoSelfie.tsx")} className="items-center">
+        <TouchableOpacity onPress={() => router.push("/app/preparativoImagem.tsx")} className="items-center">
           <Image source={require("../assets/imagem promoção.png")} style={{ width: 300, height: 300, resizeMode: "contain" }}/> 
         </TouchableOpacity>
 

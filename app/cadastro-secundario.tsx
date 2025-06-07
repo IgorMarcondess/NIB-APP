@@ -23,7 +23,7 @@ export default function CadastroSecundario() {
             setConfirmData(true);
             setTimeout(() => {
                 setConfirmData(false);
-                router.navigate('./initial');
+                router.navigate('./planoUser.tsx');
             }, 3000);
         }
     };
@@ -57,7 +57,7 @@ export default function CadastroSecundario() {
 
             <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white items-center justify-center mt-10 w-[170px]"
                 onPress={validarCampos}>
-                <Text className="text-white text-lg font-bold">Enviar</Text>
+                <Text className="text-white text-lg font-bold">PRÓXIMO</Text>
             </TouchableOpacity>
 
             {confirmData && (
