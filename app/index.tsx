@@ -2,102 +2,101 @@ import { Feather } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import { Alert, Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/input";
 import { useUser } from "../components/userContext";
 import { loginUser } from "../services/firebase";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ImageBackground } from "react-native";
 
+const schema = z.object({
+  email: z.string().email("E-mail inválido"),
+  senha: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+});
 
+type FormData = z.infer<typeof schema>;
 
 export default function Index() {
   const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
   const { setUser } = useUser();
 
-  const handleLogin = async (): Promise<void> => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  const handleLogin = async (data: FormData): Promise<void> => {
     try {
-      if (!email || !senha) {
-        Alert.alert("Erro", "Preencha todos os campos.");
-        return;
-      }
-
-      const userData = await loginUser(email, senha); 
-      console.log("Informações para o SetData", userData)
-
+      const userData = await loginUser(data.email, data.senha);
       setUser(userData);
       Alert.alert("Login realizado com sucesso!");
-      console.log("Usuário autenticado:", userData);
-
-      
-      await AsyncStorage.setItem( email, JSON.stringify({ nome: userData.nomeUser }));
+      await AsyncStorage.setItem(data.email, JSON.stringify({ nome: userData.nomeUser }));
       router.navigate("./initial");
-
     } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert("Erro ao fazer login", error.message);
-      } else {
-        Alert.alert("Erro desconhecido", "Não foi possível fazer login.");
-      }
+      Alert.alert("Erro", error instanceof Error ? error.message : "Não foi possível fazer login.");
     }
   };
 
-
-
-
   return (
-    <SafeAreaView className="flex-1 items-center justify-center bg-white">
-      <View className="flex-1 bg-blue-800 rounded-b-[270px] w-full h-[600px] mb-2">
-        <View className="items-center justify-center mt-4">
-          <Image
-            source={require("../assets/logoteeth.png")}
-            className="w-52 h-10"
-            resizeMode="contain"
-          />
-        </View>
-        <Text className="text-white text-4xl ml-5 mt-6">Bem - vindo!</Text>
-        <Text className="text-white text-2xl ml-5">Log In</Text>
+    <SafeAreaView className="flex-1 bg-white items-center justify-center">
+      <ImageBackground source={require("../assets/imagemBackground.png")} className="flex-1 items-center justify-center">
+     <View className="w-full border border-blue-800 rounded-xl p-6 items-center bg-[rgba(255,255,255,0.9)]">
+        <Text className="text-blue-800 text-2xl font-bold mb-10">SEJAM BEM-VINDOS!</Text>
 
-        <View className="flex-1 items-center justify-center">
-          <Image
-            source={require("../assets/manImage.png")}
-            style={{
-              width: Dimensions.get("window").width * 0.5,
-              height: Dimensions.get("window").width * 0.5,
-              resizeMode: "contain",
-            }}
-          />
-        </View>
-      </View>
-
-      <View className="flex-1 items-center w-full bg-white">
-        <Text className="text-blue-800 mt-2">E-mail</Text>
-        <Input
-          text="Digite seu E-mail!"
-          imagem={<Feather name="mail" size={20} color="blue" />}
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
+        <Text className="text-blue-800 text-lg font-bold text-center w-full">E-MAIL</Text>
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              text="Digite seu e-mail"
+              imagem={<Feather name="mail" size={20} color="blue" />}
+              keyboardType="email-address"
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
         />
+        {errors.email && <Text className="text-red-500 text-xs mb-2">{errors.email.message}</Text>}
 
-        <Text className="text-blue-800">Senha</Text>
-        <Input text="Senha" imagem={<Feather name="eye" size={20} color="blue" />} secureTextEntry value={senha} onChangeText={setSenha} />
+        <Text className="text-blue-800 text-lg font-bold text-center ml-2">SENHA</Text>
+        <Controller
+          control={control}
+          name="senha"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              text="Digite sua senha"
+              imagem={<Feather name="lock" size={20} color="blue" />}
+              secureTextEntry
+              value={value}
+              onChangeText={onChange}
+            />
+          )}
+        />
+        {errors.senha && <Text className="text-red-500 text-xs mb-2">{errors.senha.message}</Text>}
 
-        <TouchableOpacity className="bg-primary py-2 px-5 rounded-md w-1/2 items-center mt-6" onPress={handleLogin} >
-          <Text className="text-white text-base font-bold">ENTRAR</Text>
+        <TouchableOpacity
+          className="bg-blue-800 py-2 px-5 rounded-md w-80 items-center justify-center h-10 mt-4"
+          onPress={handleSubmit(handleLogin)}
+        >
+          <Text className="text-white text-base font-bold">LOGIN</Text>
         </TouchableOpacity>
-
-        <Link href={"/cadastro-principal"} asChild>
-          <TouchableOpacity className="bg-primary py-3 px-5 rounded-md w-4/5 items-center mt-4">
-            <Text className="text-white text-base font-bold">REGISTRE-SE AQUI</Text>
-          </TouchableOpacity>
-        </Link>
-
-        <StatusBar style="auto" />
       </View>
+
+      <Link href="/cadastro-principal" asChild>
+        <TouchableOpacity className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
+          <Text className="text-white text-base font-bold">REGISTRAR - SE</Text>
+        </TouchableOpacity>
+      </Link>
+
+      <StatusBar style="auto" />
+      </ImageBackground>
     </SafeAreaView>
   );
 }

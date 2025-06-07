@@ -1,103 +1,155 @@
 import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '../components/input';
 import { registerUser } from '../services/firebase';
 import { useUser } from "../components/userContext";
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const schema = z.object({
+  cpf: z.string().regex(/^\d{11}$/, "CPF deve conter 11 números"),
+  nome: z.string().min(1, "Nome é obrigatório"),
+  email: z.string().email("E-mail inválido"),
+  senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+  telefone: z.string().regex(/^\d{11}$/, "Telefone deve conter 11 números"),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function CadastroPrincipal() {
-    const [cpf, setCpf] = useState('');
-    const [email, setEmail] = useState('');
-    const [nome, setNome] = useState('');
-    const [sobrenome, setSobrenome] = useState('');
-    const [senha, setSenha] = useState('');
-    const [telefone, setTelefone] = useState('');
-    const { setUser } = useUser();
+  const { setUser } = useUser();
+  const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
-    const validarCampos_EnviarInformacao = async () => {
-        if (!cpf || !email || !nome || !senha || !telefone) {
-            Alert.alert("Erro", "Preencha todos os campos.");
-            return;
-        }
-        if (!/^\d{11}$/.test(cpf)) {
-            Alert.alert("Erro", "CPF inválido! Deve conter 11 números.");
-            return;
-        } 
-        if (!/^\d{11}$/.test(telefone)) {
-            Alert.alert("Erro", "Número de telefone inválido! Deve conter 11 números.");
-            return;
-        }
+  const onSubmit = async (data: FormData) => {
+    try {
+      const usuario = {
+        ...data,
+        nome: `${data.nome}`,
+        plano: "",
+        userId: ""
+      };
 
-        try {
-            const usuario = {
-                email: `${email}`,
-                senha: `${senha}`,
-                nome: `${nome} ${sobrenome}`,
-                sobrenome: `${sobrenome}`,
-                telefone: `${telefone}`,
-                plano: "",
-                cpf:`${cpf}`,
-                userId: ""  
-            };
+      const userData = await registerUser(usuario);
+      setUser(userData);
+      router.navigate("./cadastro-secundario");
 
-            console.log("Informações enviadas: ", usuario);
+    } catch (error: any) {
+      const msg = error.message === "E-mail já cadastrado." 
+        ? "Este e-mail já está cadastrado." 
+        : error.message || "Erro ao registrar o usuário";
+      Alert.alert("Erro", msg);
+    }
+  };
 
-            const userData = await registerUser(usuario);
-            setUser(userData);
-            console.log("Usuário registrado:", userData);
-            console.log("Usuário cadastrado com sucesso");
-            router.navigate("./cadastro-secundario");
+  return (
+    <SafeAreaView className="flex-1 bg-[#003EA6]">
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View className="items-center px-4 pb-10">
+          <Image source={require('../assets/logoteeth.png')} className="w-40 mb-5" />
+          <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>
+          <Image source={require('../assets/image1.png')} className="w-[300px] h-[200px] rounded-xl" />
 
-        } catch (error: any) {
-            if (error.message === "E-mail já cadastrado.") {
-                Alert.alert("Erro", "Este e-mail já está cadastrado.");
-            } else {
-                Alert.alert("Erro!", error.message || "Erro ao registrar o usuário");
-            }
-            console.error("Erro ao registrar:", error);
-        }
-    };
+          {/* CPF */}
+          <Text className="text-white text-lg font-bold mt-2">CPF</Text>
+          <Controller
+            control={control}
+            name="cpf"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                text="Digite seu CPF"
+                imagem={<Feather name="mail" size={20} color="blue" />}
+                keyboardType="numeric"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          {errors.cpf && <Text className="text-red-500 text-xs mb-1">{errors.cpf.message}</Text>}
 
-    return (
-        <SafeAreaView className="flex-1 bg-[#003EA6] w-full h-full">
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View className="flex-1 items-center">
-                    <Image source={require('../assets/logoteeth.png')} className="w-40 mb-5" />
-                    <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>
+          {/* Nome */}
+          <Text className="text-white text-lg font-bold mt-2">Nome</Text>
+          <Controller
+            control={control}
+            name="nome"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                text="Digite seu Nome"
+                imagem={<Feather name="user" size={20} color="blue" />}
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          {errors.nome && <Text className="text-red-500 text-xs mb-1">{errors.nome.message}</Text>}
 
-                    <Image source={require('../assets/image1.png')} className="w-[300px] h-[200px] rounded-xl" />
+          {/* Email */}
+          <Text className="text-white text-lg font-bold mt-2">E-mail</Text>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                text="Digite seu E-mail"
+                imagem={<Feather name="mail" size={20} color="blue" />}
+                keyboardType="email-address"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          {errors.email && <Text className="text-red-500 text-xs mb-1">{errors.email.message}</Text>}
 
-                    <Text className="text-white text-lg mt-4">CPF</Text>
-                    <Input text="Digite seu CPF!" imagem={<Feather name="mail" size={20} color="blue" />} keyboardType="numeric" value={cpf} onChangeText={setCpf} returnKeyType="done" />
+          {/* Senha */}
+          <Text className="text-white text-lg font-bold mt-2">Senha</Text>
+          <Controller
+            control={control}
+            name="senha"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                text="Digite sua Senha"
+                imagem={<Feather name="lock" size={20} color="blue" />}
+                secureTextEntry
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          {errors.senha && <Text className="text-red-500 text-xs mb-1">{errors.senha.message}</Text>}
 
-                    <Text className="text-white text-lg mt-4">Nome</Text>
-                    <Input text="Digite seu nome" imagem={<Feather name="user" size={20} color="blue" />} value={nome} onChangeText={setNome} />
+          {/* Telefone */}
+          <Text className="text-white text-lg font-bold mt-2">Telefone</Text>
+          <Controller
+            control={control}
+            name="telefone"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                text="Digite seu Telefone"
+                imagem={<Feather name="phone" size={20} color="blue" />}
+                keyboardType="numeric"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          {errors.telefone && <Text className="text-red-500 text-xs mb-1">{errors.telefone.message}</Text>}
 
-                    <Text className="text-white text-lg mt-4">Sobrenome</Text>
-                    <Input text="Digite seu sobrenome" imagem={<Feather name="user" size={20} color="blue" />} value={sobrenome} onChangeText={setSobrenome} />
+          {/* Botões */}
+          <View className="flex-row justify-center items-center gap-5 mt-10">
+            <TouchableOpacity className="py-3 px-8 rounded-full border-2 border-white" onPress={() => router.back()}>
+              <Text className="text-white text-lg font-bold">VOLTAR</Text>
+            </TouchableOpacity>
 
-                    <Text className="text-white text-lg mt-4">E-mail</Text>
-                    <Input text="Digite seu E-mail!" imagem={<Feather name="mail" size={20} color="blue" />} keyboardType="email-address" value={email} onChangeText={setEmail} />
-
-                    <Text className="text-white text-lg mt-4">Senha</Text>
-                    <Input text="Digite sua Senha!" imagem={<Feather name="lock" size={20} color="blue" />} secureTextEntry value={senha} onChangeText={setSenha} />
-
-                    <Text className="text-white text-lg mt-4">Telefone</Text>
-                    <Input text="Digite seu Telefone!" imagem={<Feather name="phone" size={20} color="blue" />} keyboardType="numeric" value={telefone} onChangeText={setTelefone} returnKeyType="done" />
-
-                    <View className="flex-row justify-center items-center gap-5 mt-10">
-                        <TouchableOpacity className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white" onPress={() => router.back()}>
-                            <Text className="text-white text-lg font-bold">Voltar</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={validarCampos_EnviarInformacao} className="bg-[#003EA6] py-3 px-8 rounded-full border-2 border-white">
-                            <Text className="text-white text-lg font-bold">Próximo</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+            <TouchableOpacity onPress={handleSubmit(onSubmit)} className="py-3 px-8 rounded-full border-2 border-white">
+              <Text className="text-white text-lg font-bold">REGISTRAR - SE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }

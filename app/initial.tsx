@@ -13,7 +13,6 @@ import { db } from "../services/firebase";
 
 const Dashboard = () => {
   const { user } = useUser();
-  const [diasConsecutivos, setDiasConsecutivos] = useState(12);
   const [ofensiva, setOfensiva] = useState(0);
 
   useEffect(() => {
@@ -63,21 +62,17 @@ const Dashboard = () => {
               <Text className="text-white text-base font-bold leading-tight">
                 Olá, {user?.nomeUser} 
               </Text>
-              <Text className="text-white text-sm">seja bem-vindo ao Teeth Diary</Text>
+              <Text className="text-white text-sm font-semibold">Bem-vindos ao Teeth Diary</Text>
             </View>
           </View>
         </View>
-
-        <TouchableOpacity
-          className="bg-gray-300 p-4 m-4 rounded-xl items-center"
-          onPress={() => router.push("./avaliacao")}
-        >
-          <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
-          <Text className="text-blue-500">Clique Aqui!</Text>
+        <TouchableOpacity onPress={() => router.push("./preparacaoSelfie.tsx")} className="items-center">
+          <Image source={require("../assets/imagem promoção.png")} style={{ width: 300, height: 300, resizeMode: "contain" }}/> 
         </TouchableOpacity>
 
         <View className="my-4 justify-center items-center">
           <Text className="text-primary font-bold text-lg">Notícias Recentes</Text>
+          <Text className="text-primary font-semibold text-sm">Acompanhe as novidades do mundo odontológico</Text>
           <CardNoticias />
         </View>
 
@@ -96,6 +91,13 @@ const Dashboard = () => {
             <Text className="text-gray-600 text-lg">CONSECUTIVOS</Text>
           </View>
         </View>
+        <TouchableOpacity
+          className="bg-gray-300 p-4 m-4 rounded-xl items-center"
+          onPress={() => router.push("./preparacaoSelfie.tsx")}
+        >
+          <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
+          <Text className="text-blue-500">Clique Aqui!</Text>
+        </TouchableOpacity>
 
         <CalendarioCompleto />
       </ScrollView>
