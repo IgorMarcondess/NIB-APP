@@ -4,9 +4,9 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
-import { useUser } from "../components/userContext";
+import { useUser } from "../../components/userContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../services/firebase";
+import { db } from "../../services/firebase";
 import { doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
 
 export default function Avaliacao() {
@@ -126,7 +126,7 @@ export default function Avaliacao() {
           </TouchableOpacity>
 
           <Image
-            source={require("../assets/health.png")}
+            source={require("../../assets/health.png")}
             className="w-full h-60 mt-9 mb-20"
             resizeMode="contain"
           />

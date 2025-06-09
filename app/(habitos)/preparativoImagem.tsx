@@ -6,7 +6,7 @@ export default function PreparativoImagem() {
     <SafeAreaView className="flex-1 bg-[#003F91] items-center">
       <ScrollView contentContainerStyle={{ alignItems: "center"}}>
       <View className="items-center p-2">
-      <Image source={require('../assets/logoteeth.png')} className="w-40 mt-4 mb-10" />
+      <Image source={require('../../assets/logoteeth.png')} className="w-40 mt-4 mb-10" />
 
         <Text className="text-white text-lg text-center font-medium mb-10 px-2">
           A FOTO DEVE SER TIRADA SEGURANDO SUA ESCOVA DE DENTE, DE PREFERÊNCIA EM FRENTE AO ESPELHO OU COMO UM SELFIE 
@@ -19,7 +19,7 @@ export default function PreparativoImagem() {
           <Text className="text-white text-sm font-semibold mb-2">- A IMAGEM DEVE TER BOA ILUMINAÇÃO E ESTAR EM FOCO.</Text>
           <Text className="text-white text-sm font-semibold mb-6">- A FOTO DEVE SER TIRADA EM UM AMBIENTE ADEQUADO, COMO O BANHEIRO OU FRENTE AO ESPELHO.</Text>
         </View>
-        <Image source={require('../assets/selfie.jpg')} className="w-96 h-80 rounded-xl mb-12" />
+        <Image source={require('../../assets/selfie.jpg')} className="w-96 h-80 rounded-xl mb-12" />
     
         <View className="w-full bg-transparent" />
 

@@ -41,7 +41,17 @@ export async function registrarUser(userData: any) {
     throw new Error("E-mail já cadastrado.");
   }
 
-  await addDoc(usuariosRef, userData);
+  const usuario = await addDoc(usuariosRef, userData);
+  return {
+    cpfUser: userData.cpf,
+    nomeUser: userData.nome,
+    sobrenomeUser: userData.sobrenome ?? "",
+    telefoneUser: userData.telefone,
+    dataNascimentoUser: userData.dataNascimento ?? "",
+    planoUser: userData.plano ?? "",
+    emailUser: userData.email,
+    idUser: usuario.id,
+  };
 }
 
 export const loginUser = async (email: string, senha: string): Promise<UserType> => {

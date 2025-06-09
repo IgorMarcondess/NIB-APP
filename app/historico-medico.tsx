@@ -4,78 +4,70 @@ import { Text, TouchableOpacity, View, Alert } from "react-native";
 import { Input } from "../components/input";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "../components/userContext";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  tratamento: z.string().refine(v => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
+    message: "Digite SIM ou NÃO"
+  }),
+  canal: z.string().refine(v => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
+    message: "Digite SIM ou NÃO"
+  }),
+  limpeza: z.string().refine(v => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
+    message: "Digite SIM ou NÃO"
+  }),
+  aparelho: z.string().refine(v => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
+    message: "Digite SIM ou NÃO"
+  }),
+  cirurgia: z.string().refine(v => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
+    message: "Digite SIM ou NÃO"
+  })
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function HistoricoMedico() {
   const { user } = useUser();
-
-  const [tratamento, setTratamento] = useState("");
-  const [canal, setCanal] = useState("");
-  const [limpeza, setLimpeza] = useState("");
-  const [aparelho, setAparelho] = useState("");
-  const [cirurgia, setCirurgia] = useState("");
   const [informacoesEnviadas, setInformacoesEnviadas] = useState(false);
 
-  const respostasValidas = ["SIM", "NAO", "NÃO"];
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   useEffect(() => {
     const verificarInformacoesEnviadas = async () => {
       if (!user?.emailUser) return;
-
       const dadosExistente = await AsyncStorage.getItem(user.emailUser);
       const objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
-
       if (objetoDados.historicoMedico === true) {
         setInformacoesEnviadas(true);
-        setTimeout(() => {
-        router.push("./initial");
-    }, 3000);
+        setTimeout(() => router.push("./initial"), 3000);
       }
     };
-
     verificarInformacoesEnviadas();
   }, [user?.emailUser]);
 
-  const validarResposta = (texto: string) => {
-    return respostasValidas.includes(texto.trim().toUpperCase());
-  };
-
-  const enviarInformacoes = async () => {
+  const onSubmit = async (data: FormData) => {
     if (!user?.emailUser) {
       Alert.alert("Erro", "Email do usuário não disponível.");
       return;
     }
 
-    if (!tratamento || !canal || !limpeza || !aparelho || !cirurgia) {
-      Alert.alert("Erro", "Preencha todos os campos antes de enviar.");
-      return;
-    }
-
-    if (
-      !validarResposta(tratamento) ||
-      !validarResposta(canal) ||
-      !validarResposta(limpeza) ||
-      !validarResposta(aparelho) ||
-      !validarResposta(cirurgia)
-    ) {
-      Alert.alert("Erro", "Digite apenas 'SIM' ou 'NÃO' nos campos.");
-      return;
-    }
-
     const dadosExistente = await AsyncStorage.getItem(user.emailUser);
-    let objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
+    const objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
 
     objetoDados.historicoMedico = true;
-
     await AsyncStorage.setItem(user.emailUser, JSON.stringify(objetoDados));
-
     setInformacoesEnviadas(true);
 
-    setTimeout(() => {
-      router.push("./initial");
-    }, 3000);
+    setTimeout(() => router.push("./initial"), 3000);
   };
 
   return (
@@ -94,50 +86,30 @@ export default function HistoricoMedico() {
       <View className="flex-1 items-center">
         <Text className="text-[#003EA6] text-3xl font-bold mb-4">Histórico Médico</Text>
 
-        <Text className="text-[#003EA6] text-lg mt-2 mb-2">Já realizou tratamento?</Text>
-        <Input
-          text="SIM OU NÃO"
-          imagem={<Feather name="calendar" size={20} color="blue" />}
-          keyboardType="default"
-          value={tratamento}
-          onChangeText={setTratamento}
-        />
-
-        <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já realizou canal?</Text>
-        <Input
-          text="SIM OU NÃO"
-          imagem={<Feather name="calendar" size={20} color="blue" />}
-          keyboardType="default"
-          value={canal}
-          onChangeText={setCanal}
-        />
-
-        <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já realizou limpeza?</Text>
-        <Input
-          text="SIM OU NÃO"
-          imagem={<Feather name="calendar" size={20} color="blue" />}
-          keyboardType="default"
-          value={limpeza}
-          onChangeText={setLimpeza}
-        />
-
-        <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já colocou aparelho ortodôntico?</Text>
-        <Input
-          text="SIM OU NÃO"
-          imagem={<Feather name="calendar" size={20} color="blue" />}
-          keyboardType="default"
-          value={aparelho}
-          onChangeText={setAparelho}
-        />
-
-        <Text className="text-[#003EA6] text-lg mt-1 mb-2">Já realizou alguma cirurgia?</Text>
-        <Input
-          text="SIM OU NÃO"
-          imagem={<Feather name="calendar" size={20} color="blue" />}
-          keyboardType="default"
-          value={cirurgia}
-          onChangeText={setCirurgia}
-        />
+        {([
+          { label: "Já realizou tratamento?", name: "tratamento" },
+          { label: "Já realizou canal?", name: "canal" },
+          { label: "Já realizou limpeza?", name: "limpeza" },
+          { label: "Já colocou aparelho ortodôntico?", name: "aparelho" },
+          { label: "Já realizou alguma cirurgia?", name: "cirurgia" }
+        ] as const).map(({ label, name }) => (
+          <View key={name} className="w-full items-center">
+            <Text className="text-[#003EA6] text-lg mt-2 mb-2">{label}</Text>
+            <Controller
+              control={control}
+              name={name}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  text="SIM OU NÃO"
+                  imagem={<Feather name="calendar" size={20} color="blue" />}
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
+            />
+            {errors[name] && <Text className="text-red-500 text-xs mb-1">{errors[name]?.message}</Text>}
+          </View>
+        ))}
 
         <View className="flex-row items-center gap-16">
           <Link push href="/initial" asChild>
@@ -147,7 +119,7 @@ export default function HistoricoMedico() {
           </Link>
 
           <TouchableOpacity
-            onPress={enviarInformacoes}
+            onPress={handleSubmit(onSubmit)}
             className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-6"
           >
             <Text className="text-white text-lg font-bold">Enviar</Text>

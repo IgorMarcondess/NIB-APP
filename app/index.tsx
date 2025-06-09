@@ -23,21 +23,17 @@ export default function Index() {
   const router = useRouter();
   const { setUser } = useUser();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const {control, handleSubmit, formState: { errors },} = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const handleLogin = async (data: FormData): Promise<void> => {
+  const Login = async (data: FormData): Promise<void> => {
     try {
       const userData = await loginUser(data.email, data.senha);
       setUser(userData);
       Alert.alert("Login realizado com sucesso!");
       await AsyncStorage.setItem(data.email, JSON.stringify({ nome: userData.nomeUser }));
-      router.navigate("./initial");
+      router.push("./initial");
     } catch (error) {
       Alert.alert("Erro", error instanceof Error ? error.message : "Não foi possível fazer login.");
     }
@@ -50,50 +46,30 @@ export default function Index() {
         <Text className="text-blue-800 text-2xl font-bold mb-10">SEJAM BEM-VINDOS!</Text>
 
         <Text className="text-blue-800 text-lg font-bold text-center w-full">E-MAIL</Text>
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value } }) => (
-            <Input
-              text="Digite seu e-mail"
-              imagem={<Feather name="mail" size={20} color="blue" />}
-              keyboardType="email-address"
-              value={value}
-              onChangeText={onChange}
-            />
-          )}
-        />
+        <Controller control={control} name="email" 
+        render={({ field: { onChange, value } }) => (
+            <Input text="Digite seu e-mail" imagem={<Feather name="mail" size={20} color="blue" />} keyboardType="email-address" value={value} onChangeText={onChange} />
+          )} />
         {errors.email && <Text className="text-red-500 text-xs mb-2">{errors.email.message}</Text>}
 
         <Text className="text-blue-800 text-lg font-bold text-center ml-2">SENHA</Text>
-        <Controller
-          control={control}
-          name="senha"
+        <Controller control={control} name="senha"
           render={({ field: { onChange, value } }) => (
-            <Input
-              text="Digite sua senha"
-              imagem={<Feather name="lock" size={20} color="blue" />}
-              secureTextEntry
-              value={value}
-              onChangeText={onChange}
-            />
+            <Input text="Digite sua senha" imagem={<Feather name="lock" size={20} color="blue" />} secureTextEntry value={value} onChangeText={onChange} />
           )}
         />
         {errors.senha && <Text className="text-red-500 text-xs mb-2">{errors.senha.message}</Text>}
 
-        <TouchableOpacity
-          className="bg-blue-800 py-2 px-5 rounded-md w-80 items-center justify-center h-10 mt-4"
-          onPress={handleSubmit(handleLogin)}
-        >
+        <TouchableOpacity onPress={handleSubmit(Login)}
+          className="bg-blue-800 py-2 px-5 rounded-md w-80 items-center justify-center h-10 mt-4">
           <Text className="text-white text-base font-bold">LOGIN</Text>
         </TouchableOpacity>
       </View>
 
-      <Link href="/cadastro-principal" asChild>
-        <TouchableOpacity className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
+
+        <TouchableOpacity onPress={() => router.push("./(cadastro)/primeiro-cadastro")} className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
           <Text className="text-white text-base font-bold">REGISTRAR - SE</Text>
         </TouchableOpacity>
-      </Link>
 
       <StatusBar style="auto" />
       </ImageBackground>

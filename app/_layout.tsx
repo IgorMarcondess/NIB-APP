@@ -1,5 +1,5 @@
 import { Slot } from "expo-router";
-import Tela from "../app/enviarImagem"
+import Tela from "./(habitos)/enviarImagem"
 import { UserProvider } from "../components/userContext";
 import "../global.css";
 

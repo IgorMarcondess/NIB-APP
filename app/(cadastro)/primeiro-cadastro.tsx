@@ -2,12 +2,13 @@ import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Input } from '../components/input';
-import { registrarUser } from '../services/firebase';
-import { useUser } from "../components/userContext";
+import { Input } from '../../components/input';
+import { registrarUser } from '../../services/firebase';
+import { useUser } from "../../components/userContext";
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import postCriarUsuario from '../../services/postCriarUsuario';
 
 const schema = z.object({
   cpf: z.string().regex(/^\d{11}$/, "CPF deve conter 11 números"),
@@ -28,15 +29,22 @@ export default function CadastroPrincipal() {
   const onSubmit = async (data: FormData) => {
     try {
       const usuario = {
-        ...data,
-        nome: `${data.nome}`,
+        cpf: data.cpf,
+        nome: data.nome,
+        email: data.email,
+        senha: data.senha,
+        telefone: data.telefone,
         plano: "",
+        dataNascimento: "",
         userId: ""
       };
 
       const userData = await registrarUser(usuario);
-      //setUser(userData);
-      router.navigate("./cadastro-secundario");
+      await postCriarUsuario({ cpfUser: usuario.cpf, nomeUser: usuario.nome, sobrenomeUser: "", telefoneUser: usuario.telefone,
+      dataNascimentoUser: usuario.dataNascimento, planoUser: usuario.plano,emailUser: usuario.email});
+      
+      setUser(userData);
+      router.push("./planoUser");
 
     } catch (error: any) {
       const msg = error.message === "E-mail já cadastrado." 
@@ -50,32 +58,20 @@ export default function CadastroPrincipal() {
     <SafeAreaView className="flex-1 bg-[#003EA6]">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="items-center px-4 pb-10">
-          <Image source={require('../assets/logoteeth.png')} className="w-40 mb-5" />
+          <Image source={require('../../assets/logoteeth.png')} className="w-40 mb-5" />
           <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>
-          <Image source={require('../assets/image1.png')} className="w-[300px] h-[200px] rounded-xl" />
+          <Image source={require('../../assets/image1.png')} className="w-[300px] h-[200px] rounded-xl" />
 
-          {/* CPF */}
           <Text className="text-white text-lg font-bold mt-2">CPF</Text>
-          <Controller
-            control={control}
-            name="cpf"
+          <Controller control={control} name="cpf"
             render={({ field: { onChange, value } }) => (
-              <Input
-                text="Digite seu CPF"
-                imagem={<Feather name="mail" size={20} color="blue" />}
-                keyboardType="numeric"
-                value={value}
-                onChangeText={onChange}
-              />
+              <Input text="Digite seu CPF" imagem={<Feather name="mail" size={20} color="blue" />} keyboardType="numeric" value={value} onChangeText={onChange} />
             )}
           />
           {errors.cpf && <Text className="text-red-500 text-xs mb-1">{errors.cpf.message}</Text>}
 
-          {/* Nome */}
           <Text className="text-white text-lg font-bold mt-2">Nome</Text>
-          <Controller
-            control={control}
-            name="nome"
+          <Controller control={control} name="nome"
             render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite seu Nome"
@@ -87,11 +83,8 @@ export default function CadastroPrincipal() {
           />
           {errors.nome && <Text className="text-red-500 text-xs mb-1">{errors.nome.message}</Text>}
 
-          {/* Email */}
           <Text className="text-white text-lg font-bold mt-2">E-mail</Text>
-          <Controller
-            control={control}
-            name="email"
+          <Controller control={control} name="email"
             render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite seu E-mail"
@@ -104,11 +97,8 @@ export default function CadastroPrincipal() {
           />
           {errors.email && <Text className="text-red-500 text-xs mb-1">{errors.email.message}</Text>}
 
-          {/* Senha */}
           <Text className="text-white text-lg font-bold mt-2">Senha</Text>
-          <Controller
-            control={control}
-            name="senha"
+          <Controller control={control} name="senha"
             render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite sua Senha"
@@ -121,11 +111,8 @@ export default function CadastroPrincipal() {
           />
           {errors.senha && <Text className="text-red-500 text-xs mb-1">{errors.senha.message}</Text>}
 
-          {/* Telefone */}
           <Text className="text-white text-lg font-bold mt-2">Telefone</Text>
-          <Controller
-            control={control}
-            name="telefone"
+          <Controller control={control} name="telefone"
             render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite seu Telefone"
@@ -138,7 +125,6 @@ export default function CadastroPrincipal() {
           />
           {errors.telefone && <Text className="text-red-500 text-xs mb-1">{errors.telefone.message}</Text>}
 
-          {/* Botões */}
           <View className="flex-row justify-center items-center gap-5 mt-10">
             <TouchableOpacity className="py-3 px-8 rounded-full border-2 border-white" onPress={() => router.back()}>
               <Text className="text-white text-lg font-bold">VOLTAR</Text>
