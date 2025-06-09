@@ -24,7 +24,7 @@ export default function PreparativoImagem() {
         <View className="w-full bg-transparent" />
 
         <View className="flex-row justify-between w-full px-4">
-          <TouchableOpacity onPress={() => router.push("./initial.tsx")} className="flex-1 border border-white py-3 rounded-full mr-2 items-center">
+          <TouchableOpacity onPress={() => router.push("../initial")} className="flex-1 border border-white py-3 rounded-full mr-2 items-center">
             <Text className="text-white font-bold">VOLTAR</Text>
           </TouchableOpacity>
 

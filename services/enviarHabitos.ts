@@ -1,31 +1,41 @@
- 
+// src/services/enviarHabitos.ts
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "./firebase"; 
+import { db } from "./firebase";
 
-export const enviarHabitos = async (userId: string): Promise<void> => {
-  
-  const dataAtual = new Date();
-  const mesAtual = dataAtual.toLocaleString("pt-BR", { month: "long" });
-  const diaAtual = String(dataAtual.getDate()).padStart(2, "0");
-  let infosAtualizada = {};
+type Habitos = {
+  escovacao: boolean;
+  fioDental: boolean;
+  bochecho: boolean;
+};
+
+export const enviarHabitos = async (userId: string, habitos: Habitos): Promise<void> => {
+  const hoje = new Date();
+  const mesAtual = hoje.toLocaleString("pt-BR", { month: "long" });
+  const diaAtual = String(hoje.getDate()).padStart(2, "0");
 
   const docRef = doc(db, "usuarios", userId);
-  const dadosUsuario = await getDoc(docRef);
-  console.log("Infos do usuario", dadosUsuario)
+  const docSnap = await getDoc(docRef);
 
+  let dadosAtualizados: any = {};
 
-  if (dadosUsuario.exists()) {
-    const infosUsuario = dadosUsuario.data();
+  if (docSnap.exists()) {
+    dadosAtualizados = docSnap.data();
 
-    if (!infosUsuario[mesAtual]) {infosUsuario[mesAtual] = {};} // verificando o mês
-    if (!infosUsuario[mesAtual][diaAtual]) {infosUsuario[mesAtual][diaAtual] = 0;}
+    if (!dadosAtualizados[mesAtual]) { dadosAtualizados[mesAtual] = {};}
 
-    infosUsuario[mesAtual][diaAtual] += 1;
-    infosAtualizada = infosUsuario;
+    dadosAtualizados[mesAtual][diaAtual] = { escovacao: habitos.escovacao, fioDental: habitos.fioDental, bochecho: habitos.bochecho,};
 
   } else {
-    infosAtualizada = { [mesAtual]: {[diaAtual]: 1},}; //prevenção caso n exista nada
+    dadosAtualizados = {
+      [mesAtual]: {
+        [diaAtual]: {
+          escovacao: habitos.escovacao,
+          fioDental: habitos.fioDental,
+          bochecho: habitos.bochecho,
+        },
+      },
+    };
   }
 
-  await setDoc(docRef, infosAtualizada);
+  await setDoc(docRef, dadosAtualizados);
 };
