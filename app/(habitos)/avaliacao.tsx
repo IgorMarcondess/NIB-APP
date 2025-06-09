@@ -15,15 +15,6 @@ export default function Avaliacao() {
   const [popupEnvio, setPopupEnvio] = useState(false);
   const { user } = useUser();
 
-  useEffect(() => {
-    if (popupEnvio) {
-      const timeout = setTimeout(() => {
-        setPopupEnvio(false);
-        router.navigate("./initial");
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [popupEnvio]);
 
   const envioHabitos = async () => {
     if (!user?.idUser || !user?.cpfUser) {
@@ -42,16 +33,12 @@ export default function Avaliacao() {
     };
 
     try {
-      console.log("Informações", user.cpfUser)
       console.log(habitosDiarios)
       await axios.post(`http://192.168.15.10:8080/diario/criar?cpfUser=${user.cpfUser}`, habitosDiarios);
       console.log("Envio para API realizada com sucesso")
 
       await enviarHabitos(user.idUser, { escovacao, fioDental, bochecho,});
-      console.log("Envio para FIREBASE realizada com sucesso")
-
       router.push("./preparativoImagem");
-      setPopupEnvio(true);
     } catch (error) {
       console.error("Erro ao salvar hábitos:", error);
     }
@@ -84,23 +71,12 @@ export default function Avaliacao() {
 
           <Image source={require("../../assets/health.png")} className="w-full h-60 mt-9 mb-20" resizeMode="contain" />
 
-          <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-4" onPress={() => router.push("./initial")}>
+          <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-4" onPress={() => router.push("../initial")}>
             <Text className="text-white font-bold text-center">Voltar</Text>
           </TouchableOpacity>
 
           <StatusBar style="auto" />
         </View>
-
-        <Modal transparent animationType="fade" visible={popupEnvio}>
-          <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
-              <Text className="text-blue-700 font-extrabold text-2xl text-center">
-                ENVIO REALIZADO COM SUCESSO!
-              </Text>
-              <Feather name="check-circle" size={60} color="limegreen" style={{ marginTop: 16 }} />
-            </View>
-          </View>
-        </Modal>
       </ScrollView>
     </SafeAreaView>
   );

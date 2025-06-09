@@ -27,11 +27,11 @@ export default function Conta() {
         }
 
         try {
-            const userRef = doc(db, "usuarios", user.idUser);
-            await updateDoc(userRef, { [field]: value });
+            const DadosUser = doc(db, "usuarios", user.idUser);
+            await updateDoc(DadosUser, { [field]: value });
             Alert.alert("Informação atualizada!", `${field} atualizado com sucesso!`);
 
-            const dados = await getDoc(userRef);
+            const dados = await getDoc(DadosUser);
             if (!dados?.exists()) return;
 
             const infosUsuario = dados.data();

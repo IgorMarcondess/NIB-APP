@@ -11,7 +11,7 @@ const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho","julho
 export const CalendarioCompleto = () => {
   const { user } = useUser();
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
-  const [mesAtual, setMesAtual] = useState<string>("");
+  const [mesAtual, setMesAtual] = useState("");
 
   useEffect(() => {
     const carregarDadosDoMesAtual = async () => {
@@ -24,8 +24,8 @@ export const CalendarioCompleto = () => {
       const mesIndex = hoje.getMonth();
       const mes = meses[mesIndex];
       const ano = hoje.getFullYear();
-      const docRef = doc(db, "usuarios", user.idUser);
-      const docsUsuario = await getDoc(docRef);
+      const DadosUser = doc(db, "usuarios", user.idUser);
+      const docsUsuario = await getDoc(DadosUser);
 
       if (docsUsuario.exists()) {
         const dados = docsUsuario.data();

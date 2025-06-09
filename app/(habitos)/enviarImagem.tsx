@@ -4,9 +4,9 @@ import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { router } from "expo-router";
 
-export default function CameraCapture() {
+export default function EnviarImagem() {
   const [photo, setPhoto] = useState<string | null>(null);
-  const [isSending, setIsSending] = useState(false);
+  const [isEnviando, setIsEnviando] = useState(false);
 
   const tirarFoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -29,7 +29,7 @@ export default function CameraCapture() {
     if (!photo) return;
 
     try {
-      setIsSending(true);
+      setIsEnviando(true);
 
       const manipResult = await ImageManipulator.manipulateAsync(photo, [], {
         compress: 0.7,
@@ -50,7 +50,7 @@ export default function CameraCapture() {
 
       if (response.ok) {
         Alert.alert("Sucesso", "Foto enviada com sucesso!");
-        router.push("../initial.tsx");
+        router.push("../initial");
       } else {
         const errorText = await response.text();
         console.error("Erro da API:", errorText);
@@ -61,16 +61,22 @@ export default function CameraCapture() {
       console.error("Erro ao enviar imagem:", error);
       Alert.alert("Erro", "Falha ao enviar a foto.");
     } finally {
-      setIsSending(false);
+      setIsEnviando(false);
     }
   };
 
   return (
     <View className="flex-1 bg-white items-center justify-center p-4">
       {!photo ? (
+        <>
         <TouchableOpacity onPress={tirarFoto} className="bg-white px-12 py-6 rounded-lg border border-blue-700">
           <Text className="font-extrabold text-blue-700">ABRIR CÂMERA</Text>
         </TouchableOpacity>
+        <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-12" onPress={() => router.push("../initial")}>
+            <Text className="text-white font-bold text-center">Voltar</Text>
+        </TouchableOpacity>
+        </>
+        
       ) : (
         <>
           <Text className="text-blue-700 text-lg font-bold mb-2">VERIFIQUE SE A IMAGEM ESTÁ ADEQUADA:</Text>
@@ -80,12 +86,9 @@ export default function CameraCapture() {
               <Text className="text-blue-700 font-bold">CANCELAR</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={enviarFoto} className="border border-blue-700 bg-white px-8 py-4 rounded-lg" disabled={isSending}>
-              {isSending ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text className="text-blue-700 font-bold">ENVIAR FOTO</Text>
-              )}
+            <TouchableOpacity onPress={() => enviarFoto()} className="border border-blue-700 bg-white px-8 py-4 rounded-lg" disabled={isEnviando}>
+              {isEnviando ? (
+                <ActivityIndicator color="blue-700" />) : (<Text className="text-blue-700 font-bold">ENVIAR FOTO</Text>)}
             </TouchableOpacity>
           </View>
         </>

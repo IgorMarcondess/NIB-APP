@@ -13,12 +13,11 @@ export default function PlanoOfensiva() {
   const salvarPlano = async (plano:any) => {
     console.log("Entrou")
     if(!user?.idUser) return;
-
     try {
       console.log("Entrou novamente")
-      const userRef = doc(db, "usuarios", user.idUser);
+      const dadosUser = doc(db, "usuarios", user.idUser);
 
-      await updateDoc(userRef, {
+      await updateDoc(dadosUser, {
       planoOfensiva: {
         nome: plano.nome,
         diasMaximos: plano.diasMaximos,
@@ -40,10 +39,7 @@ export default function PlanoOfensiva() {
       <Text className="text-center text-blue-700 font-bold text-xl mb-6 uppercase"> Escolha seu plano de ofensiva </Text>
 
       {planos.map((plano) => (
-        <View
-          key={plano.id}
-          className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-5 mb-5 w-80 items-center"
-        >
+        <View key={plano.id} className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-5 mb-5 w-80 items-center">
           <View className={`flex-row ${plano.imagem ? "justify-between" : "justify-center"} items-center w-full`}>
             <View className={`${plano.imagem ? "" : "items-center"}`}>
               <Text className={`text-blue-700 font-extrabold ${plano.imagem ? "text-xl" : "text-2xl"}`}>{plano.diasMaximos} DIAS</Text>

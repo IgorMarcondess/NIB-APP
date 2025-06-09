@@ -1,15 +1,14 @@
-import { Link, router } from "expo-router";
-import { Feather } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View, Alert } from "react-native";
-import { Input } from "../components/input";
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Alert, TextInput, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { router, Link } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUser } from "../components/userContext";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useUser } from "../components/userContext";
 
 const schema = z.object({
   tratamento: z.string().refine(v => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
@@ -33,7 +32,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function HistoricoMedico() {
   const { user } = useUser();
-  const [informacoesEnviadas, setInformacoesEnviadas] = useState(false);
+  const [popupEnviadoAntes, setPopupEnviadoAntes] = useState(false);
+  const [popupEnviadoAgora, setPopupEnviadoAgora] = useState(false);
 
   const {
     control,
@@ -42,91 +42,169 @@ export default function HistoricoMedico() {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   useEffect(() => {
-    const verificarInformacoesEnviadas = async () => {
+    const carregarDados = async () => {
       if (!user?.emailUser) return;
-      const dadosExistente = await AsyncStorage.getItem(user.emailUser);
-      const objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
-      if (objetoDados.historicoMedico === true) {
-        setInformacoesEnviadas(true);
-        setTimeout(() => router.push("./initial"), 3000);
+      const salvo = await AsyncStorage.getItem(user.emailUser);
+      const dados = salvo ? JSON.parse(salvo) : {};
+      if (dados.historicoMedico) {
+        setPopupEnviadoAntes(true);
+        setTimeout(() => {
+          setPopupEnviadoAntes(false);
+          router.push("./initial");
+        }, 3000);
       }
     };
-    verificarInformacoesEnviadas();
+    carregarDados();
   }, [user?.emailUser]);
 
   const onSubmit = async (data: FormData) => {
-    if (!user?.emailUser) {
-      Alert.alert("Erro", "Email do usuário não disponível.");
-      return;
-    }
+    if (!user?.emailUser) return Alert.alert("Erro", "Usuário não identificado.");
 
-    const dadosExistente = await AsyncStorage.getItem(user.emailUser);
-    const objetoDados = dadosExistente ? JSON.parse(dadosExistente) : {};
+    const salvo = await AsyncStorage.getItem(user.emailUser);
+    const dados = salvo ? JSON.parse(salvo) : {};
 
-    objetoDados.historicoMedico = true;
-    await AsyncStorage.setItem(user.emailUser, JSON.stringify(objetoDados));
-    setInformacoesEnviadas(true);
+    dados.historicoMedico = true;
+    await AsyncStorage.setItem(user.emailUser, JSON.stringify(dados));
+    setPopupEnviadoAgora(true);
 
-    setTimeout(() => router.push("./initial"), 3000);
+    setTimeout(() => {
+      setPopupEnviadoAgora(false);
+      router.push("./initial");
+    }, 3000);
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center bg-white w-full h-full pt-12">
-      {informacoesEnviadas && (
-        <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center bg-black/50 z-50">
+    <SafeAreaView className="flex-1 bg-white items-center pt-12 px-4">
+      <StatusBar style="auto" />
+
+      <Modal transparent animationType="fade" visible={popupEnviadoAntes}>
+        <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
             <Text className="text-blue-700 font-extrabold text-2xl text-center">
-              Informações Médicas já enviadas
+              INFORMAÇÕES JÁ ENVIADAS
             </Text>
-            <Feather name="check-circle" size={60} color="limegreen" className="mt-4" />
+            <Feather name="check-circle" size={60} color="limegreen" style={{ marginTop: 16 }} />
           </View>
         </View>
-      )}
+      </Modal>
 
-      <View className="flex-1 items-center">
-        <Text className="text-[#003EA6] text-3xl font-bold mb-4">Histórico Médico</Text>
+      <Modal transparent animationType="fade" visible={popupEnviadoAgora}>
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
+            <Text className="text-blue-700 font-extrabold text-2xl text-center">
+              ENVIO REALIZADO COM SUCESSO!
+            </Text>
+            <Feather name="check-circle" size={60} color="limegreen" style={{ marginTop: 16 }} />
+          </View>
+        </View>
+      </Modal>
 
-        {([
-          { label: "Já realizou tratamento?", name: "tratamento" },
-          { label: "Já realizou canal?", name: "canal" },
-          { label: "Já realizou limpeza?", name: "limpeza" },
-          { label: "Já colocou aparelho ortodôntico?", name: "aparelho" },
-          { label: "Já realizou alguma cirurgia?", name: "cirurgia" }
-        ] as const).map(({ label, name }) => (
-          <View key={name} className="w-full items-center">
-            <Text className="text-[#003EA6] text-lg mt-2 mb-2">{label}</Text>
-            <Controller
-              control={control}
-              name={name}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  text="SIM OU NÃO"
-                  imagem={<Feather name="calendar" size={20} color="blue" />}
-                  value={value}
-                  onChangeText={onChange}
-                />
-              )}
+      <Text className="text-[#003EA6] text-3xl font-bold mb-6">Histórico Médico</Text>
+
+      <View className="w-full mb-4">
+        <Text className="text-[#003EA6] text-base mb-1">Já realizou tratamento?</Text>
+        <Controller
+          control={control}
+          name="tratamento"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
+              placeholder="Digite SIM ou NÃO"
+              value={value}
+              onChangeText={onChange}
+              autoCapitalize="characters"
             />
-            {errors[name] && <Text className="text-red-500 text-xs mb-1">{errors[name]?.message}</Text>}
-          </View>
-        ))}
-
-        <View className="flex-row items-center gap-16">
-          <Link push href="/initial" asChild>
-            <TouchableOpacity className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-5">
-              <Text className="text-white text-lg font-bold">Voltar</Text>
-            </TouchableOpacity>
-          </Link>
-
-          <TouchableOpacity
-            onPress={handleSubmit(onSubmit)}
-            className="bg-primary py-3 px-8 rounded-full items-center justify-center mt-6"
-          >
-            <Text className="text-white text-lg font-bold">Enviar</Text>
-          </TouchableOpacity>
-        </View>
+          )}
+        />
+        {errors.tratamento && <Text className="text-red-500 text-xs mt-1">{errors.tratamento.message}</Text>}
       </View>
-      <StatusBar style="auto" />
+
+      <View className="w-full mb-4">
+        <Text className="text-[#003EA6] text-base mb-1">Já realizou canal?</Text>
+        <Controller
+          control={control}
+          name="canal"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
+              placeholder="Digite SIM ou NÃO"
+              value={value}
+              onChangeText={onChange}
+              autoCapitalize="characters"
+            />
+          )}
+        />
+        {errors.canal && <Text className="text-red-500 text-xs mt-1">{errors.canal.message}</Text>}
+      </View>
+
+      <View className="w-full mb-4">
+        <Text className="text-[#003EA6] text-base mb-1">Já realizou limpeza?</Text>
+        <Controller
+          control={control}
+          name="limpeza"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
+              placeholder="Digite SIM ou NÃO"
+              value={value}
+              onChangeText={onChange}
+              autoCapitalize="characters"
+            />
+          )}
+        />
+        {errors.limpeza && <Text className="text-red-500 text-xs mt-1">{errors.limpeza.message}</Text>}
+      </View>
+
+      <View className="w-full mb-4">
+        <Text className="text-[#003EA6] text-base mb-1">Já colocou aparelho ortodôntico?</Text>
+        <Controller
+          control={control}
+          name="aparelho"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
+              placeholder="Digite SIM ou NÃO"
+              value={value}
+              onChangeText={onChange}
+              autoCapitalize="characters"
+            />
+          )}
+        />
+        {errors.aparelho && <Text className="text-red-500 text-xs mt-1">{errors.aparelho.message}</Text>}
+      </View>
+
+      <View className="w-full mb-4">
+        <Text className="text-[#003EA6] text-base mb-1">Já realizou alguma cirurgia?</Text>
+        <Controller
+          control={control}
+          name="cirurgia"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
+              placeholder="Digite SIM ou NÃO"
+              value={value}
+              onChangeText={onChange}
+              autoCapitalize="characters"
+            />
+          )}
+        />
+        {errors.cirurgia && <Text className="text-red-500 text-xs mt-1">{errors.cirurgia.message}</Text>}
+      </View>
+
+      <View className="flex-row gap-6 mt-6">
+        <Link href="/initial" asChild>
+          <TouchableOpacity className="bg-primary py-3 px-8 rounded-full">
+            <Text className="text-white text-lg font-bold">Voltar</Text>
+          </TouchableOpacity>
+        </Link>
+
+        <TouchableOpacity
+          onPress={handleSubmit(onSubmit)}
+          className="bg-primary py-3 px-8 rounded-full"
+        >
+          <Text className="text-white text-lg font-bold">Enviar</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
