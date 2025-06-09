@@ -43,15 +43,15 @@ export default function CameraCapture() {
         type: "image/jpeg",
       } as any);
 
-    //   await axios.post("https://sua-api.com/upload", formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   });
+      await axios.post("http://localhost:8080/diario/criar?cpfUser=98684948009", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       
 
       Alert.alert("Sucesso", "Foto enviada com sucesso!");
-    router.push("./ofensiva.tsx")
+      router.push("./")
     } catch (error) {
       console.error(error);
       Alert.alert("Erro", "Falha ao enviar a foto.");

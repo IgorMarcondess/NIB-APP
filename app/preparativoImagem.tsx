@@ -28,7 +28,7 @@ export default function PreparativoImagem() {
             <Text className="text-white font-bold">VOLTAR</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-1 border border-white py-3 rounded-full ml-2 items-center">
+          <TouchableOpacity onPress={() => router.push("./enviarImagem")} className="flex-1 border border-white py-3 rounded-full ml-2 items-center">
             <Text className="text-white font-bold">INICIAR</Text>
           </TouchableOpacity>
         </View>
