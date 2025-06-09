@@ -50,7 +50,7 @@ export default function CameraCapture() {
 
       if (response.ok) {
         Alert.alert("Sucesso", "Foto enviada com sucesso!");
-        router.push("./");
+        router.push("../initial.tsx");
       } else {
         const errorText = await response.text();
         console.error("Erro da API:", errorText);
