@@ -29,25 +29,27 @@ export default function CameraCapture() {
 
   const enviarFoto = async () => {
     if (!photo) return;
-    try {
-      setIsSending(true);
-      const manipResult = await ImageManipulator.manipulateAsync(photo, [], {
-        compress: 0.6,
-        format: ImageManipulator.SaveFormat.JPEG,
-      });
 
-      const formData = new FormData();
-      formData.append("file", {
-        uri: manipResult.uri,
-        name: "foto.jpg",
-        type: "image/jpeg",
-      } as any);
+  try {
+    setIsSending(true);
 
-      await axios.post("http://localhost:8080/diario/criar?cpfUser=98684948009", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    const manipResult = await ImageManipulator.manipulateAsync(photo, [], {
+      compress: 0.6,
+      format: ImageManipulator.SaveFormat.JPEG,
+    });
+
+    const formData = new FormData();
+
+    // Corrigir o nome do campo para "imagem"
+    formData.append("imagem", {
+      uri: manipResult.uri,
+      name: "foto.jpg",
+      type: "image/jpeg",
+    } as any);
+
+    await axios.post(
+      "http://192.168.X.X:8080/diario/criar?cpfUser=98684948009",
+      formData);
       
 
       Alert.alert("Sucesso", "Foto enviada com sucesso!");
