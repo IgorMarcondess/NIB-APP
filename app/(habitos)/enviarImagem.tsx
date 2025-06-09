@@ -48,7 +48,7 @@ export default function CameraCapture() {
     } as any);
 
     await axios.post(
-      "http://192.168.X.X:8080/diario/criar?cpfUser=98684948009", formData);
+      "http://192.168.107.234:8080/imagens/upload", formData);
       
 
       Alert.alert("Sucesso", "Foto enviada com sucesso!");
