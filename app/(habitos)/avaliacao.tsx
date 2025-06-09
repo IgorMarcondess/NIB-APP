@@ -6,13 +6,12 @@ import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-na
 import axios from "axios";
 import { useUser } from "../../components/userContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { enviarHabitos } from "../../services/enviarHabitos"; // ✅ importe correto
+import { enviarHabitos } from "../../services/enviarHabitos";
 
 export default function Avaliacao() {
   const [escovacao, setEscovacao] = useState(false);
   const [fioDental, setFioDental] = useState(false);
   const [bochecho, setBochecho] = useState(false);
-  const [popupEnvio, setPopupEnvio] = useState(false);
   const { user } = useUser();
 
 
