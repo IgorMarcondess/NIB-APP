@@ -52,7 +52,7 @@ export default function Avaliacao() {
 
         console.log("Dados", habitosDiarios)
       // 🔹 Envio para API externa
-      await axios.post("http://192.168.107.234:8080/diario/criar?cpfUser=98684948009", habitosDiarios);
+      await axios.post("http://192.168.15.13:8080/diario/criar?cpfUser=98684948009", habitosDiarios);
 
       // 🔹 Envio para o Firebase
       const docRef = doc(db, "usuarios", user.idUser);
@@ -78,7 +78,7 @@ export default function Avaliacao() {
           },
         });
       }
-      router.push("./preparativoImagem")
+      router.push("./enviarImagem"); // <- caminho correto da página EnviarImagem
       setPopupEnvio(true);
     } catch (error) {
       console.error("Erro ao salvar hábitos:", error);

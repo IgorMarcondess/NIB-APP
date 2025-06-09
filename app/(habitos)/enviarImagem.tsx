@@ -47,8 +47,10 @@ export default function CameraCapture() {
       type: "image/jpeg",
     } as any);
 
-    await axios.post(
-      "http://192.168.107.234:8080/imagens/upload", formData);
+    const response = await fetch("http://192.168.15.13:8080/imagens/upload", {
+        method: "POST",
+        body: formData,
+      });
       
 
       Alert.alert("Sucesso", "Foto enviada com sucesso!");
