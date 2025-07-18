@@ -67,8 +67,8 @@ export default function Login() {
       </View>
 
 
-        <TouchableOpacity onPress={() => router.push("./(cadastro)/primeiro-cadastro")} className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
-          <Text className="text-white text-base font-bold">REGISTRAR - SE</Text>
+        <TouchableOpacity onPress={() => router.push("/(cadastro)/localizar_cpf")} className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
+          <Text className="text-white text-base font-bold">PRIMEIRO ACESSO</Text>
         </TouchableOpacity>
 
       <StatusBar style="auto" />

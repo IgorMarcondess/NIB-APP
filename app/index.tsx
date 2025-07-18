@@ -18,7 +18,7 @@ export default function Index() {
   return (
     <SafeAreaView className="flex-1 bg-white items-center px-4 py-6">
 
-      <Text className="text-center text-2xl text-blue-700 font-extrabold mb-20 mt-32 uppercase">
+      <Text className="text-center text-2xl text-blue-700 font-extrabold mb-16 mt-28 uppercase">
         Escolha uma opção
       </Text>
 
