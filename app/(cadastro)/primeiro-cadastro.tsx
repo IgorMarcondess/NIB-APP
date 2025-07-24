@@ -83,7 +83,6 @@ export default function CadastroPrincipal() {
         <View className="items-center px-4 pb-10">
           <Image source={require('../../assets/logoteeth.png')} className="w-40 mb-5" />
           <Text className="text-white text-2xl font-bold mb-2">INSERIR DADOS</Text>
-          <Image source={require('../../assets/image1.png')} className="w-[300px] h-[200px] rounded-xl" />
 
           <Text className="text-white text-lg font-bold mt-2">CPF</Text>
           <Controller control={control} name="cpf"
