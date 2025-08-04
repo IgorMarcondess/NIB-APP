@@ -16,6 +16,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase';
 
 const schema = z.object({
   cpf: z.string().regex(/^\d{11}$/, 'CPF deve conter 11 números'),
@@ -38,26 +40,27 @@ export default function Localizar_cpf() {
     try {
       setLoading(true);
 
-      const response = await fetch('https://sua-api.com/usuario/buscar-cpf', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ cpf: data.cpf }),
-      });
+      const usuariosRef = collection(db, 'usuarios');
+      const q = query(usuariosRef, where('cpf', '==', data.cpf));
+      const querySnapshot = await getDocs(q);
 
-      const json = await response.json();
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        const dados = doc.data();
 
-      if (!response.ok) {
-        throw new Error(json.message || 'Erro ao buscar usuário.');
-      }
+        const userFinal = {
+          cpfUser: dados.cpf || '',
+          nomeUser: dados.nome || '',
+          sobrenomeUser: dados.sobrenome || '',
+          telefoneUser: dados.telefone || '',
+          dataNascimentoUser: dados.dataNascimento || '',
+          planoUser: dados.plano || '',
+          emailUser: dados.email || '',
+          idUser: doc.id,
+        };
 
-      // Exemplo de resposta esperada:
-      // { usuarioEncontrado: true, nome: "Maria", ... }
-
-      if (json.usuarioEncontrado) {
-        setUser(json); // armazena no contexto global se necessário
-        router.push('/cadastro_confirmado'); // redireciona para próxima etapa
+        setUser(userFinal);
+        router.push('/primeiro-cadastro');
       } else {
         Alert.alert('CPF não encontrado', 'Nenhum cadastro foi localizado com esse CPF.');
       }
