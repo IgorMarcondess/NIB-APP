@@ -44,14 +44,13 @@ export async function notifyNow(nome?: string) {
       title: `Oiii ${nome ?? 'você'}! tudo bem?`,
       body: 'Já realizou seu Check-in hoje? 👀',
     },
-    trigger: null, // dispara agora
+    trigger: null, 
   });
 }
 
 export async function scheduleHourly(nome?: string) {
   await ensurePermissionsAndChannel();
   const trigger: Notifications.TimeIntervalTriggerInput = {
-    // dependendo da sua versão, use UMA destas linhas:
     type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
     seconds: 3600,
     repeats: true,
@@ -72,7 +71,7 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-      // dispara agora
+      
       notifyNow(user?.nomeUser).catch(console.warn);
       //scheduleHourly(user.nomeUser).catch(console.warn);
 
