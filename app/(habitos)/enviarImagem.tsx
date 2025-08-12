@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { router } from "expo-router";
@@ -11,7 +18,10 @@ export default function EnviarImagem() {
   const tirarFoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Permissão negada", "É necessário conceder permissão para usar a câmera.");
+      Alert.alert(
+        "Permissão negada",
+        "É necessário conceder permissão para usar a câmera."
+      );
       return;
     }
 
@@ -43,7 +53,7 @@ export default function EnviarImagem() {
         type: "image/jpeg",
       } as any);
 
-      const response = await fetch("http://192.168.15.13:8080/imagens/upload", {
+      const response = await fetch("http://192.168.15.6:8080/imagens/upload", {
         method: "POST",
         body: formData,
       });
@@ -56,7 +66,6 @@ export default function EnviarImagem() {
         console.error("Erro da API:", errorText);
         Alert.alert("Erro", `Falha ao enviar: ${errorText}`);
       }
-
     } catch (error: any) {
       console.error("Erro ao enviar imagem:", error);
       Alert.alert("Erro", "Falha ao enviar a foto.");
@@ -69,26 +78,46 @@ export default function EnviarImagem() {
     <View className="flex-1 bg-white items-center justify-center p-4">
       {!photo ? (
         <>
-        <TouchableOpacity onPress={tirarFoto} className="bg-white px-12 py-6 rounded-lg border border-blue-700">
-          <Text className="font-extrabold text-blue-700">ABRIR CÂMERA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-blue-700 rounded-full py-3 w-36 mt-12" onPress={() => router.push("../initial")}>
+          <TouchableOpacity
+            onPress={tirarFoto}
+            className="bg-white px-12 py-6 rounded-lg border border-blue-700"
+          >
+            <Text className="font-extrabold text-blue-700">ABRIR CÂMERA</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-blue-700 rounded-full py-3 w-36 mt-12"
+            onPress={() => router.push("../initial")}
+          >
             <Text className="text-white font-bold text-center">Voltar</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </>
-        
       ) : (
         <>
-          <Text className="text-blue-700 text-lg font-bold mb-2">VERIFIQUE SE A IMAGEM ESTÁ ADEQUADA:</Text>
-          <Image source={{ uri: photo }} className="w-full h-96 rounded-xl mt-2" />
+          <Text className="text-blue-700 text-lg font-bold mb-2">
+            VERIFIQUE SE A IMAGEM ESTÁ ADEQUADA:
+          </Text>
+          <Image
+            source={{ uri: photo }}
+            className="w-full h-96 rounded-xl mt-2"
+          />
           <View className="flex-row gap-16 mt-10">
-            <TouchableOpacity onPress={() => setPhoto(null)} className="border border-blue-700 bg-white px-8 py-4 rounded-lg">
+            <TouchableOpacity
+              onPress={() => setPhoto(null)}
+              className="border border-blue-700 bg-white px-8 py-4 rounded-lg"
+            >
               <Text className="text-blue-700 font-bold">CANCELAR</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => enviarFoto()} className="border border-blue-700 bg-white px-8 py-4 rounded-lg" disabled={isEnviando}>
+            <TouchableOpacity
+              onPress={() => enviarFoto()}
+              className="border border-blue-700 bg-white px-8 py-4 rounded-lg"
+              disabled={isEnviando}
+            >
               {isEnviando ? (
-                <ActivityIndicator color="blue-700" />) : (<Text className="text-blue-700 font-bold">ENVIAR FOTO</Text>)}
+                <ActivityIndicator color="blue-700" />
+              ) : (
+                <Text className="text-blue-700 font-bold">ENVIAR FOTO</Text>
+              )}
             </TouchableOpacity>
           </View>
         </>

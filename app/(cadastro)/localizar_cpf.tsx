@@ -1,5 +1,5 @@
-import { Feather } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import {
   Alert,
   Image,
@@ -8,20 +8,20 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Input } from '../../components/input';
-import { useUser } from '../../components/userContext';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import axios from 'axios';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../../services/firebase';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Input } from "../../components/input";
+import { useUser } from "../../components/userContext";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import axios from "axios";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../services/firebase";
 
 const schema = z.object({
-  cpf: z.string().regex(/^\d{11}$/, 'CPF deve conter 11 números'),
+  cpf: z.string().regex(/^\d{11}$/, "CPF deve conter 11 números"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -42,12 +42,15 @@ export default function Localizar_cpf() {
     setLoading(true);
     try {
       // 🔍 Busca no Firebase
-      const usuariosRef = collection(db, 'usuarios');
-      const q = query(usuariosRef, where('cpf', '==', data.cpf));
+      const usuariosRef = collection(db, "usuarios");
+      const q = query(usuariosRef, where("cpf", "==", data.cpf));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        Alert.alert('CPF não encontrado no Firebase', 'Nenhum cadastro foi localizado no banco interno.');
+        Alert.alert(
+          "CPF não encontrado no Firebase",
+          "Nenhum cadastro foi localizado no banco interno."
+        );
         return;
       }
 
@@ -55,32 +58,43 @@ export default function Localizar_cpf() {
       const firebaseData = firebaseDoc.data();
 
       // 🔍 Busca na API
-      const response = await axios.get(`http://192.168.15.10:8080/usuario/cpf/${data.cpf}`);
+      const response = await axios.get(
+        `http://192.168.15.6:8080/usuario/cpf/${data.cpf}`
+      );
 
       if (!response.data) {
-        Alert.alert('CPF não encontrado na API', 'O cadastro não foi localizado na base externa.');
+        Alert.alert(
+          "CPF não encontrado na API",
+          "O cadastro não foi localizado na base externa."
+        );
         return;
       }
 
-      const dados = Array.isArray(response.data) ? response.data[0] : response.data;
+      const dados = Array.isArray(response.data)
+        ? response.data[0]
+        : response.data;
 
       // ✅ CPF encontrado nas duas fontes
       const userFinal = {
-        cpfUser: dados.cpf || firebaseData.cpf || '',
-        nomeUser: dados.nome || firebaseData.nome || '',
-        sobrenomeUser: dados.sobrenome || firebaseData.sobrenome || '',
-        telefoneUser: dados.telefone || firebaseData.telefone || '',
-        dataNascimentoUser: dados.dataNascimento || firebaseData.dataNascimento || '',
-        planoUser: dados.plano || firebaseData.plano || '',
-        emailUser: dados.email || firebaseData.email || '',
+        cpfUser: dados.cpf || firebaseData.cpf || "",
+        nomeUser: dados.nome || firebaseData.nome || "",
+        sobrenomeUser: dados.sobrenome || firebaseData.sobrenome || "",
+        telefoneUser: dados.telefone || firebaseData.telefone || "",
+        dataNascimentoUser:
+          dados.dataNascimento || firebaseData.dataNascimento || "",
+        planoUser: dados.plano || firebaseData.plano || "",
+        emailUser: dados.email || firebaseData.email || "",
         idUser: firebaseDoc.id,
       };
 
       setUser(userFinal);
-      Alert.alert('Usuário encontrado', 'Seguindo para próxima tela...');
-      router.push('/primeiro-cadastro');
+      Alert.alert("Usuário encontrado", "Seguindo para próxima tela...");
+      router.push("/primeiro-cadastro");
     } catch (error: any) {
-      Alert.alert('Erro', error.response?.data?.message || error.message || 'Erro inesperado.');
+      Alert.alert(
+        "Erro",
+        error.response?.data?.message || error.message || "Erro inesperado."
+      );
     } finally {
       setLoading(false);
     }
@@ -90,10 +104,17 @@ export default function Localizar_cpf() {
     <SafeAreaView className="flex-1 bg-[#003EA6]">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="items-center px-4 pb-10">
-          <Image source={require('../../assets/logoteeth.png')} className="w-40 mb-5" />
-          <Text className="text-white text-2xl font-bold mb-2 mt-6">LOCALIZAR CADASTRO</Text>
+          <Image
+            source={require("../../assets/logoteeth.png")}
+            className="w-40 mb-5"
+          />
+          <Text className="text-white text-2xl font-bold mb-2 mt-6">
+            LOCALIZAR CADASTRO
+          </Text>
 
-          <Text className="text-white text-lg font-medium mt-2 mb-2">DIGITE SEU CPF</Text>
+          <Text className="text-white text-lg font-medium mt-2 mb-2">
+            DIGITE SEU CPF
+          </Text>
           <Controller
             control={control}
             name="cpf"
@@ -107,10 +128,14 @@ export default function Localizar_cpf() {
               />
             )}
           />
-          {errors.cpf && <Text className="text-red-500 text-xs mb-1">{errors.cpf.message}</Text>}
+          {errors.cpf && (
+            <Text className="text-red-500 text-xs mb-1">
+              {errors.cpf.message}
+            </Text>
+          )}
 
           <Image
-            source={require('../../assets/recepcao.jpg')}
+            source={require("../../assets/recepcao.jpg")}
             className="w-[350px] h-[300px] rounded-xl mt-10"
           />
 
