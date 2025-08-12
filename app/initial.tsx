@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView, Platform } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Notifications from 'expo-notifications';
 import { router } from "expo-router";
 import { useUser } from "../components/userContext";
 import { CalendarioOfensiva } from "../components/calendarioOfensivas";
@@ -11,11 +12,70 @@ import { CalendarioCompleto } from "../components/calendarioCompleto";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 
+Notifications.setNotificationHandler({
+  handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
+async function ensurePermissionsAndChannel() {
+  const { status } = await Notifications.getPermissionsAsync();
+  if (status !== 'granted') {
+    const req = await Notifications.requestPermissionsAsync();
+    if (req.status !== 'granted') throw new Error('Permissão negada');
+  }
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'Padrão',
+      importance: Notifications.AndroidImportance.MAX,
+    });
+  }
+}
+
+export async function notifyNow(nome?: string) {
+  await ensurePermissionsAndChannel();
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: `Oiii ${nome ?? 'você'}! tudo bem?`,
+      body: 'Já realizou seu Check-in hoje? 👀',
+    },
+    trigger: null, // dispara agora
+  });
+}
+
+export async function scheduleHourly(nome?: string) {
+  await ensurePermissionsAndChannel();
+  const trigger: Notifications.TimeIntervalTriggerInput = {
+    // dependendo da sua versão, use UMA destas linhas:
+    type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+    seconds: 3600,
+    repeats: true,
+  };
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: `Oiii ${nome ?? 'você'}! tudo bem?`,
+      body: 'Já realizou seu Check-in hoje? 👀',
+    },
+    trigger,
+  });
+}
+
 const Dashboard = () => {
   const { user } = useUser();
   const [ofensiva, setOfensiva] = useState(0);
 
   useEffect(() => {
+
+      // dispara agora
+      notifyNow(user?.nomeUser).catch(console.warn);
+      //scheduleHourly(user.nomeUser).catch(console.warn);
+
     const buscarDiasPreenchidos = async () => {
       if (!user?.idUser) return;
 

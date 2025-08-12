@@ -16,6 +16,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import axios from 'axios';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 
@@ -34,38 +35,52 @@ export default function Localizar_cpf() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: FormData) => {
+    setLoading(true);
     try {
-      setLoading(true);
-
+      // 🔍 Busca no Firebase
       const usuariosRef = collection(db, 'usuarios');
       const q = query(usuariosRef, where('cpf', '==', data.cpf));
       const querySnapshot = await getDocs(q);
 
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        const dados = doc.data();
-
-        const userFinal = {
-          cpfUser: dados.cpf || '',
-          nomeUser: dados.nome || '',
-          sobrenomeUser: dados.sobrenome || '',
-          telefoneUser: dados.telefone || '',
-          dataNascimentoUser: dados.dataNascimento || '',
-          planoUser: dados.plano || '',
-          emailUser: dados.email || '',
-          idUser: doc.id,
-        };
-
-        setUser(userFinal);
-        router.push('/primeiro-cadastro');
-      } else {
-        Alert.alert('CPF não encontrado', 'Nenhum cadastro foi localizado com esse CPF.');
+      if (querySnapshot.empty) {
+        Alert.alert('CPF não encontrado no Firebase', 'Nenhum cadastro foi localizado no banco interno.');
+        return;
       }
+
+      const firebaseDoc = querySnapshot.docs[0];
+      const firebaseData = firebaseDoc.data();
+
+      // 🔍 Busca na API
+      const response = await axios.get(`http://192.168.15.10:8080/usuario/cpf/${data.cpf}`);
+
+      if (!response.data) {
+        Alert.alert('CPF não encontrado na API', 'O cadastro não foi localizado na base externa.');
+        return;
+      }
+
+      const dados = Array.isArray(response.data) ? response.data[0] : response.data;
+
+      // ✅ CPF encontrado nas duas fontes
+      const userFinal = {
+        cpfUser: dados.cpf || firebaseData.cpf || '',
+        nomeUser: dados.nome || firebaseData.nome || '',
+        sobrenomeUser: dados.sobrenome || firebaseData.sobrenome || '',
+        telefoneUser: dados.telefone || firebaseData.telefone || '',
+        dataNascimentoUser: dados.dataNascimento || firebaseData.dataNascimento || '',
+        planoUser: dados.plano || firebaseData.plano || '',
+        emailUser: dados.email || firebaseData.email || '',
+        idUser: firebaseDoc.id,
+      };
+
+      setUser(userFinal);
+      Alert.alert('Usuário encontrado', 'Seguindo para próxima tela...');
+      router.push('/primeiro-cadastro');
     } catch (error: any) {
-      Alert.alert('Erro', error.message || 'Erro inesperado.');
+      Alert.alert('Erro', error.response?.data?.message || error.message || 'Erro inesperado.');
     } finally {
       setLoading(false);
     }

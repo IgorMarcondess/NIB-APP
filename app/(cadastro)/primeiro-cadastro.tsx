@@ -33,7 +33,11 @@ const schema = z.object({
   senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
   confirmarsenha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
   telefone: z.string().regex(/^\d{11}$/, "Telefone deve conter 11 números"),
+}).refine((data) => data.senha === data.confirmarsenha, {
+  message: "As senhas não coincidem",
+  path: ["confirmarsenha"],
 });
+
 
 type FormData = z.infer<typeof schema>;
 
@@ -45,8 +49,8 @@ export default function primeiroCadastro() {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: FormData) => {
-    try {
-       setLoading(true);
+  try {
+    setLoading(true);
 
     if (!user?.cpfUser) {
       throw new Error("CPF do usuário não disponível no contexto.");
@@ -63,36 +67,40 @@ export default function primeiroCadastro() {
     const userDoc = querySnapshot.docs[0];
     const docRef = doc(db, 'usuarios', userDoc.id);
 
-    await updateDoc(docRef, {
+    const payload = {
       email: data.email,
       telefone: data.telefone,
-      senha: data.senha, 
+      planoUser: 'PREMIUM'
+    };
+
+    await updateDoc(docRef, {
+      email: payload.email,
+      telefone: payload.telefone,
+      senha: data.senha,
     });
 
+    console.log("Informações enviado API - ", payload)
+   await axios.patch( `http://192.168.15.10:8080/usuario/${user.cpfUser}/atualizar`, payload);
+
+    
     const novoUsuario = {
       ...user,
       emailUser: data.email,
-      telefoneUser: data.telefone,
+      telefoneUser: data.telefone
     };
     setUser(novoUsuario);
-
-    // // 4. Enviar para API externa via axios
-    // await axios.post('https://sua-api.com/api/usuarios', {
-    //   cpf: user.cpfUser,
-    //   email: data.email,
-    //   telefone: data.telefone,
-    // });
 
     Alert.alert("Sucesso", "Dados atualizados com sucesso!");
     router.push("./planoUser");
 
   } catch (error: any) {
-    const msg = error?.message || "Erro ao atualizar os dados.";
+    const msg = error?.response?.data?.message || error?.message || "Erro ao atualizar os dados.";
     Alert.alert("Erro", msg);
   } finally {
     setLoading(false);
   }
-  };
+};
+
 
   return (
     <SafeAreaView className="flex-1 bg-[#003EA6]">
@@ -125,13 +133,13 @@ export default function primeiroCadastro() {
           />
           {errors.senha && <Text className="text-red-500 text-xs mb-1">{errors.senha.message}</Text>}
 
-        <Text className="text-white text-lg font-bold mt-2">Confirmar senha</Text>
+          <Text className="text-white text-lg font-bold mt-2">Confirmar senha</Text>
           <Controller control={control} name="confirmarsenha"
             render={({ field: { onChange, value } }) => (
               <Input text="Digite sua Senha" imagem={<Feather name="lock" size={20} color="blue" />} secureTextEntry value={value} onChangeText={onChange} />
             )}
           />
-          {errors.senha && <Text className="text-red-500 text-xs mb-1">{errors.senha.message}</Text>}
+          {errors.confirmarsenha && <Text className="text-red-500 text-xs mb-1">{errors.confirmarsenha.message}</Text>}
 
           <View className="flex-row justify-center items-center gap-5 mt-24">
             <TouchableOpacity className="py-3 px-8 rounded-full border-2 border-white" onPress={() => router.back()}>
@@ -144,7 +152,10 @@ export default function primeiroCadastro() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator size="small" color="#fff" />) : (<Text className="text-white text-lg font-bold">AVANÇAR</Text>)}
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text className="text-white text-lg font-bold">AVANÇAR</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

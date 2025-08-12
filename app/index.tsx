@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-
-// ✅ Importando ícones da biblioteca
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+
 
 export default function Index() {
   const handleOpcao = (ehCliente: boolean) => {
