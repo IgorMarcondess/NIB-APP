@@ -41,7 +41,7 @@ export async function notifyNow(nome?: string) {
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: `Oiii ${nome ?? 'você'}! tudo bem?`,
+      title: `Oiii ${nome ?? 'você'}! Tudo bem?`,
       body: 'Já realizou seu Check-in hoje? 👀',
     },
     trigger: null, 
