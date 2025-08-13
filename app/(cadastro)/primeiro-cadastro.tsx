@@ -93,10 +93,10 @@ export default function primeiroCadastro() {
       });
 
       console.log("Informações enviado API - ", payload);
-      await axios.patch(
-        `http://192.168.15.6:8080/usuario/${user.cpfUser}/atualizar`,
-        payload
-      );
+      // await axios.patch(
+      //   `http://192.168.15.6:8080/usuario/${user.cpfUser}/atualizar`,
+      //   payload
+      // );
 
       const novoUsuario = {
         ...user,
@@ -108,10 +108,7 @@ export default function primeiroCadastro() {
       Alert.alert("Sucesso", "Dados atualizados com sucesso!");
       router.push("./planoUser");
     } catch (error: any) {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Erro ao atualizar os dados.";
+      const msg = error?.response?.data?.message || error?.message ||"Erro ao atualizar os dados.";
       Alert.alert("Erro", msg);
     } finally {
       setLoading(false);
@@ -122,13 +119,8 @@ export default function primeiroCadastro() {
     <SafeAreaView className="flex-1 bg-[#003EA6]">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="items-center px-4 pb-10">
-          <Image
-            source={require("../../assets/logoteeth.png")}
-            className="w-40 mb-5"
-          />
-          <Text className="text-white text-2xl font-bold mb-2">
-            INFORMAÇÕES PESSOAIS{" "}
-          </Text>
+          <Image source={require("../../assets/logoteeth.png")} className="w-40 mb-5"/>
+          <Text className="text-white text-2xl font-bold mb-2"> INFORMAÇÕES PESSOAIS</Text>
 
           <Text className="text-white text-lg font-bold mt-2">E-mail</Text>
           <Controller

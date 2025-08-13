@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
+import { View, Text, TouchableOpacity, Platform, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -22,13 +22,13 @@ export default function Index() {
         Escolha uma opção
       </Text>
 
-      <TouchableOpacity onPress={() => handleOpcao(true)} className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-6 mb-6 w-80 h-44 items-center shadow-sm" >
+      <TouchableOpacity onPress={() => router.push("/login")} className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-6 mb-6 w-80 h-44 items-center shadow-sm" >
         <MaterialCommunityIcons name="account-check" size={56} color="#1D4ED8" style={{ marginBottom: 12 }}/>
 
         <Text className="text-blue-700 font-bold text-base">SOU CLIENTE</Text>
       </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => handleOpcao(false)} className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-6 w-80 h-44 items-center shadow-sm" >
+    <TouchableOpacity onPress={() => Linking.openURL("https://www.odontoprev.com.br")} className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-6 w-80 h-44 items-center shadow-sm" >
         <MaterialCommunityIcons name="account-cancel" size={56} color="#1D4ED8" style={{ marginBottom: 12 }} />
         <Text className="text-blue-700 font-bold text-base">NÃO SOU CLIENTE</Text>
       </TouchableOpacity> 

@@ -31,7 +31,7 @@
 
 // type FormData = z.infer<typeof schema>;
 
-// export default function segundoCadastro() {
+export default function segundoCadastro() {
 //   const { setUser } = useUser();
 //   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
 //     resolver: zodResolver(schema),
@@ -78,7 +78,8 @@
 //     }
 //   };
 
-//   return (
+return (
+    <></>
 //     <SafeAreaView className="flex-1 bg-[#003EA6]">
 //       <ScrollView showsVerticalScrollIndicator={false}>
 //         <View className="items-center px-4 pb-10">
@@ -138,5 +139,5 @@
 //         </View>
 //       </ScrollView>
 //     </SafeAreaView>
-//   );
-// }
+   );
+}

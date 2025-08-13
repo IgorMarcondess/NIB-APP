@@ -16,6 +16,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+// Mantendo imports da tratativa original
 import axios from "axios";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../services/firebase";
@@ -38,66 +39,84 @@ export default function Localizar_cpf() {
 
   const [loading, setLoading] = useState(false);
 
+  const [menuAberto, setMenuAberto] = useState(false);
+  const cpfOpcoes = [
+    "81547430001",
+    "69220107015",
+    "21740955056",
+    "99903676042",
+    "92243812002",
+  ];
+
+  const selecionarCPF = (cpf: string) => {
+    setMenuAberto(false);
+
+    setUser({
+      cpfUser: cpf,
+      nomeUser: "",
+      sobrenomeUser: "",
+      telefoneUser: "",
+      dataNascimentoUser: "",
+      planoUser: "",
+      emailUser: "",
+      idUser: "",
+    });
+
+    router.push("/primeiro-cadastro");
+  };
+
   const onSubmit = async (data: FormData) => {
-    setLoading(true);
-    try {
-      // 🔍 Busca no Firebase
-      const usuariosRef = collection(db, "usuarios");
-      const q = query(usuariosRef, where("cpf", "==", data.cpf));
-      const querySnapshot = await getDocs(q);
+    // setLoading(true);
+    // try {
+    //   const usuariosRef = collection(db, "usuarios");
+    //   const q = query(usuariosRef, where("cpf", "==", data.cpf));
+    //   const querySnapshot = await getDocs(q);
 
-      if (querySnapshot.empty) {
-        Alert.alert(
-          "CPF não encontrado no Firebase",
-          "Nenhum cadastro foi localizado no banco interno."
-        );
-        return;
-      }
+    //   if (querySnapshot.empty) {
+    //     Alert.alert("CPF não encontrado no Firebase");
+    //     setLoading(false);
+    //     return;
+    //   }
 
-      const firebaseDoc = querySnapshot.docs[0];
-      const firebaseData = firebaseDoc.data();
+    //   const firebaseDoc = querySnapshot.docs[0];
+    //   const firebaseData = firebaseDoc.data();
 
-      // 🔍 Busca na API
-      const response = await axios.get(
-        `http://192.168.15.6:8080/usuario/cpf/${data.cpf}`
-      );
+    //   const response = await axios.get(
+    //     `http://192.168.15.6:8080/usuario/cpf/${data.cpf}`
+    //   );
 
-      if (!response.data) {
-        Alert.alert(
-          "CPF não encontrado na API",
-          "O cadastro não foi localizado na base externa."
-        );
-        return;
-      }
+    //   if (!response.data) {
+    //     Alert.alert("CPF não encontrado na API");
+    //     setLoading(false);
+    //     return;
+    //   }
 
-      const dados = Array.isArray(response.data)
-        ? response.data[0]
-        : response.data;
+    //   const dados = Array.isArray(response.data)
+    //     ? response.data[0]
+    //     : response.data;
 
-      // ✅ CPF encontrado nas duas fontes
-      const userFinal = {
-        cpfUser: dados.cpf || firebaseData.cpf || "",
-        nomeUser: dados.nome || firebaseData.nome || "",
-        sobrenomeUser: dados.sobrenome || firebaseData.sobrenome || "",
-        telefoneUser: dados.telefone || firebaseData.telefone || "",
-        dataNascimentoUser:
-          dados.dataNascimento || firebaseData.dataNascimento || "",
-        planoUser: dados.plano || firebaseData.plano || "",
-        emailUser: dados.email || firebaseData.email || "",
-        idUser: firebaseDoc.id,
-      };
+    //   const userFinal = {
+    //     cpfUser: dados.cpf || firebaseData.cpf || "",
+    //     nomeUser: dados.nome || firebaseData.nome || "",
+    //     sobrenomeUser: dados.sobrenome || firebaseData.sobrenome || "",
+    //     telefoneUser: dados.telefone || firebaseData.telefone || "",
+    //     dataNascimentoUser:
+    //       dados.dataNascimento || firebaseData.dataNascimento || "",
+    //     planoUser: dados.plano || firebaseData.plano || "",
+    //     emailUser: dados.email || firebaseData.email || "",
+    //     idUser: firebaseDoc.id,
+    //   };
 
-      setUser(userFinal);
-      Alert.alert("Usuário encontrado", "Seguindo para próxima tela...");
-      router.push("/primeiro-cadastro");
-    } catch (error: any) {
-      Alert.alert(
-        "Erro",
-        error.response?.data?.message || error.message || "Erro inesperado."
-      );
-    } finally {
-      setLoading(false);
-    }
+    //   setUser(userFinal);
+    //   Alert.alert("Usuário encontrado", "Seguindo para próxima tela...");
+    //   router.push("/primeiro-cadastro");
+    // } catch (error: any) {
+    //   Alert.alert("Erro", error.message || "Erro inesperado.");
+    // } finally {
+    //   setLoading(false);
+    // }
+
+    Alert.alert("CPF digitado", "Por favor escolha um dos CPFs registrados!");
   };
 
   return (
@@ -133,6 +152,36 @@ export default function Localizar_cpf() {
               {errors.cpf.message}
             </Text>
           )}
+
+          <Text className="text-white text-lg font-medium mt-4 mb-2">
+            OU SELECIONE UM CPF
+          </Text>
+          <View className="w-full items-center">
+            <TouchableOpacity
+              className="w-80 bg-white/10 border border-white rounded-2xl px-4 py-4 mt-1 flex-row justify-between items-center"
+              onPress={() => setMenuAberto((v) => !v)}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white text-base">Escolha um CPF</Text>
+              <Feather
+                name={menuAberto ? "chevron-up" : "chevron-down"}
+                size={20}
+                color="#fff"
+              />
+            </TouchableOpacity>
+
+            {menuAberto && (
+              <View className="w-80 bg-white rounded-2xl mt-2 shadow border border-white/30">
+                {cpfOpcoes.map((cpf) => (
+                  <TouchableOpacity
+                    key={cpf} className="px-4 py-3 border-b border-gray-200" 
+                    onPress={() => selecionarCPF(cpf)}activeOpacity={0.9}>
+                    <Text className="text-[#003EA6] font-semibold">{cpf}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
 
           <Image
             source={require("../../assets/recepcao.jpg")}
