@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView, Platform } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView, Platform, LogBox } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +11,8 @@ import CardNoticias from "../components/cardNoticias";
 import { CalendarioCompleto } from "../components/calendarioCompleto";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import Constants from "expo-constants";
+
 
 Notifications.setNotificationHandler({
   handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
@@ -23,6 +25,7 @@ Notifications.setNotificationHandler({
 });
 
 async function ensurePermissionsAndChannel() {
+  
   const { status } = await Notifications.getPermissionsAsync();
   if (status !== 'granted') {
     const req = await Notifications.requestPermissionsAsync();
@@ -72,8 +75,8 @@ const Dashboard = () => {
   useEffect(() => {
 
       
-      notifyNow(user?.nomeUser).catch(console.warn);
-      //scheduleHourly(user.nomeUser).catch(console.warn);
+      //notifyNow(user?.nomeUser).catch(console.warn);
+      scheduleHourly(user?.nomeUser).catch(console.warn);
 
     const buscarDiasPreenchidos = async () => {
       if (!user?.idUser) return;
