@@ -10,10 +10,12 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { router } from "expo-router";
+import { useUser } from "../../components/userContext";
 
 export default function EnviarImagem() {
   const [photo, setPhoto] = useState<string | null>(null);
   const [isEnviando, setIsEnviando] = useState(false);
+  const { user } = useUser();
 
   const tirarFoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -49,11 +51,11 @@ export default function EnviarImagem() {
       const formData = new FormData();
       formData.append("imagem", {
         uri: manipResult.uri,
-        name: "foto.jpg",
+        name: user?.cpfUser + "_" + Date.now().toString() + ".jpg",
         type: "image/jpeg",
       } as any);
 
-      const response = await fetch("http://192.168.15.6:8080/imagens/upload", {
+      const response = await fetch("http://192.168.15.9:8080/imagens/upload", {
         method: "POST",
         body: formData,
       });
