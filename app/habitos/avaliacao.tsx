@@ -39,8 +39,9 @@ export default function Avaliacao() {
 
     try {
       console.log(habitosDiarios);
+      console.log(user.cpfUser);
       await axios.post(
-        `http://192.168.15.9:8080/diario/criar?cpfUser=${user.cpfUser}`,
+        `http://192.168.15.11:8080/diario/criar?cpfUser=${user.cpfUser}`,
         habitosDiarios
       );
       console.log("Envio para API realizada com sucesso");

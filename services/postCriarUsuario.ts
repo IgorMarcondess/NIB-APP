@@ -14,7 +14,7 @@ export default async function postUsuario(data: UsuarioData): Promise<void> {
   try {
     console.log(data);
     const response = await axios.post(
-      "http://192.168.15.6:8080/usuario/criar",
+      "http://192.168.15.11:8080/usuario/criar",
       data
     );
     console.log("Usuário criado com sucesso:", response.data);

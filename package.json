@@ -4,7 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
+    "android": "emulator -avd Medium_Phone_API_36.1 -netdelay none -netspeed full & npx expo start",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },

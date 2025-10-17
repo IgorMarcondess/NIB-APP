@@ -74,8 +74,6 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-      
-      //notifyNow(user?.nomeUser).catch(console.warn);
       scheduleHourly(user?.nomeUser).catch(console.warn);
 
     const buscarDiasPreenchidos = async () => {
@@ -168,7 +166,7 @@ const Dashboard = () => {
         icons={[
           { name: "Ofensiva", component: <Feather name="clock" size={24} color="white" />, route: "/ofensiva" },
           { name: "Historico", component: <Feather name="heart" size={24} color="white" />, route: "/historico-medico" },
-          { name: "Perfil", component: <Feather name="user" size={24} color="white" />, route: "/conta" },
+          { name: "Perfil", component: <Feather name="user" size={24} color="white" />, route: "./usuario" },
         ]}
       />
     </SafeAreaView>

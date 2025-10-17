@@ -26,6 +26,7 @@ import {
   doc,
 } from "firebase/firestore";
 import axios from "axios";
+import postUsuario from "../../services/postCriarUsuario";
 
 function formatarData(data: string): string {
   if (!/^\d{8}$/.test(data))
@@ -50,6 +51,8 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
+
+
 export default function primeiroCadastro() {
   const { user, setUser } = useUser();
   const {
@@ -60,6 +63,7 @@ export default function primeiroCadastro() {
     resolver: zodResolver(schema),
   });
   const [loading, setLoading] = useState(false);
+  
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -86,23 +90,35 @@ export default function primeiroCadastro() {
         planoUser: "PREMIUM",
       };
 
+      const usuarioPayload = {
+        cpfUser: user.cpfUser,
+        nomeUser: "igor",
+        sobrenomeUser: "gabriel",
+        telefoneUser: "11970658463",
+        dataNascimentoUser: "2025-10-14",
+        planoUser: "PREMIUM",
+        emailUser: "igor@exemplo.com",
+      };
+
       await updateDoc(docRef, {
         email: payload.emailUser,
         telefone: payload.telefoneUser,
         senha: data.senha,
       });
 
-      console.log("Informações enviado API - ", payload);
-      await axios.patch(
-        `http://192.168.15.9:8080/usuario/${user.cpfUser}/atualizar`,
-        payload
-      );
+      // console.log("Informações enviado API - ", payload);
+      // await axios.patch(
+      //   `/usuario/${user.cpfUser}/atualizar`,
+      //   payload
+      // );
 
       const novoUsuario = {
         ...user,
         emailUser: data.email,
         telefoneUser: data.telefone,
       };
+
+      await postUsuario(usuarioPayload);
       setUser(novoUsuario);
 
       Alert.alert("Sucesso", "Dados atualizados com sucesso!");
