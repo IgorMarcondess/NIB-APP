@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView, Platform, LogBox } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView, Platform, LogBox, FlatList, useWindowDimensions, Dimensions } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import BottomTabNavigator from "../components/navBottom";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Notifications from 'expo-notifications';
 import { router } from "expo-router";
 import { useUser } from "../components/userContext";
-import { CalendarioOfensiva } from "../components/calendarioOfensivas";
 import CardNoticias from "../components/cardNoticias";
 import { CalendarioCompleto } from "../components/calendarioCompleto";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
-import Constants from "expo-constants";
+
 
 
 Notifications.setNotificationHandler({
@@ -69,6 +68,9 @@ export async function scheduleHourly(nome?: string) {
 }
 
 const Dashboard = () => {
+  const { width: SCREEN_W } = Dimensions.get("window");
+
+
   const { user } = useUser();
   const [ofensiva, setOfensiva] = useState(0);
 
@@ -77,6 +79,7 @@ const Dashboard = () => {
       scheduleHourly(user?.nomeUser).catch(console.warn);
 
     const buscarDiasPreenchidos = async () => {
+      
       if (!user?.idUser) return;
 
       const meses = [
@@ -120,16 +123,15 @@ const Dashboard = () => {
             <Image source={require("../assets/manImage.png")} className="w-14 h-14" />
             <View>
               <Text className="text-white text-base font-bold leading-tight">
-                Olá, {user?.nomeUser} 
+                Olá, {user?.nomeUser.toUpperCase()} 
               </Text>
               <Text className="text-white text-sm font-semibold">Bem-vindos ao Teeth Diary</Text>
             </View>
           </View>
         </View>
         <TouchableOpacity onPress={() => router.push("./avaliacao")} className="items-center">
-          <Image source={require("../assets/imagem promoção.png")} style={{ width: 300, height: 300, resizeMode: "contain" }}/> 
+          <Image source={require("../assets/slide/slide_1.png")} style={{ width: 300, height: 300, resizeMode: "contain" }}/> 
         </TouchableOpacity>
-
         <View className="my-4 justify-center items-center">
           <Text className="text-primary font-bold text-lg">Notícias Recentes</Text>
           <Text className="text-primary font-semibold text-sm">Acompanhe as novidades do mundo odontológico</Text>
@@ -151,10 +153,7 @@ const Dashboard = () => {
             <Text className="text-gray-600 text-lg">CONSECUTIVOS</Text>
           </View>
         </View>
-        <TouchableOpacity
-          className="bg-gray-300 p-4 m-4 rounded-xl items-center"
-          onPress={() => router.push("./avaliacao")}
-        >
+        <TouchableOpacity className="bg-gray-300 p-4 m-4 rounded-xl items-center"onPress={() => router.push("/habitos/avaliacao")}>
           <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
           <Text className="text-blue-500">Clique Aqui!</Text>
         </TouchableOpacity>
@@ -166,7 +165,7 @@ const Dashboard = () => {
         icons={[
           { name: "Ofensiva", component: <Feather name="clock" size={24} color="white" />, route: "/ofensiva" },
           { name: "Historico", component: <Feather name="heart" size={24} color="white" />, route: "/historico-medico" },
-          { name: "Perfil", component: <Feather name="user" size={24} color="white" />, route: "./usuario" },
+          { name: "Troféus", component: <Feather name="award" size={24} color="white" />, route: "/rank/rankUser" },
         ]}
       />
     </SafeAreaView>

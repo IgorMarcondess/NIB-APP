@@ -192,11 +192,9 @@ export default function HistoricoMedico() {
       </View>
 
       <View className="flex-row gap-6 mt-6">
-        <Link href="/initial" asChild>
-          <TouchableOpacity className="bg-primary py-3 px-8 rounded-full">
-            <Text className="text-white text-lg font-bold">Voltar</Text>
-          </TouchableOpacity>
-        </Link>
+      <TouchableOpacity onPress={() => router.push("/initial")} className="bg-primary py-3 px-8 rounded-full">
+        <Text className="text-white text-lg font-bold">Voltar</Text>
+      </TouchableOpacity>
 
         <TouchableOpacity
           onPress={handleSubmit(onSubmit)}

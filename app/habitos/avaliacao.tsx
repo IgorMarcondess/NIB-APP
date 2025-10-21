@@ -41,7 +41,7 @@ export default function Avaliacao() {
       console.log(habitosDiarios);
       console.log(user.cpfUser);
       await axios.post(
-        `http://192.168.15.11:8080/diario/criar?cpfUser=${user.cpfUser}`,
+        `http://192.168.15.8:8080/diario/criar?cpfUser=${user.cpfUser}`,
         habitosDiarios
       );
       console.log("Envio para API realizada com sucesso");
@@ -61,22 +61,9 @@ export default function Avaliacao() {
             O QUE FOI REALIZADO?
           </Text>
 
-          <TouchableOpacity
-            onPress={() => setEscovacao(!escovacao)}
-            className="flex-row items-center justify-between border-2 border-blue-500 rounded-lg p-4 w-full mb-2"
-          >
-            <Text
-              className={`text-blue-700 text-xl font-extrabold ${
-                escovacao ? "opacity-100" : "opacity-50"
-              }`}
-            >
-              ESCOVAÇÃO
-            </Text>
-            <Feather
-              name="check"
-              size={30}
-              color={escovacao ? "green" : "gray"}
-            />
+          <TouchableOpacity onPress={() => setEscovacao(!escovacao)} className="flex-row items-center justify-between border-2 border-blue-500 rounded-lg p-4 w-full mb-2">
+            <Text className={`text-blue-700 text-xl font-extrabold ${ escovacao ? "opacity-100" : "opacity-50"}`}>ESCOVAÇÃO</Text>
+            <Feather name="check" size={30} color={escovacao ? "green" : "gray"}/>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -108,20 +95,13 @@ export default function Avaliacao() {
             >
               BOCHECHO
             </Text>
-            <Feather
-              name="check"
-              size={30}
-              color={bochecho ? "green" : "gray"}
-            />
+            <Feather name="check" size={30} color={bochecho ? "green" : "gray"}/>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            className="bg-blue-500 rounded-full py-3 w-80 mt-4"
-            onPress={envioHabitos}
-          >
+          <TouchableOpacity className="bg-blue-500 rounded-full py-3 w-80 mt-4" onPress={envioHabitos}>
             <Text className="text-white font-bold text-center">ENVIAR</Text>
           </TouchableOpacity>
-
+          
           <Image
             source={require("../../assets/health.png")}
             className="w-full h-60 mt-9 mb-20"
