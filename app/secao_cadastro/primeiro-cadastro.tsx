@@ -39,6 +39,7 @@ function formatarData(data: string): string {
 
 const schema = z
   .object({
+    nome: z.string().trim().min(3, "Nome é obrigatório"),
     email: z.string().email("E-mail inválido"),
     senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
     confirmarsenha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
@@ -84,50 +85,41 @@ export default function primeiroCadastro() {
       const userDoc = querySnapshot.docs[0];
       const docRef = doc(db, "usuarios", userDoc.id);
 
-      const payload = {
-        emailUser: data.email,
-        telefoneUser: data.telefone,
-        planoUser: "PREMIUM",
-      };
+      const payloadFirebase = { emailUser: data.email, telefoneUser: data.telefone, planoUser: "PREMIUM", senhaUser: data.senha };
 
-      const usuarioPayload = {
+      const PayloadAPI = {
         cpfUser: user.cpfUser,
-        nomeUser: "igor",
-        sobrenomeUser: "gabriel",
-        telefoneUser: "11970658463",
-        dataNascimentoUser: "2025-10-14",
+        nomeUser: data.nome,
+        sobrenomeUser: "none",
+        telefoneUser: "119",
+        dataNascimentoUser: "2025-01-01",
         planoUser: "PREMIUM",
-        emailUser: "igor@exemplo.com",
+        emailUser: data.email,
       };
 
+      {/*POST FIREBASE*/}
       await updateDoc(docRef, {
-        email: payload.emailUser,
-        telefone: payload.telefoneUser,
-        senha: data.senha,
+        email: payloadFirebase.emailUser,
+        plano: payloadFirebase.planoUser,
+        telefone: payloadFirebase.telefoneUser,
+        senha: payloadFirebase.senhaUser
       });
 
-      // console.log("Informações enviado API - ", payload);
-      // await axios.patch(
-      //   `/usuario/${user.cpfUser}/atualizar`,
-      //   payload
-      // );
+      {/*POST API*/}
+      console.log("Informações enviado API - ", payloadFirebase);
+      await axios.patch(`http://192.168.15.8:8080/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
+      // await axios.patch(`/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
 
       const novoUsuario = {
-        ...user,
-        emailUser: data.email,
-        telefoneUser: data.telefone,
+        ...PayloadAPI,
+        idUser: userDoc.id
       };
 
-      await postUsuario(usuarioPayload);
       setUser(novoUsuario);
-
       Alert.alert("Sucesso", "Dados atualizados com sucesso!");
       router.push("./planoUser");
     } catch (error: any) {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Erro ao atualizar os dados.";
+      const msg = "Erro ao atualizar os dados nos múltiplos bancos de dados";
       Alert.alert("Erro", msg);
     } finally {
       setLoading(false);
@@ -146,12 +138,25 @@ export default function primeiroCadastro() {
             {" "}
             INFORMAÇÕES PESSOAIS
           </Text>
+          <Text className="text-white text-lg font-bold mt-2">Nome & Sobrenome</Text>
+          <Controller control={control} name="nome" render={({ field: { onChange, value } }) => (
+              <Input
+                text="Digite seu Nome & Sobrenome"
+                imagem={<Feather name="mail" size={20} color="blue" />}
+                keyboardType="name-phone-pad"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          {errors.email && (
+            <Text className="text-red-500 text-xs mb-1">
+              {errors.email.message}
+            </Text>
+          )}
 
           <Text className="text-white text-lg font-bold mt-2">E-mail</Text>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, value } }) => (
+          <Controller control={control} name="email" render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite seu E-mail"
                 imagem={<Feather name="mail" size={20} color="blue" />}
@@ -168,10 +173,7 @@ export default function primeiroCadastro() {
           )}
 
           <Text className="text-white text-lg font-bold mt-2">Telefone</Text>
-          <Controller
-            control={control}
-            name="telefone"
-            render={({ field: { onChange, value } }) => (
+          <Controller control={control} name="telefone" render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite seu Telefone"
                 imagem={<Feather name="phone" size={20} color="blue" />}
@@ -188,10 +190,7 @@ export default function primeiroCadastro() {
           )}
 
           <Text className="text-white text-lg font-bold mt-2">Senha</Text>
-          <Controller
-            control={control}
-            name="senha"
-            render={({ field: { onChange, value } }) => (
+          <Controller control={control} name="senha" render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite sua Senha"
                 imagem={<Feather name="lock" size={20} color="blue" />}
@@ -210,10 +209,7 @@ export default function primeiroCadastro() {
           <Text className="text-white text-lg font-bold mt-2">
             Confirmar senha
           </Text>
-          <Controller
-            control={control}
-            name="confirmarsenha"
-            render={({ field: { onChange, value } }) => (
+          <Controller control={control} name="confirmarsenha" render={({ field: { onChange, value } }) => (
               <Input
                 text="Digite sua Senha"
                 imagem={<Feather name="lock" size={20} color="blue" />}

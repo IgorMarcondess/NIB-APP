@@ -16,9 +16,8 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-// Mantendo imports da tratativa original
 import axios from "axios";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, DocumentData, Query, setDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
 const schema = z.object({
@@ -48,9 +47,20 @@ export default function Localizar_cpf() {
     "92243812002",
   ];
 
-  const selecionarCPF = (cpf: string) => {
+  const selecionarCPF = async (cpf: string) => {
+    console.log("Inicio processo!")
     setMenuAberto(false);
 
+    const colecaoUser = query(collection(db, "usuarios"), where("cpf", "==", cpf ))
+    const docsUser = await getDocs(colecaoUser)
+
+    if (docsUser.empty) return;
+
+    const ref = docsUser.docs[0].ref
+    await setDoc(ref, { cpf }, { merge: false }); 
+  
+
+    console.log(`Limpeza do Docs ${ref} realizada com sucesso`)
     setUser({
       cpfUser: cpf,
       nomeUser: "",
@@ -62,62 +72,59 @@ export default function Localizar_cpf() {
       idUser: "",
     });
 
-    router.push("/primeiro-cadastro");
+    router.push("./primeiro-cadastro")
   };
 
-  const onSubmit = async (data: FormData) => {
-    // setLoading(true);
-    // try {
-    //   const usuariosRef = collection(db, "usuarios");
-    //   const q = query(usuariosRef, where("cpf", "==", data.cpf));
-    //   const querySnapshot = await getDocs(q);
+  // const onSubmit = async (data: FormData) => {
+  //   setLoading(true);
+  //   try {
+  //     const usuariosRef = collection(db, "usuarios");
+  //     const q = query(usuariosRef, where("cpf", "==", data.cpf));
+  //     const querySnapshot = await getDocs(q);
 
-    //   if (querySnapshot.empty) {
-    //     Alert.alert("CPF não encontrado no Firebase");
-    //     setLoading(false);
-    //     return;
-    //   }
+  //     if (querySnapshot.empty) {
+  //       Alert.alert("CPF não encontrado no Firebase");
+  //       setLoading(false);
+  //       return;
+  //     }
 
-    //   const firebaseDoc = querySnapshot.docs[0];
-    //   const firebaseData = firebaseDoc.data();
+  //     const firebaseDoc = querySnapshot.docs[0];
+  //     const firebaseData = firebaseDoc.data();
 
-    //   const response = await axios.get(
-    //     `http://192.168.15.6:8080/usuario/cpf/${data.cpf}`
-    //   );
+  //     const response = await axios.get(
+  //       `http://192.168.15.6:8080/usuario/cpf/${data.cpf}`
+  //     );
 
-    //   if (!response.data) {
-    //     Alert.alert("CPF não encontrado na API");
-    //     setLoading(false);
-    //     return;
-    //   }
+  //     if (!response.data) {
+  //       Alert.alert("CPF não encontrado na API");
+  //       setLoading(false);
+  //       return;
+  //     }
 
-    //   const dados = Array.isArray(response.data)
-    //     ? response.data[0]
-    //     : response.data;
+  //     const dados = Array.isArray(response.data)? response.data[0]: response.data;
 
-    //   const userFinal = {
-    //     cpfUser: dados.cpf || firebaseData.cpf || "",
-    //     nomeUser: dados.nome || firebaseData.nome || "",
-    //     sobrenomeUser: dados.sobrenome || firebaseData.sobrenome || "",
-    //     telefoneUser: dados.telefone || firebaseData.telefone || "",
-    //     dataNascimentoUser:
-    //       dados.dataNascimento || firebaseData.dataNascimento || "",
-    //     planoUser: dados.plano || firebaseData.plano || "",
-    //     emailUser: dados.email || firebaseData.email || "",
-    //     idUser: firebaseDoc.id,
-    //   };
+  //     const userFinal = {
+  //       cpfUser: dados.cpf || firebaseData.cpf,
+  //       nomeUser: dados.nome || firebaseData.nome,
+  //       sobrenomeUser: dados.sobrenome || firebaseData.sobrenome ,
+  //       telefoneUser: dados.telefone || firebaseData.telefone,
+  //       dataNascimentoUser: dados.dataNascimento || firebaseData.dataNascimento,
+  //       planoUser: dados.plano || firebaseData.plano ,
+  //       emailUser: dados.email || firebaseData.email,
+  //       idUser: firebaseDoc.id,
+  //     };
 
-    //   setUser(userFinal);
-    //   Alert.alert("Usuário encontrado", "Seguindo para próxima tela...");
-    //   router.push("/primeiro-cadastro");
-    // } catch (error: any) {
-    //   Alert.alert("Erro", error.message || "Erro inesperado.");
-    // } finally {
-    //   setLoading(false);
-    // }
+  //     setUser(userFinal);
+  //     Alert.alert("Usuário encontrado", "Seguindo para próxima tela...");
+  //     router.push("/primeiro-cadastro");
+  //   } catch (error: any) {
+  //     Alert.alert("Erro", error.message || "Erro inesperado.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
 
-    Alert.alert("CPF digitado", "Por favor escolha um dos CPFs registrados!");
-  };
+  //   Alert.alert("CPF digitado", "Por favor escolha um dos CPFs registrados!");
+  // };
 
   return (
     <SafeAreaView className="flex-1 bg-[#003EA6]">
@@ -131,7 +138,8 @@ export default function Localizar_cpf() {
             LOCALIZAR CADASTRO
           </Text>
 
-          <Text className="text-white text-lg font-medium mt-2 mb-2">
+          {/* CÓDIGO COMENTADO - INPUT MANUAL DO CPF/}
+          {/* <Text className="text-white text-lg font-medium mt-2 mb-2">
             DIGITE SEU CPF
           </Text>
           <Controller
@@ -151,12 +159,13 @@ export default function Localizar_cpf() {
             <Text className="text-red-500 text-xs mb-1">
               {errors.cpf.message}
             </Text>
-          )}
+          )} */}
 
+          
           <Text className="text-white text-lg font-medium mt-4 mb-2">
-            OU SELECIONE UM CPF
+            SELECIONE UM CPF
           </Text>
-          <View className="w-full items-center">
+           <View className="w-full items-center">
             <TouchableOpacity
               className="w-80 bg-white/10 border border-white rounded-2xl px-4 py-4 mt-1 flex-row justify-between items-center"
               onPress={() => setMenuAberto((v) => !v)}
@@ -170,25 +179,26 @@ export default function Localizar_cpf() {
               />
             </TouchableOpacity>
 
-            {menuAberto && (
+             {menuAberto && (
               <View className="w-80 bg-white rounded-2xl mt-2 shadow border border-white/30">
                 {cpfOpcoes.map((cpf) => (
                   <TouchableOpacity
                     key={cpf} className="px-4 py-3 border-b border-gray-200" 
-                    onPress={() => selecionarCPF(cpf)}activeOpacity={0.9}>
+                    onPress={() => selecionarCPF(cpf)}>
                     <Text className="text-[#003EA6] font-semibold">{cpf}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
-            )}
-          </View>
+            )} 
+          </View> 
 
           <Image
             source={require("../../assets/recepcao.jpg")}
             className="w-[350px] h-[300px] rounded-xl mt-10"
           />
-
-          <View className="flex-row justify-center items-center gap-5 mt-10">
+          
+          {/* CODIGO COMENTADO POIS N SERA MAIS NECESSSÁRIO*/}
+          {/* <View className="flex-row justify-center items-center gap-5 mt-10">
             <TouchableOpacity
               className="py-3 px-8 rounded-full border-2 border-white"
               onPress={() => router.back()}
@@ -207,9 +217,13 @@ export default function Localizar_cpf() {
                 <Text className="text-white text-lg font-bold">AVANÇAR</Text>
               )}
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+function deleteDocs(q: Query<DocumentData, DocumentData>) {
+  throw new Error("Function not implemented.");
+}
+

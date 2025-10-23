@@ -11,6 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImageBackground } from "react-native";
+import { collection, query, where } from "firebase/firestore";
 
 const schema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -31,6 +32,7 @@ export default function Login() {
     try {
       const userData = await loginUser(data.email, data.senha);
       setUser(userData);
+      console.log(userData)
       Alert.alert("Login realizado com sucesso!");
       await AsyncStorage.setItem(data.email, JSON.stringify({ nome: userData.nomeUser }));
       router.push("./initial");
@@ -67,7 +69,7 @@ export default function Login() {
       </View>
 
 
-        <TouchableOpacity onPress={() => router.push("/(cadastro)/localizar_cpf")} className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
+        <TouchableOpacity onPress={() => router.push("/secao_cadastro/localizar_cpf")} className="bg-blue-800 border border-blue-800 py-2 px-5 rounded-md w-80 items-center mt-6">
           <Text className="text-white text-base font-bold">PRIMEIRO ACESSO</Text>
         </TouchableOpacity>
 

@@ -48,7 +48,6 @@ const fetchPontuacoesCpf = async () => {
     });
     setNotaUser(response.data.nota)
     setPontuacaoUser(response.data.pontos)
-    console.log("Nota  ",notaUser)
   } catch (error) {
     console.error("Erro ao buscar pontuação do usuário: ", error)
   }

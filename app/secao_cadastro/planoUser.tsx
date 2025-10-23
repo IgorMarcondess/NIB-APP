@@ -14,7 +14,6 @@ export default function PlanoOfensiva() {
     console.log("Entrou")
     if(!user?.idUser) return;
     try {
-      console.log("Entrou novamente")
       const dadosUser = doc(db, "usuarios", user.idUser);
 
       await updateDoc(dadosUser, {
@@ -52,11 +51,7 @@ export default function PlanoOfensiva() {
               <Image source={plano.imagem} className="w-14 h-14 ml-2" resizeMode="contain" />
             )}
           </View>
-
-          <TouchableOpacity
-            onPress={() => salvarPlano(plano)}
-            className="mt-4 border border-blue-700 rounded-md px-6 py-2"
-          >
+          <TouchableOpacity onPress={() => salvarPlano(plano)} className="mt-4 border border-blue-700 rounded-md px-6 py-2">
             <Text className="text-blue-700 font-bold text-sm">SELECIONAR</Text>
           </TouchableOpacity>
         </View>
