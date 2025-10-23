@@ -7,17 +7,17 @@ import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-na
 import axios from "axios";
 import { router } from "expo-router";
 
-type AllpontuacoesType = {          // veio como []
-  cpfUser: string;                  // "69220107015"
-  dataNascimentoUser: string;       // "2025-10-14" (ISO date em string)
-  emailUser: string;                // "igor@exemplo.com"
-  endereco: unknown | null;         // null no exemplo              // [[Object], [Object]] no exemplo
-  nomeUser: string;                 // "igor"
-  nota: number;                     // 0
-  planoUser: string;                // "PREMIUM"
-  pontos: number;                   // 1
-  sequenciaDias: number;            // 1
-  sobrenomeUser: string;            // "gabriel"
+type AllpontuacoesType = { 
+  cpfUser: string; 
+  dataNascimentoUser: string;
+  emailUser: string; 
+  endereco: unknown | null;
+  nomeUser: string; 
+  nota: number; 
+  planoUser: string;                
+  pontos: number;                   
+  sequenciaDias: number;            
+  sobrenomeUser: string;            
   telefoneUser: string;        
 }
 
