@@ -22,13 +22,9 @@ type AllpontuacoesType = {
 }
 
 export default function Usuario(){
-
-const { user } = useUser();
-const [score, setScore] = useState(0);
 const [allpontuacoes, setAllpontuacoes] = useState<AllpontuacoesType[]>([]);
 const [pontuacaoUser, setPontuacaoUser] = useState();
 const [notaUser, setNotaUser] = useState(0)
-const [loading, setLoading] = useState(true);
 const [visible, setVisible] = useState(false); 
 
 const imagensPerfil = [
@@ -109,10 +105,12 @@ return(
       <View className="items-center">
       <Text className="text-blue-700 font-extrabold text-xl mb-2">RANKING</Text>
       </View>
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 24 }} showsVerticalScrollIndicator>
+      <View className="gap-4">
       {allpontuacoes.sort((a, b) => b.pontos - a.pontos).map((user, index) => (
-        <View key={user.cpfUser} className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-3 h-24 ">
+        <View key={user.cpfUser} className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-3 h-24">
         
-            <View className="flex-row items-center gap-4 space-x-3">
+            <View className="flex-row items-center space-x-3 gap-4">
               <View className="w-10 h-10 bg-blue-700 rounded-full items-center justify-center">
                 <Text className="text-white font-extrabold text-xl">{index + 1}</Text>
               </View>
@@ -125,8 +123,10 @@ return(
             <Text className="text-lm font-bold">{user.nomeUser.toUpperCase()}</Text>
             <Text className="text-blue-800 font-extrabold text-xl">{user.pontos} PTS</Text>
             </View>
-          </View>
+        </View>
       ))}
+      </View>
+      </ScrollView>
     </View>
 
     <TouchableOpacity onPress={() => router.push("/initial")} className="bg-primary py-3 px-8 rounded-full">

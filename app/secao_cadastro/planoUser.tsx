@@ -25,7 +25,7 @@ export default function PlanoOfensiva() {
       });
 
       Alert.alert("Sucesso", "Plano selecionado com sucesso!");
-      router.replace("/initial")
+      router.replace("/login")
     } catch (error) {
       console.error("Erro ao salvar plano:", error);
       Alert.alert("Erro", "Não foi possível salvar o plano. Tente novamente.");

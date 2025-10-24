@@ -1,14 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import {
-  Alert,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator,
-} from "react-native";
+import {Alert,Image,ScrollView,Text,TouchableOpacity,View,ActivityIndicator,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../../components/input";
 import { useUser } from "../../components/userContext";
@@ -17,16 +9,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { db } from "../../services/firebase";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import {collection,query,where,getDocs,updateDoc,doc,} from "firebase/firestore";
 import axios from "axios";
-import postUsuario from "../../services/postCriarUsuario";
+
 
 function formatarData(data: string): string {
   if (!/^\d{8}$/.test(data))
@@ -85,7 +70,7 @@ export default function primeiroCadastro() {
       const userDoc = querySnapshot.docs[0];
       const docRef = doc(db, "usuarios", userDoc.id);
 
-      const payloadFirebase = { emailUser: data.email, telefoneUser: data.telefone, planoUser: "PREMIUM", senhaUser: data.senha };
+      const payloadFirebase = { nome: data.nome, email: data.email, telefone: data.telefone, plano: "PREMIUM", senha: data.senha };
 
       const PayloadAPI = {
         cpfUser: user.cpfUser,
@@ -98,15 +83,10 @@ export default function primeiroCadastro() {
       };
 
       {/*POST FIREBASE*/}
-      await updateDoc(docRef, {
-        email: payloadFirebase.emailUser,
-        plano: payloadFirebase.planoUser,
-        telefone: payloadFirebase.telefoneUser,
-        senha: payloadFirebase.senhaUser
-      });
+      await updateDoc(docRef, { ...payloadFirebase });
+      console.log("Informações enviado API - ", payloadFirebase);
 
       {/*POST API*/}
-      console.log("Informações enviado API - ", payloadFirebase);
       await axios.patch(`http://192.168.15.8:8080/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
       // await axios.patch(`/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
 

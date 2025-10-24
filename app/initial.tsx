@@ -154,7 +154,7 @@ const Dashboard = () => {
           </View>
         </View>
         <TouchableOpacity className="bg-gray-300 p-4 m-4 rounded-xl items-center"onPress={() => router.push("/habitos/avaliacao")}>
-          <Text className="text-blue-700 font-bold text-lg">AVALIAÇÃO DIÁRIA</Text>
+          <Text className="text-blue-700 font-bold text-lg">ENVIE SEU HÁBITO DIÁRIO</Text>
           <Text className="text-blue-500">Clique Aqui!</Text>
         </TouchableOpacity>
 
