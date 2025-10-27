@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API } from "../app/constants";
 
 export interface UsuarioData {
   cpfUser: string;
@@ -14,7 +15,7 @@ export default async function postUsuario(data: UsuarioData): Promise<void> {
   try {
     console.log(data);
     const response = await axios.post(
-      "http://192.168.15.11:8080/usuario/criar",
+      `http://${API.BASE_URL}/usuario/criar`,
       data
     );
     console.log("Usuário criado com sucesso:", response.data);

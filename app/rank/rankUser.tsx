@@ -1,11 +1,12 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../services/firebase";
 import { useUser } from "../../components/userContext";
 import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
+import { API } from "@/constants";
 
 type AllpontuacoesType = { 
   cpfUser: string; 
@@ -26,6 +27,7 @@ const [allpontuacoes, setAllpontuacoes] = useState<AllpontuacoesType[]>([]);
 const [pontuacaoUser, setPontuacaoUser] = useState();
 const [notaUser, setNotaUser] = useState(0)
 const [visible, setVisible] = useState(false); 
+const { user } = useUser()
 
 const imagensPerfil = [
   require('../../assets/Woman 3.png'),
@@ -37,7 +39,7 @@ const imagensPerfil = [
 useEffect(() => {
 const fetchPontuacoesCpf = async () => {
   try {
-    const response = await axios.get(`http://192.168.15.8:8080/usuario/cpf/69220107015`, {
+    const response = await axios.get(`http://${API.BASE_URL}/usuario/cpf/${user?.cpfUser}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -53,7 +55,7 @@ fetchPontuacoesCpf
 const fetchPontuacoes = async () => {
 
   try {
-    const response = await axios.get<AllpontuacoesType[]>(`http://192.168.15.8:8080/usuario/todos`, {
+    const response = await axios.get<AllpontuacoesType[]>(`http://${API.BASE_URL}/usuario/todos`, {
       headers: {
         "Content-Type": "application/json",
       }
@@ -76,17 +78,13 @@ function imagemAleatoria() {
 
 return(
 
-  <SafeAreaView className="flew-1 bg-white px-4 justify-center items-center gap-4">
+  <SafeAreaView className="flex-1 bg-white px-4 justify-center items-center gap-4">
     <View className="items-center mt-4">
 
       <Text className="text-blue-700 font-bold text-2xl mt-6 mb-2">SUA PONTUAÇÃO</Text>
 
       <View className="flex-row items-center bg-gray-100 rounded-xl px-4 py-2">
-        <Image
-          source={require('../../assets/trophy.png')}
-          className="w-5 h-5 mr-2"
-          resizeMode="contain"
-        />
+        <Image source={require('../../assets/trophy.png')}className="w-5 h-5 mr-2"resizeMode="contain"/>
         <Text className="text-blue-700 font-bold text-xl">{pontuacaoUser ?? 0}</Text>
       </View>
     </View>

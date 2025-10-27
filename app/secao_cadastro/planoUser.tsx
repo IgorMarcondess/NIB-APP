@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Image, Alert, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Image, Alert, ScrollView, Modal } from "react-native";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { useUser } from "../../components/userContext";
@@ -9,6 +9,7 @@ import { router } from "expo-router";
 
 export default function PlanoOfensiva() {
   const { user } = useUser();
+  const [visible, setVisible] = useState(true);
 
   const salvarPlano = async (plano:any) => {
     console.log("Entrou")
@@ -57,6 +58,30 @@ export default function PlanoOfensiva() {
         </View>
       ))}
       </ScrollView>
+
+      <Modal animationType="slide" transparent visible={visible} onRequestClose={() => setVisible(false)}>
+          <View className="flex-1 items-center bg-black/60 justify-center px-4 ">
+
+          <View className="w-full max-w-[560px] rounded-3xl bg-white p-6 shadow-xl" style={{ elevation: 10 }} >
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text className="text-2xl font-extrabold text-center text-blue-800 mb-6">
+                Ofensivas de Hábitos
+              </Text>
+
+              <Text className="text-gray-700 text-base leading-relaxed mb-8"> <Text className="font-extrabold text-blue-800">Escolha suas ofensivas e multiplique seus prêmios.</Text> Quanto mais dias em sequência, maiores as recompensas. 
+                Seja realista, mantenha a constância e evolua. 🏆
+              </Text>
+
+              <TouchableOpacity onPress={() => setVisible(false)} className="bg-blue-700 py-3 rounded-2xl">
+                <Text className="text-white text-center font-bold text-lg">
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+
+      </Modal>
     </SafeAreaView>
   );
 }

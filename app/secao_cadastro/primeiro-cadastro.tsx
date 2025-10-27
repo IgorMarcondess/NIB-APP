@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import {Alert,Image,ScrollView,Text,TouchableOpacity,View,ActivityIndicator,} from "react-native";
+import {Alert,Image,ScrollView,Text,TouchableOpacity,View,ActivityIndicator, KeyboardAvoidingView, Platform,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../../components/input";
 import { useUser } from "../../components/userContext";
@@ -108,6 +108,7 @@ export default function primeiroCadastro() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#003EA6]">
+        <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="items-center px-4 pb-10">
           <Image
@@ -227,6 +228,7 @@ export default function primeiroCadastro() {
           </View>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

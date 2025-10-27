@@ -14,6 +14,7 @@ import axios from "axios";
 import { useUser } from "../../components/userContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { enviarHabitos } from "../../services/enviarHabitos";
+import { API } from "@/constants";
 
 export default function Avaliacao() {
   const [escovacao, setEscovacao] = useState(false);
@@ -41,7 +42,7 @@ export default function Avaliacao() {
       console.log(habitosDiarios);
       console.log(user.cpfUser);
       await axios.post(
-        `http://192.168.15.8:8080/diario/criar?cpfUser=${user.cpfUser}`,
+        `http://${API.BASE_URL}/diario/criar?cpfUser=${user.cpfUser}`,
         habitosDiarios
       );
       console.log("Envio para API realizada com sucesso");
