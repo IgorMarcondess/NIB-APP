@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API } from "../app/constants";
+import { API } from "../src/constants";
 
 export interface UsuarioData {
   cpfUser: string;

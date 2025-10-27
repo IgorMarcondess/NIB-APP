@@ -7,13 +7,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 
 export default function Index() {
-  const handleOpcao = (ehCliente: boolean) => {
-    if (ehCliente) {
-      router.push("/login");
-    } else {
-      router.push("/cadastro");
-    }
-  };
 
   return (
     <SafeAreaView className="flex-1 bg-white items-center px-4 py-6">

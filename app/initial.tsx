@@ -15,7 +15,6 @@ import { db } from "../services/firebase";
 
 Notifications.setNotificationHandler({
   handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
-    shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
     shouldShowBanner: true,
@@ -68,10 +67,7 @@ export async function scheduleHourly(nome?: string) {
 }
 
 const Dashboard = () => {
-  const { width: SCREEN_W } = Dimensions.get("window");
-
-
-  const { user } = useUser();
+ const { user } = useUser();
   const [ofensiva, setOfensiva] = useState(0);
 
   useEffect(() => {
@@ -164,7 +160,7 @@ const Dashboard = () => {
       <BottomTabNavigator
         icons={[
           { name: "Ofensiva", component: <Feather name="clock" size={24} color="white" />, route: "/ofensiva" },
-          { name: "Historico", component: <Feather name="heart" size={24} color="white" />, route: "/historico-medico" },
+          { name: "Historico", component: <Feather name="clipboard" size={24} color="white" />, route: "/historico-medico" },
           { name: "Troféus", component: <Feather name="award" size={24} color="white" />, route: "/rank/rankUser" },
         ]}
       />

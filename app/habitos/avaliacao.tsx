@@ -2,19 +2,12 @@ import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import {
-  Image,
-  Modal,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { useUser } from "../../components/userContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { enviarHabitos } from "../../services/enviarHabitos";
-import { API } from "@/constants";
+import { API } from "../../src/constants";
 
 export default function Avaliacao() {
   const [escovacao, setEscovacao] = useState(false);

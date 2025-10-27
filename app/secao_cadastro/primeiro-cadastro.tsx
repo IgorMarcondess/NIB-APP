@@ -11,6 +11,7 @@ import { useState } from "react";
 import { db } from "../../services/firebase";
 import {collection,query,where,getDocs,updateDoc,doc,} from "firebase/firestore";
 import axios from "axios";
+import { API } from "../../src/constants";
 
 
 function formatarData(data: string): string {
@@ -87,7 +88,7 @@ export default function primeiroCadastro() {
       console.log("Informações enviado API - ", payloadFirebase);
 
       {/*POST API*/}
-      await axios.patch(`http://192.168.15.8:8080/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
+      await axios.patch(`http://${API.BASE_URL}/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
       // await axios.patch(`/usuario/${user.cpfUser}/atualizar`, PayloadAPI);
 
       const novoUsuario = {

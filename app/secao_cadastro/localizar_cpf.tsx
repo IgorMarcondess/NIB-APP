@@ -1,16 +1,8 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import {
-  Alert,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator,
-} from "react-native";
+import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "../../components/input";
+
 import { useUser } from "../../components/userContext";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";

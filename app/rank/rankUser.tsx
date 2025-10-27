@@ -1,12 +1,11 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../services/firebase";
 import { useUser } from "../../components/userContext";
 import { Image, Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import axios from "axios";
 import { router } from "expo-router";
-import { API } from "@/constants";
+import { API } from "../../src/constants";
 
 type AllpontuacoesType = { 
   cpfUser: string; 

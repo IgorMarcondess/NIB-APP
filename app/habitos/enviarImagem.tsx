@@ -1,18 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  Alert,
-  Modal,
-} from "react-native";
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Alert,Modal,} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { router } from "expo-router";
 import { useUser } from "../../components/userContext";
-import { API } from "@/constants";
+import { API } from "../../src/constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function EnviarImagem() {

@@ -1,16 +1,14 @@
 import { Link, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { deleteDoc, doc } from "firebase/firestore";
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUser } from "../components/userContext";
-import { db } from "../services/firebase";
-import { useState } from "react";
+
 
 export default function Conta() {
   const { user } = useUser();
   const router = useRouter();
-  const [fecharModal, setFecharModal] = useState(false);
+
 
 
   return (

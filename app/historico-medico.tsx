@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Alert, TextInput, Modal } from "react-nat
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
-import { router, Link } from "expo-router";
+import { router} from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -34,6 +34,7 @@ export default function HistoricoMedico() {
   const { user } = useUser();
   const [popupEnviadoAntes, setPopupEnviadoAntes] = useState(false);
   const [popupEnviadoAgora, setPopupEnviadoAgora] = useState(false);
+  const [show, setShow] = useState(true);
 
   const {
     control,
@@ -75,6 +76,30 @@ export default function HistoricoMedico() {
 
   return (
     <SafeAreaView className="flex-1 bg-white items-center pt-12 px-4">
+
+      <Modal visible={show} transparent animationType="fade" statusBarTranslucent onRequestClose={() => setShow(false)} >
+      <View className="flex-1 bg-black/60 items-center justify-center px-6">
+        <View className="w-full bg-white rounded-2xl p-6">
+          <Text className="text-xl font-extrabold text-blue-700">Etapa - Histórico Médico</Text>
+
+          <Text className="mt-3 text-gray-700 leading-6">
+            Aqui coletamos informações sobre seus 
+            <Text className="font-semibold"> procedimentos e cuidados bucais</Text> para
+            entender sua trajetória até agora. Esses dados nos ajudam a
+            <Text className="font-semibold"> personalizar sua jornada</Text> e oferecer
+            orientações mais relevantes para você.
+          </Text>
+
+          <Text className="mt-3 text-gray-600">
+            O preenchimento é simples e rápido.
+          </Text>
+
+          <TouchableOpacity onPress={() => setShow(false)} className="mt-6 bg-blue-700 rounded-xl py-4 items-center">
+            <Text className="text-white font-semibold">OK</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
       <StatusBar style="auto" />
 
       <Modal transparent animationType="fade" visible={popupEnviadoAntes}>
