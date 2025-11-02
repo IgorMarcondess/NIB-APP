@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, Alert,Modal,} from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  Alert,
+  Modal,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { router } from "expo-router";
@@ -20,7 +28,7 @@ export default function EnviarImagem() {
         "Permissão negada",
         "É necessário conceder permissão para usar a câmera."
       );
-      setShowModal(true); 
+      setShowModal(true);
       return;
     }
 
@@ -59,13 +67,38 @@ export default function EnviarImagem() {
         body: formData,
       });
 
+      const textResponse = await response.text();
+      console.log("Resposta do servidor:", textResponse);
+
       if (response.ok) {
-        Alert.alert("Sucesso", "Foto enviada com sucesso!");
-        router.push("../initial");
+        // ✅ Caso a imagem seja inválida (retorno do backend)
+        if (textResponse.includes("Imagem não válida: 0")) {
+          Alert.alert(
+            "Imagem não válida",
+            "A imagem enviada não foi aprovada. Deseja tentar novamente?",
+            [
+              {
+                text: "Enviar nova foto",
+                onPress: () => {
+                  setPhoto(null);
+                  tirarFoto();
+                },
+              },
+              {
+                text: "Pular etapa",
+                onPress: () => router.push("../initial"),
+                style: "cancel",
+              },
+            ]
+          );
+        } else {
+          // ✅ Caso imagem seja válida
+          Alert.alert("Sucesso", "Foto enviada com sucesso!");
+          router.push("../initial");
+        }
       } else {
-        const errorText = await response.text();
-        console.error("Erro da API:", errorText);
-        Alert.alert("Erro", `Falha ao enviar: ${errorText}`);
+        console.error("Erro da API:", textResponse);
+        Alert.alert("Erro", `Falha ao enviar: ${textResponse}`);
       }
     } catch (error: any) {
       console.error("Erro ao enviar imagem:", error);
@@ -77,40 +110,57 @@ export default function EnviarImagem() {
 
   return (
     <SafeAreaView className="flex-1 bg-white items-center justify-center p-4">
-
-      <Modal visible={showModal} transparent animationType="fade" statusBarTranslucent  onRequestClose={() => setShowModal(false)}>
+      <Modal
+        visible={showModal}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => setShowModal(false)}
+      >
         <View className="flex-1 bg-black/60 items-center justify-center px-6">
           <View className="w-full bg-white rounded-2xl p-6">
             <Text className="text-xl font-extrabold text-blue-700">
-              📸 Foto opcional, <Text className="text-emerald-600">+1 ponto</Text> no seu score!
+              📸 Foto opcional,{" "}
+              <Text className="text-emerald-600">+1 ponto</Text> no seu score!
             </Text>
 
             <View className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 items-center">
-              <Text className="text-emerald-700 font-semibold">+1 ponto bônus</Text>
+              <Text className="text-emerald-700 font-semibold">
+                +1 ponto bônus
+              </Text>
             </View>
 
             <Text className="mt-4 text-gray-700 leading-6">
-              O envio da sua foto é <Text className="font-semibold">opcional</Text> e{" "}
-              <Text className="font-semibold">não é obrigatório</Text>. Se preferir, você pode pular
-              esta etapa agora.{"\n\n"}
-              Mas se enviar a foto, você <Text className="text-emerald-700 font-semibold">ganha +1 ponto</Text> no seu score
-              e acelera a validação do seu perfil.
+              O envio da sua foto é{" "}
+              <Text className="font-semibold">opcional</Text> e{" "}
+              <Text className="font-semibold">não é obrigatório</Text>. Se
+              preferir, você pode pular esta etapa agora.{"\n\n"}Mas se enviar a
+              foto, você{" "}
+              <Text className="text-emerald-700 font-semibold">
+                ganha +1 ponto
+              </Text>{" "}
+              no seu score e acelera a validação do seu perfil.
             </Text>
 
             <View className="mt-4 rounded-xl bg-blue-50 px-4 py-3">
               <Text className="text-blue-700 font-semibold">Dicas rápidas</Text>
-              <Text className="text-blue-700 mt-1"> • Boa iluminação • Fundo neutro • Escova Visível </Text>
+              <Text className="text-blue-700 mt-1">
+                • Boa iluminação • Fundo neutro • Escova Visível{" "}
+              </Text>
             </View>
 
             <View className="flex-row gap-3 mt-6">
-              <TouchableOpacity onPress={() => router.push("../initial")}className="flex-1 border border-blue-700 rounded-xl py-4 items-center">
+              <TouchableOpacity
+                onPress={() => router.push("../initial")}
+                className="flex-1 border border-blue-700 rounded-xl py-4 items-center"
+              >
                 <Text className="text-blue-700 font-semibold">Pular Etapa</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => {
                   setShowModal(false);
-                  tirarFoto(); 
+                  tirarFoto();
                 }}
                 className="flex-1 bg-blue-700 rounded-xl py-4 items-center"
               >
@@ -120,6 +170,7 @@ export default function EnviarImagem() {
           </View>
         </View>
       </Modal>
+
       {!photo ? (
         <>
           <TouchableOpacity
@@ -153,12 +204,12 @@ export default function EnviarImagem() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => enviarFoto()}
+              onPress={enviarFoto}
               className="border border-blue-700 bg-white px-8 py-4 rounded-lg"
               disabled={isEnviando}
             >
               {isEnviando ? (
-                <ActivityIndicator color="blue-700" />
+                <ActivityIndicator color="blue" />
               ) : (
                 <Text className="text-blue-700 font-bold">ENVIAR FOTO</Text>
               )}
@@ -166,8 +217,6 @@ export default function EnviarImagem() {
           </View>
         </>
       )}
-
-
     </SafeAreaView>
   );
 }
