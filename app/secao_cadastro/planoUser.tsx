@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Alert, ScrollView, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ScrollView,
+  Modal,
+} from "react-native";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { useUser } from "../../components/userContext";
@@ -11,68 +19,118 @@ export default function PlanoOfensiva() {
   const { user } = useUser();
   const [visible, setVisible] = useState(true);
 
-  const salvarPlano = async (plano:any) => {
-    console.log("Entrou")
-    if(!user?.idUser) return;
+  const salvarPlano = async (plano: any) => {
+    if (!user?.idUser) return;
     try {
       const dadosUser = doc(db, "usuarios", user.idUser);
 
       await updateDoc(dadosUser, {
-      planoOfensiva: {
-        nome: plano.nome,
-        diasMaximos: plano.diasMaximos,
-        beneficios: plano.beneficios || "",
-      },
+        planoOfensiva: {
+          nome: `Plano ${plano.diasMaximos} dias`,
+          diasMaximos: plano.diasMaximos,
+          pontos: plano.pontos,
+          desconto: plano.beneficios,
+        },
       });
 
       Alert.alert("Sucesso", "Plano selecionado com sucesso!");
-      router.replace("/login")
+      router.replace("/login");
     } catch (error) {
       console.error("Erro ao salvar plano:", error);
       Alert.alert("Erro", "Não foi possível salvar o plano. Tente novamente.");
     }
   };
 
+  const coresPlano = [
+    "#E0F7FA", // Azul claro
+    "#B2EBF2",
+    "#80DEEA",
+    "#4DD0E1",
+    "#26C6DA",
+    "#00ACC1",
+  ];
+
   return (
     <SafeAreaView className="flex-1 bg-white items-center px-4 py-6">
-    <ScrollView contentContainerStyle={{ paddingBottom: 20, alignItems: "center" }} className="flex-1" showsVerticalScrollIndicator={false}>
-      <Text className="text-center text-blue-700 font-bold text-xl mb-6 uppercase"> Escolha seu plano de ofensiva </Text>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 20, alignItems: "center" }}
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+      >
+        <Text className="text-center text-blue-700 font-bold text-xl mb-6 uppercase">
+          Escolha seu plano de ofensiva
+        </Text>
 
-      {planos.map((plano) => (
-        <View key={plano.id} className="bg-[#F7FAFC] border border-blue-700 rounded-xl px-4 py-5 mb-5 w-80 items-center">
-          <View className={`flex-row ${plano.imagem ? "justify-between" : "justify-center"} items-center w-full`}>
-            <View className={`${plano.imagem ? "" : "items-center"}`}>
-              <Text className={`text-blue-700 font-extrabold ${plano.imagem ? "text-xl" : "text-2xl"}`}>{plano.diasMaximos} DIAS</Text>
-              <Text className="text-blue-700 font-bold -mt-1">OFENSIVAS</Text>
-              {plano.beneficios && (
-                <Text className="text-gray-500 text-xs mt-1 w-56 ">{plano.beneficios}</Text>
+        {planos.map((plano, index) => (
+          <View
+            key={plano.id}
+            className="rounded-2xl w-80 mb-5 p-4 shadow-md"
+            style={{ backgroundColor: coresPlano[index % coresPlano.length] }}
+          >
+            <View className="flex-row justify-between items-center w-full">
+              <View className="items-center">
+                <Text className="text-blue-800 font-extrabold text-2xl">
+                  {plano.diasMaximos} DIAS
+                </Text>
+                <Text className="text-blue-800 font-bold -mt-1 mb-2">
+                  OFENSIVAS
+                </Text>
+                <Text className="text-gray-700 text-sm text-center">
+                  <Text className="font-bold">{plano.pontos} pontos</Text> -{" "}
+                  {plano.beneficios}
+                </Text>
+              </View>
+              {plano.imagem && (
+                <Image
+                  source={plano.imagem}
+                  className="w-16 h-16"
+                  resizeMode="contain"
+                />
               )}
             </View>
-            {plano.imagem && (
-              <Image source={plano.imagem} className="w-14 h-14 ml-2" resizeMode="contain" />
-            )}
+
+            <TouchableOpacity
+              onPress={() => salvarPlano(plano)}
+              className="mt-4 py-2 rounded-full border border-blue-700 bg-white"
+            >
+              <Text className="text-blue-700 font-bold text-center">
+                SELECIONAR
+              </Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => salvarPlano(plano)} className="mt-4 border border-blue-700 rounded-md px-6 py-2">
-            <Text className="text-blue-700 font-bold text-sm">SELECIONAR</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
+        ))}
       </ScrollView>
 
-      <Modal animationType="slide" transparent visible={visible} onRequestClose={() => setVisible(false)}>
-          <View className="flex-1 items-center bg-black/60 justify-center px-4 ">
-
-          <View className="w-full max-w-[560px] rounded-3xl bg-white p-6 shadow-xl" style={{ elevation: 10 }} >
+      {/* Modal explicativo */}
+      <Modal
+        animationType="slide"
+        transparent
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+      >
+        <View className="flex-1 items-center bg-black/60 justify-center px-4">
+          <View
+            className="w-full max-w-[560px] rounded-3xl bg-white p-6 shadow-xl"
+            style={{ elevation: 10 }}
+          >
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text className="text-2xl font-extrabold text-center text-blue-800 mb-6">
                 Ofensivas de Hábitos
               </Text>
 
-              <Text className="text-gray-700 text-base leading-relaxed mb-8"> <Text className="font-extrabold text-blue-800">Escolha suas ofensivas e multiplique seus prêmios.</Text> Quanto mais dias em sequência, maiores as recompensas. 
-                Seja realista, mantenha a constância e evolua. 🏆
+              <Text className="text-gray-700 text-base leading-relaxed mb-8">
+                <Text className="font-extrabold text-blue-800">
+                  Escolha suas ofensivas e multiplique seus prêmios.
+                </Text>{" "}
+                Quanto mais dias em sequência e mais pontos acumulados, maiores
+                os descontos e recompensas. Seja realista, mantenha a constância
+                e evolua! 🏆
               </Text>
 
-              <TouchableOpacity onPress={() => setVisible(false)} className="bg-blue-700 py-3 rounded-2xl">
+              <TouchableOpacity
+                onPress={() => setVisible(false)}
+                className="bg-blue-700 py-3 rounded-2xl"
+              >
                 <Text className="text-white text-center font-bold text-lg">
                   OK
                 </Text>
@@ -80,7 +138,6 @@ export default function PlanoOfensiva() {
             </ScrollView>
           </View>
         </View>
-
       </Modal>
     </SafeAreaView>
   );
