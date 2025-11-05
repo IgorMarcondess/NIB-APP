@@ -87,7 +87,7 @@ export default function HistoricoMedico() {
       setTimeout(() => {
         setPopupEnviadoAgora(false);
         router.push("/login");
-        Alert.alert("Parabéns!", "Cadastro realizado com sucesso... Voltando a tela de login");
+        Alert.alert("Cadastro realizado com sucesso 🍾", "Voltando á tela de login!");
       }, 3000);
     } catch (error: any) {
       console.error("Erro ao enviar histórico:", error);

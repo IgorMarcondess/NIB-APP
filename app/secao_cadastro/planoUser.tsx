@@ -25,7 +25,7 @@ export default function PlanoOfensiva() {
         },
       });
 
-      Alert.alert("Sucesso", "Plano selecionado com sucesso!");
+      Alert.alert("Sucesso", "Ofensiva selecionada com sucesso. Boa sorte!");
       router.replace("../historico-medico");
     } catch (error) {
       console.error("Erro ao salvar plano:", error);

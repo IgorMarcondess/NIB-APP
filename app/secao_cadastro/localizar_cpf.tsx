@@ -52,15 +52,15 @@ export default function Localizar_cpf() {
     const ref = docsUser.docs[0].ref
     await setDoc(ref, { cpf }, { merge: false }); 
 
-    // try {
-    //   console.log("Fazendo delete HISTÓRICO")
-    //   await axios.delete(
-    //     `http://${API.BASE_URL}/historico/deletar/${cpf}`,
-    //   );
-    // } catch (error: any) {
-    //     console.error("Erro ao limpar histórico", error);
-    //     Alert.alert("Erro ao limpar histórico");
-    // };
+    try {
+      console.log("Fazendo delete HISTÓRICO")
+      await axios.delete(
+        `http://${API.BASE_URL}/historico/deletar/${cpf}`,
+      );
+    } catch (error: any) {
+        console.error("Erro ao limpar histórico", error);
+        Alert.alert("Erro ao limpar histórico");
+    };
 
 
     console.log(`[Cadastro] Limpeza do Docs realizada com sucesso`)
