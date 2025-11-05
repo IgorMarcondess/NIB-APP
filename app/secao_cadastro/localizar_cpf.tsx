@@ -1,6 +1,13 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import {Alert, Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useUser } from "../../components/userContext";
@@ -9,7 +16,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import axios from "axios";
-import { collection, query, where, getDocs, DocumentData, Query, setDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  DocumentData,
+  Query,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { API } from "../../src/constants";
 
@@ -41,29 +56,32 @@ export default function Localizar_cpf() {
   ];
 
   const selecionarCPF = async (cpf: string) => {
-    console.log("Inicio processo!")
+    console.log("Inicio processo!");
     setMenuAberto(false);
 
-    const colecaoUser = query(collection(db, "usuarios"), where("cpf", "==", cpf ))
-    const docsUser = await getDocs(colecaoUser)
+    const colecaoUser = query(
+      collection(db, "usuarios"),
+      where("cpf", "==", cpf)
+    );
+    const docsUser = await getDocs(colecaoUser);
 
     if (docsUser.empty) return;
 
-    const ref = docsUser.docs[0].ref
-    await setDoc(ref, { cpf }, { merge: false }); 
+    const ref = docsUser.docs[0].ref;
+    await setDoc(ref, { cpf }, { merge: false });
 
-    try {
-      console.log("Fazendo delete HISTÓRICO")
-      await axios.delete(
-        `http://${API.BASE_URL}/historico/deletar/${cpf}`,
-      );
-    } catch (error: any) {
-        console.error("Erro ao limpar histórico", error);
-        Alert.alert("Erro ao limpar histórico");
-    };
+    // try {
+    //   console.log("Fazendo delete HISTÓRICO")
+    //   await axios.delete(
+    //     `http://${API.BASE_URL}/historico/deletar/${cpf}`,
+    //   );
+    // } catch (error: any) {
+    //     console.error("Erro ao limpar histórico", error);
+    //     Alert.alert("Erro ao limpar histórico");
+    // };
 
 
-    console.log(`[Cadastro] Limpeza do Docs realizada com sucesso`)
+    console.log(`[Cadastro] Limpeza do Docs realizada com sucesso`);
     setUser({
       cpfUser: cpf,
       nomeUser: "",
@@ -75,7 +93,7 @@ export default function Localizar_cpf() {
       idUser: "",
     });
 
-    router.push("./primeiro-cadastro")
+    router.push("./primeiro-cadastro");
   };
 
   // const onSubmit = async (data: FormData) => {
@@ -164,11 +182,10 @@ export default function Localizar_cpf() {
             </Text>
           )} */}
 
-          
           <Text className="text-white text-lg font-medium mt-4 mb-2">
             SELECIONE UM CPF
           </Text>
-           <View className="w-full items-center">
+          <View className="w-full items-center">
             <TouchableOpacity
               className="w-80 bg-white/10 border border-white rounded-2xl px-4 py-4 mt-1 flex-row justify-between items-center"
               onPress={() => setMenuAberto((v) => !v)}
@@ -182,24 +199,26 @@ export default function Localizar_cpf() {
               />
             </TouchableOpacity>
 
-             {menuAberto && (
+            {menuAberto && (
               <View className="w-80 bg-white rounded-2xl mt-2 shadow border border-white/30">
                 {cpfOpcoes.map((cpf) => (
                   <TouchableOpacity
-                    key={cpf} className="px-4 py-3 border-b border-gray-200" 
-                    onPress={() => selecionarCPF(cpf)}>
+                    key={cpf}
+                    className="px-4 py-3 border-b border-gray-200"
+                    onPress={() => selecionarCPF(cpf)}
+                  >
                     <Text className="text-[#003EA6] font-semibold">{cpf}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
-            )} 
-          </View> 
+            )}
+          </View>
 
           <Image
             source={require("../../assets/recepcao.jpg")}
             className="w-[350px] h-[300px] rounded-xl mt-10"
           />
-          
+
           {/* CODIGO COMENTADO POIS N SERA MAIS NECESSSÁRIO*/}
           {/* <View className="flex-row justify-center items-center gap-5 mt-10">
             <TouchableOpacity
@@ -229,4 +248,3 @@ export default function Localizar_cpf() {
 function deleteDocs(q: Query<DocumentData, DocumentData>) {
   throw new Error("Function not implemented.");
 }
-
