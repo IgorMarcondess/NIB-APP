@@ -115,6 +115,9 @@ export default function PrimeiroCadastro() {
         dataNascimentoUser: "2025-01-01",
         planoUser: "PREMIUM",
         emailUser: data.email,
+        pontos: 0,
+        nota: 0.0,
+        sequenciaDias: 0,
       };
 
       await axios.patch(
