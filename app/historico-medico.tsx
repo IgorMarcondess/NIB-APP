@@ -1,49 +1,41 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  TextInput,
-  Modal,
-} from "react-native";
+import { View, Text, TouchableOpacity, Alert, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "../components/userContext";
-import axios from "axios"; // IMPORTAÇÃO CORRETA
-import { API } from "../src/constants"; // Certifique-se de que API.BASE_URL está definido
+import axios from "axios";
+import { API } from "../src/constants";
 
 const schema = z.object({
   tratamento: z
     .string()
     .refine((v) => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
-      message: "Digite SIM ou NÃO",
+      message: "Selecione SIM ou NÃO",
     }),
   canal: z
     .string()
     .refine((v) => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
-      message: "Digite SIM ou NÃO",
+      message: "Selecione SIM ou NÃO",
     }),
   limpeza: z
     .string()
     .refine((v) => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
-      message: "Digite SIM ou NÃO",
+      message: "Selecione SIM ou NÃO",
     }),
   aparelho: z
     .string()
     .refine((v) => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
-      message: "Digite SIM ou NÃO",
+      message: "Selecione SIM ou NÃO",
     }),
   cirurgia: z
     .string()
     .refine((v) => ["SIM", "NAO", "NÃO"].includes(v.toUpperCase()), {
-      message: "Digite SIM ou NÃO",
+      message: "Selecione SIM ou NÃO",
     }),
 });
 
@@ -51,7 +43,6 @@ type FormData = z.infer<typeof schema>;
 
 export default function HistoricoMedico() {
   const { user } = useUser();
-  // const [popupEnviadoAntes, setPopupEnviadoAntes] = useState(false);
   const [popupEnviadoAgora, setPopupEnviadoAgora] = useState(false);
   const [show, setShow] = useState(true);
 
@@ -67,12 +58,12 @@ export default function HistoricoMedico() {
     }
 
     const payload = {
-      tratamentoHistorico: data.tratamento.toUpperCase() === "SIM" ? 1 : 0,
-      canalHistorico: data.canal.toUpperCase() === "SIM" ? 1 : 0,
-      limpezaHistorico: data.limpeza.toUpperCase() === "SIM" ? 1 : 0,
+      tratamentoHistorico: data.tratamento === "SIM" ? 1 : 0,
+      canalHistorico: data.canal === "SIM" ? 1 : 0,
+      limpezaHistorico: data.limpeza === "SIM" ? 1 : 0,
       carieHistorico: 0,
-      ortodonticoHistorico: data.aparelho.toUpperCase() === "SIM" ? 1 : 0,
-      cirurgiaHistorico: data.cirurgia.toUpperCase() === "SIM" ? 1 : 0,
+      ortodonticoHistorico: data.aparelho === "SIM" ? 1 : 0,
+      cirurgiaHistorico: data.cirurgia === "SIM" ? 1 : 0,
     };
 
     try {
@@ -83,11 +74,10 @@ export default function HistoricoMedico() {
       );
 
       setPopupEnviadoAgora(true);
-
       setTimeout(() => {
         setPopupEnviadoAgora(false);
         router.push("/login");
-        Alert.alert("Parabéns!", "Cadastro realizado com sucesso... Voltando a tela de login");
+        Alert.alert("Parabéns!", "Cadastro realizado com sucesso!");
       }, 3000);
     } catch (error: any) {
       console.error("Erro ao enviar histórico:", error);
@@ -97,6 +87,38 @@ export default function HistoricoMedico() {
       );
     }
   };
+
+  // Componente reutilizável para os botões de SIM/NÃO
+  const BooleanButtons = ({
+    value,
+    onChange,
+  }: {
+    value?: string;
+    onChange: (val: string) => void;
+  }) => (
+    <View className="flex-row justify-between mt-2">
+      {["SIM", "NÃO"].map((option) => (
+        <TouchableOpacity
+          key={option}
+          onPress={() => onChange(option)}
+          className={`flex-1 py-3 mx-1 rounded-lg border 
+            ${
+              value === option
+                ? "bg-blue-700 border-blue-700"
+                : "border-blue-700"
+            }`}
+        >
+          <Text
+            className={`text-center font-semibold ${
+              value === option ? "text-white" : "text-blue-700"
+            }`}
+          >
+            {option}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-white items-center pt-12 px-4">
@@ -121,11 +143,7 @@ export default function HistoricoMedico() {
               </Text>{" "}
               para entender sua trajetória até agora. Esses dados nos ajudam a
               <Text className="font-semibold"> personalizar sua jornada</Text> e
-              oferecer orientações mais relevantes para você.
-            </Text>
-
-            <Text className="mt-3 text-gray-600">
-              O preenchimento é simples e rápido.
+              oferecer orientações mais relevantes.
             </Text>
 
             <TouchableOpacity
@@ -137,163 +155,36 @@ export default function HistoricoMedico() {
           </View>
         </View>
       </Modal>
+
       <StatusBar style="auto" />
-
-      {/* <Modal transparent animationType="fade" visible={popupEnviadoAntes}>
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
-            <Text className="text-blue-700 font-extrabold text-2xl text-center">
-              INFORMAÇÕES JÁ ENVIADAS
-            </Text>
-            <Feather
-              name="check-circle"
-              size={60}
-              color="limegreen"
-              style={{ marginTop: 16 }}
-            />
-          </View>
-        </View>
-      </Modal> */}
-
-      {/* <Modal transparent animationType="fade" visible={popupEnviadoAgora}>
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
-            <Text className="text-blue-700 font-extrabold text-2xl text-center">
-              ENVIO REALIZADO COM SUCESSO!
-            </Text>
-            <Feather
-              name="check-circle"
-              size={60}
-              color="limegreen"
-              style={{ marginTop: 16 }}
-            />
-          </View>
-        </View>
-      </Modal> */}
-
       <Text className="text-[#003EA6] text-3xl font-bold mb-6">
         Histórico Médico
       </Text>
 
-      <View className="w-full mb-4">
-        <Text className="text-[#003EA6] text-base mb-1">
-          Já realizou tratamento?
-        </Text>
-        <Controller
-          control={control}
-          name="tratamento"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
-              placeholder="Digite SIM ou NÃO"
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="characters"
-            />
+      {/* Perguntas */}
+      {[
+        { label: "Já realizou tratamento?", name: "tratamento" },
+        { label: "Já realizou canal?", name: "canal" },
+        { label: "Já realizou limpeza?", name: "limpeza" },
+        { label: "Já colocou aparelho ortodôntico?", name: "aparelho" },
+        { label: "Já realizou alguma cirurgia?", name: "cirurgia" },
+      ].map((item) => (
+        <View key={item.name} className="w-full mb-4">
+          <Text className="text-[#003EA6] text-base mb-1">{item.label}</Text>
+          <Controller
+            control={control}
+            name={item.name as keyof FormData}
+            render={({ field: { onChange, value } }) => (
+              <BooleanButtons value={value} onChange={onChange} />
+            )}
+          />
+          {errors[item.name as keyof FormData] && (
+            <Text className="text-red-500 text-xs mt-1">
+              {errors[item.name as keyof FormData]?.message as string}
+            </Text>
           )}
-        />
-        {errors.tratamento && (
-          <Text className="text-red-500 text-xs mt-1">
-            {errors.tratamento.message}
-          </Text>
-        )}
-      </View>
-
-      <View className="w-full mb-4">
-        <Text className="text-[#003EA6] text-base mb-1">
-          Já realizou canal?
-        </Text>
-        <Controller
-          control={control}
-          name="canal"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
-              placeholder="Digite SIM ou NÃO"
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="characters"
-            />
-          )}
-        />
-        {errors.canal && (
-          <Text className="text-red-500 text-xs mt-1">
-            {errors.canal.message}
-          </Text>
-        )}
-      </View>
-
-      <View className="w-full mb-4">
-        <Text className="text-[#003EA6] text-base mb-1">
-          Já realizou limpeza?
-        </Text>
-        <Controller
-          control={control}
-          name="limpeza"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
-              placeholder="Digite SIM ou NÃO"
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="characters"
-            />
-          )}
-        />
-        {errors.limpeza && (
-          <Text className="text-red-500 text-xs mt-1">
-            {errors.limpeza.message}
-          </Text>
-        )}
-      </View>
-
-      <View className="w-full mb-4">
-        <Text className="text-[#003EA6] text-base mb-1">
-          Já colocou aparelho ortodôntico?
-        </Text>
-        <Controller
-          control={control}
-          name="aparelho"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
-              placeholder="Digite SIM ou NÃO"
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="characters"
-            />
-          )}
-        />
-        {errors.aparelho && (
-          <Text className="text-red-500 text-xs mt-1">
-            {errors.aparelho.message}
-          </Text>
-        )}
-      </View>
-
-      <View className="w-full mb-4">
-        <Text className="text-[#003EA6] text-base mb-1">
-          Já realizou alguma cirurgia?
-        </Text>
-        <Controller
-          control={control}
-          name="cirurgia"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="border border-blue-700 rounded-lg px-4 py-2 text-base bg-white text-black"
-              placeholder="Digite SIM ou NÃO"
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="characters"
-            />
-          )}
-        />
-        {errors.cirurgia && (
-          <Text className="text-red-500 text-xs mt-1">
-            {errors.cirurgia.message}
-          </Text>
-        )}
-      </View>
+        </View>
+      ))}
 
       <View className="flex-row gap-6 mt-6">
         <TouchableOpacity
