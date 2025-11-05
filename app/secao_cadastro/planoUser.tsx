@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Alert,
-  ScrollView,
-  Modal,
-} from "react-native";
+import {View,Text,TouchableOpacity,Image,Alert,ScrollView,Modal,} from "react-native";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { useUser } from "../../components/userContext";
@@ -34,7 +26,7 @@ export default function PlanoOfensiva() {
       });
 
       Alert.alert("Sucesso", "Plano selecionado com sucesso!");
-      router.replace("/login");
+      router.replace("../historico-medico");
     } catch (error) {
       console.error("Erro ao salvar plano:", error);
       Alert.alert("Erro", "Não foi possível salvar o plano. Tente novamente.");
@@ -42,7 +34,7 @@ export default function PlanoOfensiva() {
   };
 
   const coresPlano = [
-    "#E0F7FA", // Azul claro
+    "#E0F7FA",
     "#B2EBF2",
     "#80DEEA",
     "#4DD0E1",
@@ -75,15 +67,18 @@ export default function PlanoOfensiva() {
                 <Text className="text-blue-800 font-bold -mt-1 mb-2">
                   OFENSIVAS
                 </Text>
-                <Text className="text-gray-700 text-sm text-center">
-                  <Text className="font-bold">{plano.pontos} pontos</Text> -{" "}
-                  {plano.beneficios}
+                <Text className="text-gray-700 text-sm text-center flex-col">
+                  <Text className="font-bold">{plano.pontos} pontos</Text> - {" "}
+                  {plano.beneficios} &
+                </Text>
+                  <Text className="text-gray-700 text-sm text-center flex-col">
+                  <Text className="font-bold"> {plano.premio}</Text>
                 </Text>
               </View>
               {plano.imagem && (
                 <Image
                   source={plano.imagem}
-                  className="w-16 h-16"
+                  className="w-20 h-20"
                   resizeMode="contain"
                 />
               )}
@@ -101,7 +96,6 @@ export default function PlanoOfensiva() {
         ))}
       </ScrollView>
 
-      {/* Modal explicativo */}
       <Modal
         animationType="slide"
         transparent

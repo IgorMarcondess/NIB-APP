@@ -51,7 +51,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function HistoricoMedico() {
   const { user } = useUser();
-  const [popupEnviadoAntes, setPopupEnviadoAntes] = useState(false);
+  // const [popupEnviadoAntes, setPopupEnviadoAntes] = useState(false);
   const [popupEnviadoAgora, setPopupEnviadoAgora] = useState(false);
   const [show, setShow] = useState(true);
 
@@ -61,34 +61,11 @@ export default function HistoricoMedico() {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  useEffect(() => {
-    const carregarDados = async () => {
-      if (!user?.emailUser) return;
-      const salvo = await AsyncStorage.getItem(user.emailUser);
-      const dados = salvo ? JSON.parse(salvo) : {};
-      if (dados.historicoMedico) {
-        setPopupEnviadoAntes(true);
-        setTimeout(() => {
-          setPopupEnviadoAntes(false);
-          router.push("./initial");
-        }, 3000);
-      }
-    };
-    carregarDados();
-  }, [user?.emailUser]);
-
   const onSubmit = async (data: FormData) => {
     if (!user?.cpfUser) {
       return Alert.alert("Erro", "Usuário não identificado.");
     }
 
-    // Atualiza AsyncStorage
-    const salvo = await AsyncStorage.getItem(user.emailUser);
-    const dados = salvo ? JSON.parse(salvo) : {};
-    dados.historicoMedico = true;
-    await AsyncStorage.setItem(user.emailUser, JSON.stringify(dados));
-
-    // Payload para envio ao backend
     const payload = {
       tratamentoHistorico: data.tratamento.toUpperCase() === "SIM" ? 1 : 0,
       canalHistorico: data.canal.toUpperCase() === "SIM" ? 1 : 0,
@@ -109,7 +86,8 @@ export default function HistoricoMedico() {
 
       setTimeout(() => {
         setPopupEnviadoAgora(false);
-        router.push("./initial");
+        router.push("/login");
+        Alert.alert("Parabéns!", "Cadastro realizado com sucesso... Voltando a tela de login");
       }, 3000);
     } catch (error: any) {
       console.error("Erro ao enviar histórico:", error);
@@ -161,7 +139,7 @@ export default function HistoricoMedico() {
       </Modal>
       <StatusBar style="auto" />
 
-      <Modal transparent animationType="fade" visible={popupEnviadoAntes}>
+      {/* <Modal transparent animationType="fade" visible={popupEnviadoAntes}>
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
             <Text className="text-blue-700 font-extrabold text-2xl text-center">
@@ -175,9 +153,9 @@ export default function HistoricoMedico() {
             />
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
-      <Modal transparent animationType="fade" visible={popupEnviadoAgora}>
+      {/* <Modal transparent animationType="fade" visible={popupEnviadoAgora}>
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white p-6 rounded-2xl w-4/5 items-center">
             <Text className="text-blue-700 font-extrabold text-2xl text-center">
@@ -191,7 +169,7 @@ export default function HistoricoMedico() {
             />
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       <Text className="text-[#003EA6] text-3xl font-bold mb-6">
         Histórico Médico
@@ -319,7 +297,7 @@ export default function HistoricoMedico() {
 
       <View className="flex-row gap-6 mt-6">
         <TouchableOpacity
-          onPress={() => router.push("/initial")}
+          onPress={() => router.push("/login")}
           className="bg-primary py-3 px-8 rounded-full"
         >
           <Text className="text-white text-lg font-bold">Voltar</Text>

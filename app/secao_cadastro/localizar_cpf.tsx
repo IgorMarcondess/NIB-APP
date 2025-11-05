@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useUser } from "../../components/userContext";
@@ -11,6 +11,7 @@ import { useState } from "react";
 import axios from "axios";
 import { collection, query, where, getDocs, DocumentData, Query, setDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
+import { API } from "../../src/constants";
 
 const schema = z.object({
   cpf: z.string().regex(/^\d{11}$/, "CPF deve conter 11 números"),
@@ -50,9 +51,19 @@ export default function Localizar_cpf() {
 
     const ref = docsUser.docs[0].ref
     await setDoc(ref, { cpf }, { merge: false }); 
-  
 
-    console.log(`Limpeza do Docs ${ref} realizada com sucesso`)
+    // try {
+    //   console.log("Fazendo delete HISTÓRICO")
+    //   await axios.delete(
+    //     `http://${API.BASE_URL}/historico/deletar/${cpf}`,
+    //   );
+    // } catch (error: any) {
+    //     console.error("Erro ao limpar histórico", error);
+    //     Alert.alert("Erro ao limpar histórico");
+    // };
+
+
+    console.log(`[Cadastro] Limpeza do Docs realizada com sucesso`)
     setUser({
       cpfUser: cpf,
       nomeUser: "",

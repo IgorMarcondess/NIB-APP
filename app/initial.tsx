@@ -212,11 +212,6 @@ const Dashboard = () => {
       <BottomTabNavigator
         icons={[
           {
-            name: "Historico",
-            component: <Feather name="clipboard" size={24} color="white" />,
-            route: "/historico-medico",
-          },
-          {
             name: "Ofensiva",
             component: <Feather name="clock" size={24} color="white" />,
             route: "/ofensiva",
