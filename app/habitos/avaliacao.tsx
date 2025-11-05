@@ -56,7 +56,7 @@ export default function Avaliacao() {
       console.log("Envio para API realizada com sucesso");
 
       await enviarHabitos(user.idUser, { escovacao, fioDental, bochecho });
-      router.push("./preparativoImagem");
+      router.push("./enviarImagem");
     } catch (error) {
       console.error("Erro ao salvar hábitos:", error);
     }
