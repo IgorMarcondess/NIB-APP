@@ -70,6 +70,7 @@ export default function Localizar_cpf() {
     const ref = docsUser.docs[0].ref;
     await setDoc(ref, { cpf }, { merge: false });
 
+<<<<<<< HEAD
     try {
 <<<<<<< HEAD
       console.log("Fazendo delete HISTÓRICO");
@@ -88,6 +89,18 @@ export default function Localizar_cpf() {
         Alert.alert("Erro ao limpar histórico");
     };
 >>>>>>> 695b067e59818def37e5a7d65882ef6f496f3ebe
+=======
+    // try {
+    //   console.log("Fazendo delete HISTÓRICO")
+    //   await axios.delete(
+    //     `http://${API.BASE_URL}/historico/deletar/${cpf}`,
+    //   );
+    // } catch (error: any) {
+    //     console.error("Erro ao limpar histórico", error);
+    //     Alert.alert("Erro ao limpar histórico");
+    // };
+
+>>>>>>> fdc118d433430f72156b8a0eb62b9193554d6aa4
 
     console.log(`[Cadastro] Limpeza do Docs realizada com sucesso`);
     setUser({
