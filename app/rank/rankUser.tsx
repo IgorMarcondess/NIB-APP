@@ -39,7 +39,6 @@ export default function Usuario() {
     require("../../assets/Woman 3.png"),
     require("../../assets/Woman 4.png"),
   ];
-
   function imagemAleatoria() {
     const index = Math.floor(Math.random() * imagensPerfil.length);
     return imagensPerfil[index];
@@ -85,9 +84,11 @@ export default function Usuario() {
     }
   }, [user?.cpfUser]);
 
+  console.log("Total de objetos:", Object.keys(allpontuacoes).length);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Scroll geral da tela toda pra evitar estourar a área segura */}
+      {/* Scroll geral da tela toda */}
       <ScrollView
         className="flex-1 px-4"
         contentContainerStyle={{
@@ -138,15 +139,16 @@ export default function Usuario() {
             </Text>
           </View>
 
-          {/* área rolável só da lista */}
+          {/* Scroll interno só da lista */}
           <View className="max-h-[400px]">
             <ScrollView
+              nestedScrollEnabled={true} // ✅ permite dois ScrollViews funcionarem juntos
               contentContainerStyle={{
                 paddingHorizontal: 10,
                 paddingBottom: 24,
                 rowGap: 16,
               }}
-              showsVerticalScrollIndicator
+              showsVerticalScrollIndicator={true}
             >
               {allpontuacoes
                 .sort((a, b) => b.pontos - a.pontos)
@@ -200,35 +202,36 @@ export default function Usuario() {
           <View className="bg-white w-full rounded-3xl p-6 max-h-[90%]">
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text className="text-2xl font-extrabold text-center text-blue-800 mb-6">
-                COMO GANHAR MAIS PONTOS
+                Como aumentar minha nota?🤔
               </Text>
+              <View className="mb-8">
+                <Text className="text-lg font-bold text-gray-800 mb-1">
+                  ENVIE SEUS REGISTROS TODOS OS DIAS
+                </Text>
+                <Text className="text-gray-600">
+                  Quão maior a sequência de dias enviando registros, maior será
+                  sua nota!
+                </Text>
+              </View>
 
               <View className="mb-5">
                 <Text className="text-lg font-bold text-gray-800 mb-1">
                   ESCOVE MAIS OS DENTES
                 </Text>
                 <Text className="text-gray-600">
-                  Escove mais os dentes e registre mais no aplicativo.
+                  Para nós, a escovação é primordial para uma boa saúde bucal.
+                  Escove seus dentes mais vezes ao dia e registre no aplicativo.
                 </Text>
               </View>
 
               <View className="mb-5">
                 <Text className="text-lg font-bold text-gray-800 mb-1">
-                  PASSE MAIS FIO DENTAL
+                  NÃO ESQUEÇA DO FIO DENTAL
                 </Text>
                 <Text className="text-gray-600">
-                  Passe mais o fio dental para limpar de forma mais excelente e
-                  registre no aplicativo.
-                </Text>
-              </View>
-
-              <View className="mb-8">
-                <Text className="text-lg font-bold text-gray-800 mb-1">
-                  NÃO SE ESQUEÇA DE ENVIAR A SELFIE
-                </Text>
-                <Text className="text-gray-600">
-                  Envie a selfie com boa iluminação e boa qualidade para que
-                  nossa IA contabilize seus pontos e notas.
+                  Assim como a escovação, o uso do fio dental é essencial para
+                  manter seus dentes e gengivas saudáveis. Use o fio dental
+                  diariamente e registre seu uso no app.
                 </Text>
               </View>
 

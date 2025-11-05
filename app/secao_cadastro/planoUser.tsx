@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import {View,Text,TouchableOpacity,Image,Alert,ScrollView,Modal,} from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ScrollView,
+  Modal,
+} from "react-native";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { useUser } from "../../components/userContext";
@@ -26,7 +34,9 @@ export default function PlanoOfensiva() {
       });
 
       Alert.alert("Sucesso", "Ofensiva selecionada com sucesso. Boa sorte!");
-      router.replace("../historico-medico");
+      setTimeout(() => {
+        router.replace("../historico-medico");
+      }, 3000);
     } catch (error) {
       console.error("Erro ao salvar plano:", error);
       Alert.alert("Erro", "Não foi possível salvar o plano. Tente novamente.");
@@ -68,10 +78,10 @@ export default function PlanoOfensiva() {
                   OFENSIVAS
                 </Text>
                 <Text className="text-gray-700 text-sm text-center flex-col">
-                  <Text className="font-bold">{plano.pontos} pontos</Text> - {" "}
+                  <Text className="font-bold">{plano.pontos} pontos</Text> -{" "}
                   {plano.beneficios} &
                 </Text>
-                  <Text className="text-gray-700 text-sm text-center flex-col">
+                <Text className="text-gray-700 text-sm text-center flex-col">
                   <Text className="font-bold"> {plano.premio}</Text>
                 </Text>
               </View>

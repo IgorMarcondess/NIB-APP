@@ -43,8 +43,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function HistoricoMedico() {
   const { user } = useUser();
-  const [popupEnviadoAgora, setPopupEnviadoAgora] = useState(false);
-  const [show, setShow] = useState(true);
+  const [popupEnviadoAgora, setPopupEnviadoAgora] = useState(false); // Modal de sucesso
+  const [show, setShow] = useState(true); // Modal introdutório
 
   const {
     control,
@@ -73,12 +73,14 @@ export default function HistoricoMedico() {
         { headers: { "Content-Type": "application/json" } }
       );
 
+      // Abre o modal de sucesso
       setPopupEnviadoAgora(true);
+
+      // Fecha o modal e redireciona após pequena pausa
       setTimeout(() => {
         setPopupEnviadoAgora(false);
-        router.push("/login");
-        Alert.alert("Parabéns!", "Cadastro realizado com sucesso!");
-      }, 3000);
+        router.replace("/initial"); // troque para "/login" se preferir
+      }, 2500);
     } catch (error: any) {
       console.error("Erro ao enviar histórico:", error);
       Alert.alert(
@@ -101,12 +103,9 @@ export default function HistoricoMedico() {
         <TouchableOpacity
           key={option}
           onPress={() => onChange(option)}
-          className={`flex-1 py-3 mx-1 rounded-lg border 
-            ${
-              value === option
-                ? "bg-blue-700 border-blue-700"
-                : "border-blue-700"
-            }`}
+          className={`flex-1 py-3 mx-1 rounded-lg border ${
+            value === option ? "bg-blue-700 border-blue-700" : "border-blue-700"
+          }`}
         >
           <Text
             className={`text-center font-semibold ${
@@ -122,6 +121,7 @@ export default function HistoricoMedico() {
 
   return (
     <SafeAreaView className="flex-1 bg-white items-center pt-12 px-4">
+      {/* Modal introdutório */}
       <Modal
         visible={show}
         transparent
@@ -152,6 +152,56 @@ export default function HistoricoMedico() {
             >
               <Text className="text-white font-semibold">OK</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal de sucesso (após envio) */}
+      <Modal
+        visible={popupEnviadoAgora}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() => setPopupEnviadoAgora(false)}
+      >
+        <View className="flex-1 bg-black/60 items-center justify-center px-6">
+          <View className="w-full bg-white rounded-2xl p-6 items-center">
+            {/* Ícone */}
+            <View className="w-16 h-16 rounded-full bg-green-100 items-center justify-center mb-4">
+              <Feather name="check" size={32} color="#16a34a" />
+            </View>
+
+            {/* Título */}
+            <Text className="text-xl font-extrabold text-green-700 text-center">
+              Histórico Médico registrado com sucesso
+            </Text>
+
+            {/* Mensagem (ajustada para soar mais natural) */}
+            <Text className="mt-3 text-gray-700 text-center leading-6">
+              Estamos te levando para a tela inicial para você{" "}
+              <Text className="font-semibold">
+                acessar e testar suas credenciais
+              </Text>
+              .
+            </Text>
+
+            {/* Indicador simples (barra) */}
+            <View className="w-full h-2 bg-gray-200 rounded-full mt-6 overflow-hidden">
+              <View className="h-2 bg-green-600" style={{ width: "100%" }} />
+            </View>
+
+            {/* Botão opcional de ir agora (descomente se quiser habilitar) */}
+            {/*
+            <TouchableOpacity
+              onPress={() => {
+                setPopupEnviadoAgora(false);
+                router.replace("/initial");
+              }}
+              className="mt-5 bg-green-600 rounded-xl py-3 px-6"
+            >
+              <Text className="text-white font-semibold">Ir agora</Text>
+            </TouchableOpacity>
+            */}
           </View>
         </View>
       </Modal>
