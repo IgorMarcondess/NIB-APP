@@ -84,7 +84,6 @@ export default function Usuario() {
     }
   }, [user?.cpfUser]);
 
-  console.log("Total de objetos:", Object.keys(allpontuacoes).length);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -157,32 +156,34 @@ export default function Usuario() {
                     key={u.cpfUser || index}
                     className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-3 h-24"
                   >
+                    {/* ESQUERDA: posição + avatar */}
                     <View className="flex-row items-center gap-4">
                       <View className="w-10 h-10 bg-blue-700 rounded-full items-center justify-center">
-                        <Text className="text-white font-extrabold text-xl">
-                          {index + 1}
-                        </Text>
+                        <Text className="text-white font-extrabold text-xl">{index + 1}</Text>
                       </View>
 
                       <View className="rounded-full items-center justify-center overflow-hidden w-12 h-12 bg-gray-200">
-                        <Image
-                          source={imagemAleatoria()}
-                          className="w-12 h-12"
-                          resizeMode="cover"
-                        />
+                        <Image source={imagemAleatoria()} className="w-12 h-12" resizeMode="cover" />
                       </View>
                     </View>
 
-                    <View className="items-center">
-                      <Text className="text-base font-bold text-center max-w-[140px]">
-                        {u.nomeUser.toUpperCase()}
-                      </Text>
-                      <Text className="text-blue-800 font-extrabold text-xl">
-                        {u.pontos} PTS
+                    {/* MEIO: PONTOS (agora à esquerda do nome) */}
+                    <Text className="text-blue-800 font-extrabold text-xl mx-2 w-20 text-center">
+                      {u.pontos} PTS
+                    </Text>
+
+                    {/* DIREITA: NOME (no mesmo lugar de antes) */}
+                    <View className="flex-1 items-end min-w-0">
+                      <Text
+                        className="text-base text-blue-800 font-bold text-right max-w-[160px]"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {u.nomeUser?.toUpperCase()}
                       </Text>
                     </View>
                   </View>
-                ))}
+              ))}
             </ScrollView>
           </View>
         </View>

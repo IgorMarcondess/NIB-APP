@@ -76,10 +76,10 @@ export default function HistoricoMedico() {
       // Abre o modal de sucesso
       setPopupEnviadoAgora(true);
 
-      // Fecha o modal e redireciona após pequena pausa
+     
       setTimeout(() => {
         setPopupEnviadoAgora(false);
-        router.replace("/initial"); // troque para "/login" se preferir
+        router.replace("/login"); 
       }, 2500);
     } catch (error: any) {
       console.error("Erro ao enviar histórico:", error);
